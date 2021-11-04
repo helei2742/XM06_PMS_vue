@@ -16,9 +16,10 @@
         <el-button type="primary" @click="typeChange(4)" size="mini">已提交的任务</el-button>
         <el-button type="primary" @click="typeChange(7)" size="mini">未提交的任务</el-button>
         <el-button type="primary" @click="typeChange(5)" size="mini">过期的任务</el-button>
+
         <el-select style="margin-left: 10px" size="mini"
                    v-model="queryGroup" placeholder="根据小组查询">
-          <el-option v-for="group in userGroups"
+          <el-option v-for="group in this.$store.getters.getJoinedGroup"
                      :key="group.groupName"
                      :label="group.groupName"
                      :value="group.id">
@@ -43,6 +44,7 @@
           @current-change="handleCurrentChange"
           :current-page.sync="page"
           :page-size="limit"
+          :pager-count="7"
           layout="total, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
@@ -58,6 +60,7 @@ import ShowWindow from "@/components/showwindow/ShowWindow";
 
 import {queryJoinedGroupAllNetwork} from "@/network/group";
 import {pageQueryUserTaskNetwork} from "@/network/task";
+import {RELOADJOINEDGROUP} from "@/store/mutations-types-groupmodule";
 
 
 export default {
@@ -74,7 +77,6 @@ export default {
       total: 0,
       creator: null,
       queryType: 1,// 1代表全部，2代表我发布的，3代表正在进行的，4代表过期的，5代表已提交的
-      userGroups: [],
       queryGroup: null
     }
   },
@@ -127,15 +129,7 @@ export default {
   },
   mounted() {
     this.pageQueryUserTask(this.page, this.limit)
-    let userId = this.$store.getters.getLoginUser.id
-    queryJoinedGroupAllNetwork(userId).then(data=>{
-      if(data.code === 200){
-        this.userGroups = data.result
-        console.log(this.userGroups)
-      }else {
-        this.$message.error('出错了，'+data.msg)
-      }
-    })
+    this.$store.dispatch(RELOADJOINEDGROUP)
   }
 }
 </script>

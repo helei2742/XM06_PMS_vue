@@ -37,7 +37,9 @@ import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
 import {findUserByUserIdStr} from "@/network/user";
 import {emitFailEvent} from "@/util/eventbus";
+
 import {CHECKSUCCESS} from "@/store/mutations-types";
+import {LOADJOINEDGROUP,LOADMYGROUP} from "@/store/mutations-types-groupmodule";
 
 export default {
   components: {
@@ -61,6 +63,7 @@ export default {
       if(data.code === 200){
         let user = data.result
         this.$store.commit(CHECKSUCCESS, {loginUser: user})
+
       }else {
         emitFailEvent.call(this, {
           msgTitle: '出错了',
@@ -68,7 +71,6 @@ export default {
         })
       }
     })
-
   }
 }
 </script>

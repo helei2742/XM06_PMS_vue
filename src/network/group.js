@@ -97,7 +97,15 @@ export function queryJoinedGroupAllNetwork(userId){
     method: 'post'
   })
 }
-
+export function queryMyGroupAllNetwork(userId){
+  return request({
+    url: '/group/queryMyGroupAll',
+    params:{
+      userId
+    },
+    method: 'post'
+  })
+}
 /**
  * 根据managerId ，分页查询所有管理的小组
  * @param managerId

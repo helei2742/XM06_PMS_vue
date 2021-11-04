@@ -5,7 +5,6 @@
         <div style="padding: 14px;">
           <span>{{group.groupName}}</span>
           <div class="bottom clearfix">
-            <time class="time">{{ formatDate(group.createDate) }}</time>
             <el-button @click="showMemberIfo" type="text" class="button">查看小组详情</el-button>
           </div>
         </div>

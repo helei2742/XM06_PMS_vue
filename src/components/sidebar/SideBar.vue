@@ -45,7 +45,8 @@
               <span>项目管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="3-2" @click="createProject">创建项目</el-menu-item>
+              <el-menu-item index="3-1" @click="createProject">创建项目</el-menu-item>
+              <el-menu-item index="3-2" @click="projectList">项目列表</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -76,7 +77,8 @@ export default {
       createTaskPath: '/index/createtask',
       showTaskPath: '/index/showtask',
 
-      createProjectPath: '/index/createproject'
+      createProjectPath: '/index/createproject',
+      projectListPath: '/index/projectlist'
     }
   },
   methods: {
@@ -106,6 +108,9 @@ export default {
     },
     createProject() {
       this.$router.push(this.createProjectPath)
+    },
+    projectList(){
+      this.$router.push(this.projectListPath)
     }
   }
 }

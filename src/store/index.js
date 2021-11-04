@@ -1,52 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex)
+import groupStore from "@/store/modules/groupmodule"
+import getters from "@/store/getters";
+import mutations from "@/store/mutations";
+import actions from "@/store/actions"
 
-import {getCookie, addCookie, delCookie} from "@/util/cookie";
-import {findUserByUserIdStr} from "@/network/user";
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     userIdStr: null,
     loginUser: null
   },
-  mutations: {
-    loginSuccess(state, payload){
-      state.userIdStr = payload.userIdStr
-      addCookie('userIdStr', payload.userIdStr, 24*7)
-    },
-    logout(state) {
-      state.userIdStr = null
-      state.loginUser = null
-      delCookie('userIdStr')
-    },
-    checkSuccess(state, payload) {
-      state.loginUser = payload.loginUser
-    }
-  },
-  getters: {
-    getUserIdStr(state){
-      let localUserIdStr = getCookie('userIdStr')
-      if(state.userIdStr == null && localUserIdStr != null){
-        state.userIdStr = localUserIdStr
-      }else if(localUserIdStr == null && state.userIdStr != null){
-        addCookie('userIdStr', state.userIdStr, 24*7)
-      }
-      return state.userIdStr
-    },
-    getLoginUser(state){
-      let localUserIdStr = getCookie('userIdStr')
-      if(state.loginUser == null){
-        findUserByUserIdStr(localUserIdStr).then(res =>{
-          state.loginUser = res.result
-        })
-      }
-      return state.loginUser
-    }
-  },
-  actions: {
-  },
   modules: {
-  }
+    groupStore: groupStore
+  },
+  getters,
+  actions,
+  mutations
 })

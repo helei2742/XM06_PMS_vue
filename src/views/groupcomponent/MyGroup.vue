@@ -18,6 +18,7 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-size="limit"
+            :pager-count="7"
             layout="total, prev, pager, next, jumper"
             :total="total">
         </el-pagination>

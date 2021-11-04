@@ -32,6 +32,8 @@ const SubmitRecord = () => import('@/views/taskcomponent/SubmitRecord')
 const InformView = () => import('@/views/informcomponent/InformView')
 
 const CreateProject = () => import('@/views/projectcomponent/CreateProject')
+const ProjectList = () => import('@/views/projectcomponent/ProjectList')
+
 
 const routes = [
   {
@@ -146,6 +148,13 @@ const routes = [
           title: '创建项目'
         },
         component: CreateProject
+      },
+      {
+        path: 'projectlist',
+        meta:{
+          title: '项目列表'
+        },
+        component: ProjectList
       }
     ]
   },
