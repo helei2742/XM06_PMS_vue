@@ -42,7 +42,6 @@ export default {
   methods: {
     showMemberIfo() {
       console.log(this.group)
-      this.group.createDate = this.$formatDate(this.group.createDate)
       this.$router.push({
         path: '/index/groupdetail',
         query: {

@@ -83,5 +83,7 @@ export default {
 </script>
 
 <style scoped>
-
+.create-project-formTable{
+  padding: 60px 10px;
+}
 </style>

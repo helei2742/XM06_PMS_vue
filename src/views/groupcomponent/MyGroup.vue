@@ -14,7 +14,7 @@
         />
 
         <el-pagination
-            class="pagination"
+            style="margin: 10px 0;text-align: center"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-size="limit"
@@ -65,7 +65,7 @@ export default {
 
           for (let group of this.groupList) {
             group.memberNum = group.memberList.length
-            group.createDate = this.$formatDate(group.createDate)
+            // group.createDate = this.$formatDate(group.createDate)
           }
 
           this.total = pageInfo.total

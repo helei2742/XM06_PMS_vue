@@ -1,11 +1,5 @@
 <template>
   <div id="app" class="infinite-list"  style="overflow:auto">
-    <message-card
-        :is-show="isShow"
-        :message="message"
-        :msg-title="msgTitle"
-        :type="type"
-    />
 
     <NavBar :is-login="isLogin" :user="userIfo" @logout="logout"></NavBar>
 
@@ -20,9 +14,6 @@
 
 <script>
 import NavBar from "@/components/navbar/NavBar";
-import MessageCard from "@/components/message/MessageCard";
-import {listenFailEvent,listenCardCloseEvent,
-  listenSuccess} from "@/util/eventbus";
 
 import {LOGOUT} from "@/store/mutations-types";
 
@@ -30,7 +21,6 @@ export default {
   name: 'app',
   components: {
     NavBar,
-    MessageCard
   },
   data(){
     return {
@@ -59,36 +49,6 @@ export default {
       this.$store.commit(LOGOUT)
       this.$router.push('/login')
     }
-  }
-  ,
-  created() {
-    listenFailEvent.call(this, (data)=>{
-      console.log(data)
-      this.isShow = true
-      this.msgTitle = data.msgTitle
-      this.message = data.message
-      this.type = 'error'
-
-      setTimeout(()=>{
-        this.isShow = false
-      }, 3000)
-    })
-
-    listenSuccess.call(this, (data)=>{
-      console.log(data)
-      this.isShow = true
-      this.msgTitle = data.msgTitle
-      this.message = data.message
-      this.type = 'success'
-
-      setTimeout(()=>{
-        this.isShow = false
-      }, 3000)
-    })
-
-    listenCardCloseEvent.call(this,()=>{
-      this.isShow = false
-    })
   }
 
 }

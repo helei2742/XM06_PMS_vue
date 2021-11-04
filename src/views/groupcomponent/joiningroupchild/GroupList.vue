@@ -91,7 +91,7 @@ export default {
       return function (id, memberList) {
         for(let i = 0; i < memberList.length; i++ ){
           if(id === memberList[i].id)
-            return memberList[i].user_name
+            return memberList[i].userName
         }
         return ''
       }

@@ -24,7 +24,7 @@ import CreateGroupFrom from "@/views/groupcomponent/creategroupchild/CreateGroup
 import ShowWindow from "@/components/showwindow/ShowWindow";
 
 import {createGroupNetwork} from "@/network/group";
-import {emitSuccess,emitFailEvent} from "@/util/eventbus";
+
 
 export default {
   name: "CreateGroup",
@@ -45,14 +45,9 @@ export default {
       createGroupNetwork(groupInfo).then(data=>{
         console.log(data)
         if(data.code === 200){
-          emitSuccess.call(this, {
-           msgTitle: '小组创建成功',
-          })
+          this.$message.success('创建小组成功')
         }else{
-          emitFailEvent.call(this, {
-            msgTitle: '创建小组失败',
-            message: data.msg
-          })
+          this.$message.error('创建失败,', data.msg)
         }
       })
     }

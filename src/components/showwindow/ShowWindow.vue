@@ -14,10 +14,17 @@
   </el-row>
 
   <el-row>
-    <el-col class="show-window-main" :span="24">
-      <slot name="main">
+    <el-col :span="24">
+      <div class="show-window-main"
+           :style="{'backgroundColor': color[lightType].bgcColor}">
 
-      </slot>
+        <div style="position: relative; border-radius: 20px;padding: 10px 0"
+             :style="{'backgroundColor': color[lightType].slotAreaBgc}">
+          <slot name="main">
+
+          </slot>
+        </div>
+      </div>
     </el-col>
   </el-row>
 
@@ -36,9 +43,17 @@ export default {
       this.$forceUpdate()
     }
   },
+  props: {
+    lightType: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
-      isClose: true
+      isClose: true,
+      color: [{bgcColor: '#50bdff', slotAreaBgc: '#84ceff'},
+              {bgcColor: '#202020', slotAreaBgc: '#333333'}]
     }
   }
 }
@@ -85,4 +100,5 @@ export default {
   padding: 50px 20px;
   position: relative;
 }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="project-list">
-    <show-window>
+    <show-window >
       <div slot="title">
         <i class="el-icon-s-finance"></i>
         <span>项目管理</span>
@@ -9,10 +9,14 @@
       </div>
 
       <div slot="main">
-        <el-row>
-          <el-button type="primary" @click="handleTypeChange(1)" size="mini">我创建的项目</el-button>
-          <el-button type="primary" @click="handleTypeChange(2)" size="mini">我加入小组的项目</el-button>
-          <el-button type="primary" @click="handleTypeChange(3)" size="mini">查看公开的项目</el-button>
+        <!-- 选择按钮套件-->
+        <el-row class="project-list-select">
+          <el-button :type="this.queryType === 1?'success':'primary'"
+                     @click="handleTypeChange(1)" size="mini">我创建的项目</el-button>
+          <el-button :type="this.queryType === 2?'success':'primary'"
+                     @click="handleTypeChange(2)" size="mini">我加入小组的项目</el-button>
+          <el-button :type="this.queryType === 3?'success':'primary'"
+                     @click="handleTypeChange(3)" size="mini">查看公开的项目</el-button>
           <div style="padding: 8px 0">
           <el-select v-model="orderType" placeholder="请选择" size="mini">
             <el-option label="创建时间降序" :value="1"/>
@@ -24,6 +28,7 @@
           </div>
         </el-row>
 
+        <!--项目展示区域-->
         <el-row class="project-list-area">
           <el-col :offset="1" :xs="22" :sm="18" :md="18" :lg="18" :xl="15">
             <div v-if="isShowPublicBtn" style="position: absolute; right: 20px;">
@@ -46,9 +51,12 @@
           </el-col>
         </el-row>
 
+
+        <!-- 分页条-->
         <el-row>
           <div class="block">
             <el-pagination
+                style="margin-top: 10px;text-align: center"
                 @current-change="handleCurrentChange"
                 :current-page=currentPage
                 :pager-count="7"
@@ -58,6 +66,7 @@
             </el-pagination>
           </div>
         </el-row>
+
       </div>
     </show-window>
   </div>
@@ -177,14 +186,19 @@ export default {
     toCreateProjectPage() {
       this.$router.push(this.createProjectPath)
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
 .project-list-area{
   margin-top: 20px;
+  background-color: #84ceff;
   padding: 35px 10px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.project-list-select{
+  left: 30px;
+  top: 15px;
 }
 </style>

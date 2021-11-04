@@ -39,6 +39,9 @@ export default {
   },
   mounted() {
     this.task = this.$route.query.task
+    if(this.$route.query.task === undefined) {
+      this.$router.push('index/welcome')
+    }
     console.log(this.task)
   }
 }

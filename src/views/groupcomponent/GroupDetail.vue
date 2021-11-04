@@ -17,12 +17,14 @@
           <el-button @click="getInvitationCode(group.id)" type="primary" round>获取小组邀请码</el-button>
         </template>
         <el-descriptions-item label="小组名">{{group.groupName}}</el-descriptions-item>
-        <el-descriptions-item label="组长用户名">{{group.manager.user_name}}</el-descriptions-item>
-        <el-descriptions-item label="组长真实姓名">{{group.manager.true_name}}</el-descriptions-item>
+        <el-descriptions-item label="组长用户名">{{group.manager.userName}}</el-descriptions-item>
+        <el-descriptions-item label="组长真实姓名">{{group.manager.trueName}}</el-descriptions-item>
         <el-descriptions-item label="创建日期">
-          <el-tag size="small">{{group.createDate}}</el-tag>
+          <el-tag size="small">{{formatDate(group.createDate)}}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="小组描述">{{group.described}}</el-descriptions-item>
+        <el-descriptions-item label="小组描述" >
+          <span style="white-space: pre-line;">{{group.described}}</span>
+        </el-descriptions-item>
       </el-descriptions>
 
       <hr>
@@ -34,13 +36,13 @@
           <el-button @click="dissolveGroup" type="danger" size="small">解散小组</el-button>
         </template>
 
-        <el-descriptions-item label="用户名">{{group.manager.user_name}}</el-descriptions-item>
-        <el-descriptions-item label="真实姓名">{{group.manager.true_name}}</el-descriptions-item>
+        <el-descriptions-item label="用户名">{{group.manager.userName}}</el-descriptions-item>
+        <el-descriptions-item label="真实姓名">{{group.manager.trueName}}</el-descriptions-item>
         <el-descriptions-item label="手机号">{{group.manager.phone}}</el-descriptions-item>
         <el-descriptions-item label="邮箱">
           <el-tag size="small">{{group.manager.email}}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="创建日期">{{group.manager.create_date}}</el-descriptions-item>
+        <el-descriptions-item label="创建日期">{{formatDate(group.manager.createDate)}}</el-descriptions-item>
       </el-descriptions>
 
       <hr/>
@@ -53,13 +55,15 @@
         <template slot="extra">
           <el-button @click="removeMember(user.id)" type="warning" size="small">移除成员</el-button>
         </template>
-        <el-descriptions-item label="用户名">{{user.user_name}}</el-descriptions-item>
-        <el-descriptions-item label="真实姓名">{{user.true_name}}</el-descriptions-item>
+        <el-descriptions-item label="用户名">{{user.userName}}</el-descriptions-item>
+        <el-descriptions-item label="真实姓名">{{user.trueName}}</el-descriptions-item>
         <el-descriptions-item label="手机号">{{user.phone}}</el-descriptions-item>
         <el-descriptions-item label="邮箱">
           <el-tag size="small">{{user.email}}</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="创建日期">{{user.create_date}}</el-descriptions-item>
+        <el-descriptions-item label="创建日期">
+          {{formatDate(user.createDate)}}
+        </el-descriptions-item>
       </el-descriptions>
 
     </div>
@@ -82,20 +86,28 @@ export default {
       group: null
     }
   },
-  mounted() {
+  activated() {
     //处理数据
     let group = this.$route.query.group
+    if(group.memberList === undefined){
+      this.$router.push('/index/welcome')
+      return
+    }
+
     for (let i = 0; i < group.memberList.length; i++) {
       let member = group.memberList[i]
-      member.create_date = this.$formatDate(member.create_date)
       if(member.id === group.managerId){
         group.manager = member
         group.memberList.splice(i-1,1)
+        break
       }
     }
     this.group = group
   },
   methods:{
+    formatDate(time){
+      return this.$formatDate(time);
+    },
     //获取小组邀请码方法
     getInvitationCode(groupId){
       let managerId = this.$store.getters.getLoginUser.id

@@ -49,7 +49,7 @@ import GroupList from "@/views/groupcomponent/joiningroupchild/GroupList";
 
 import {joinInGroupNetwork, pageQueryAllGroupNetwork, queryGroupByNameNetwork} from "@/network/group";
 
-import {emitFailEvent, emitSuccess} from "@/util/eventbus";
+
 
 export default {
   name: "JoinInGroup",
@@ -100,14 +100,9 @@ export default {
       joinInGroupNetwork(from).then(data => {
         console.log(data)
         if(data.code === 200){
-           emitSuccess.call({
-             msgTitle: '加入小组成功'
-           })
+           this.$message.success('加入小组成功')
         }else{
-          emitFailEvent.call({
-            msgTitle: '加入小组失败',
-            message: data.msg
-          })
+          this.$message.error('加入失败,',data.msg)
         }
       })
     },
@@ -130,7 +125,6 @@ export default {
         this.groupList = []
         list.forEach(group => {
           group.memberNum = group.memberList.length
-          group.createDate = this.$formatDate(group.createDate)
           this.groupList.push(group)
         });
         this.total = pageInfo.total

@@ -38,7 +38,11 @@
   </el-button>
 
 <!-- 上传进度条 -->
-  <el-progress v-if="percentVisible"
+  <el-progress
+                style="margin-top: 20px"
+                v-if="percentVisible"
+               :text-inside="true"
+               :stroke-width="26"
                :percentage="progressPercent"
                status="success">
   </el-progress>

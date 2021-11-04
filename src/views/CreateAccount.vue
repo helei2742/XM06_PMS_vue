@@ -18,7 +18,6 @@
 <script>
 import CreateAccountFrom from "@/components/createaccountfrom/CreateAccountFrom";
 import {createAccount} from "@/network/user";
-import {emitSuccess, emitFailEvent} from "@/util/eventbus";
 
 export default {
   name: "CreateAccount",
@@ -36,27 +35,17 @@ export default {
       createAccount(user).then((data) => {
         console.log(data)
         if(data.code === 200){
-          emitSuccess.call(this,{
-            msgTitle: '创建账户成功',
-            message: '请前往邮箱确认'
-          })
+          this.$message.success('注册成功，请前往邮箱确认')
 
           setTimeout(()=>{
             this.$router.push('/login')
           }, 2000)
         }else{
-
-          emitFailEvent.call(this,{
-            msgTitle: '创建账户失败',
-            message: data.msg,
-          })
+          this.$message.error('注册失败，'+data.msg)
         }
 
       }).catch(e =>{
-        emitFailEvent.call(this,{
-          msgTitle: '出错啦',
-          message: '请稍后再试',
-        })
+        this.$message.error('注册失败，请稍后重试')
       })
     }
 

@@ -8,7 +8,8 @@ import {LOADJOINEDGROUP, LOADMYGROUP} from "@/store/mutations-types-groupmodule"
 export default {
   state: {
     joinedGroup: null,
-    myGroup: null
+    myGroup: null,
+    currentShowGroup: null
   },
   getters:{
     getMyGroup(state) {
@@ -16,6 +17,9 @@ export default {
     },
     getJoinedGroup(state) {
       return state.joinedGroup
+    },
+    getCurrentShowGroup(state) {
+      return state.currentShowGroup
     }
   },
   actions: {
@@ -53,6 +57,9 @@ export default {
           console.log(e)
         })
       }
+    },
+    setCurrentShowGroup(state, payload) {
+      this.currentShowGroup = payload.currentShowGroup
     }
   }
 }

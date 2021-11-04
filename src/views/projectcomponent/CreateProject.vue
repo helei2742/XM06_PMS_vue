@@ -1,7 +1,7 @@
 <template>
   <div class="create-project">
 
-    <show-window>
+    <show-window :main-area-style="{'backgroundColor': '#e9b53c'}">
       <div slot="title">
         <i class="el-icon-s-finance"></i>
         <span>项目管理</span>
@@ -10,6 +10,7 @@
       </div>
 
       <div slot="main">
+        <el-row>
         <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
 
           <create-project-form-table
@@ -17,6 +18,7 @@
               @createproject="createProject"
           />
         </el-col>
+        </el-row>
       </div>
     </show-window>
   </div>

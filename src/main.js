@@ -9,10 +9,6 @@ import 'element-ui/lib/theme-chalk/display.css';
 Vue.config.productionTip = false
 Vue.use(ElementUi)
 
-/**
- * 挂载事件总线
- */
-Vue.prototype.$eventBus = new Vue()
 
 Date.prototype.Format = function (fmt) {
   let o = {

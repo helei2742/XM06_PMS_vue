@@ -1,6 +1,6 @@
 <template>
 <div class="show-task">
-  <show-window>
+  <show-window >
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>
@@ -9,7 +9,8 @@
     </div>
 
     <div slot="main">
-      <div>
+
+      <el-row class="task-select">
         <el-button type="primary" @click="typeChange(1)" size="mini">全部任务</el-button>
         <el-button type="primary" @click="typeChange(2)" size="mini">我发布的任务</el-button>
         <el-button type="primary" @click="typeChange(3)" size="mini">正在进行的任务</el-button>
@@ -26,9 +27,9 @@
           </el-option>
         </el-select>
         <el-button type="primary" @click="typeChange(6)" size="mini">查询</el-button>
-      </div>
+      </el-row>
 
-      <el-row>
+      <el-row class="task-list-area">
         <el-col :offset="1" :xs="22" :sm="18" :md="18" :lg="18" :xl="15">
           <show-task-desc v-for="task in tasks"
                           :task="task"
@@ -39,6 +40,7 @@
       </el-row>
 
       <el-pagination
+          style="margin-top: 10px;text-align: center"
           ref="pag"
           class="pagination"
           @current-change="handleCurrentChange"
@@ -48,6 +50,8 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
+
+
     </div>
 
   </show-window>
@@ -135,5 +139,12 @@ export default {
 </script>
 
 <style scoped>
+.task-select{
 
+  left: 20px;
+  top: 30px;
+}
+.task-list-area{
+  margin-top: 30px;
+}
 </style>

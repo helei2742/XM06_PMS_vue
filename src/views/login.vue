@@ -20,7 +20,6 @@
 <script>
 import LoginFrom from "@/components/loginfrom/LoginFrom";
 import {loginNetwork} from "@/network/user";
-import {emitFailEvent, emitSuccess} from "@/util/eventbus";
 import {LOGINSUCCESS} from "@/store/mutations-types";
 
 export default {
@@ -49,13 +48,8 @@ export default {
         console.log('服务器返回数据',data)
         if(data.code === 200){
           let userIfo = data.result
-
           this.$store.commit(LOGINSUCCESS, userIfo)
-
-          emitSuccess.call(this,{
-            msgTitle: '登录成功',
-            message: '即将跳转至主页'
-          })
+          this.$message.success('登录成功，即将进入系统')
 
           setTimeout(()=>{
             this.$router.push('/index')
@@ -63,17 +57,10 @@ export default {
 
         }else{
           //登录失败
-          emitFailEvent.call(this, {
-            'msgTitle': '出错拉',
-            'message': data.msg
-          })
-
+         this.$message.error('登陆失败,'+ data.msg)
         }
       }).catch(e => {
-        emitFailEvent.call(this, {
-          'msgTitle': '出错拉',
-          'message': '检查网络试试'
-        })
+        this.$message.error('出错拉,检查网络试试或联系管理员')
       })
     }
 

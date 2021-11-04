@@ -3,12 +3,12 @@
   <div id="index">
     <el-row >
 <!--侧边框-->
-      <el-col id="aside" :xs="0" :sm="4" :md="4" :lg="3" :xl="24">
+      <el-col id="aside" :xs="0" :sm="4" :md="4" :lg="3" :xl="3">
         <SideBar/>
       </el-col>
 <!--主要区域-->
-      <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="24">
-        <keep-alive>
+      <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="21">
+        <keep-alive exclude="SubmitTask GroupDetail">
           <router-view />
         </keep-alive>
       </el-col>
@@ -36,10 +36,9 @@
 import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
 import {findUserByUserIdStr} from "@/network/user";
-import {emitFailEvent} from "@/util/eventbus";
 
 import {CHECKSUCCESS} from "@/store/mutations-types";
-import {LOADJOINEDGROUP,LOADMYGROUP} from "@/store/mutations-types-groupmodule";
+
 
 export default {
   components: {
@@ -65,10 +64,7 @@ export default {
         this.$store.commit(CHECKSUCCESS, {loginUser: user})
 
       }else {
-        emitFailEvent.call(this, {
-          msgTitle: '出错了',
-          message: '验证登录用户失败'
-        })
+        this.$alert('验证登录失败，请刷新或重新登录')
       }
     })
   }

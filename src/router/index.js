@@ -33,7 +33,7 @@ const InformView = () => import('@/views/informcomponent/InformView')
 
 const CreateProject = () => import('@/views/projectcomponent/CreateProject')
 const ProjectList = () => import('@/views/projectcomponent/ProjectList')
-
+const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
 
 const routes = [
   {
@@ -155,6 +155,13 @@ const routes = [
           title: '项目列表'
         },
         component: ProjectList
+      },
+      {
+        path: 'projectdetail',
+        meta:{
+          title: '项目详情'
+        },
+        component: ProjectDetail
       }
     ]
   },

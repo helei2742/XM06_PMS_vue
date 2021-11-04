@@ -29,11 +29,14 @@ export function request(config) {
   * */
   instance.interceptors.response.use(
       (res) => {
-        console.log(res)
-        return res.data
+          console.log(res)
+          let result = res.data
+          if(result.code !== 200)
+              result.msg = decodeURI(result.msg)
+          return result
       },
       (error) => {
-        console.log(error)
+          console.log(error)
       })
 
   return instance(config)

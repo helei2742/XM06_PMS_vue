@@ -94,8 +94,9 @@ export default {
 .show-task-desc{
   width: 100%;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  padding: 20px 10px;
+  padding: 20px 30px;
   margin-top: 20px;
+  background-color: #fff;
 }
 
 </style>
