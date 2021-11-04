@@ -3,11 +3,11 @@
   <div id="index">
     <el-row >
 <!--侧边框-->
-      <el-col id="aside" :xs="0" :sm="4" :md="4" :lg="3" :xl="24">
+      <el-col id="aside" :xs="0" :sm="4" :md="4" :lg="3" :xl="3">
         <SideBar/>
       </el-col>
 <!--主要区域-->
-      <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="24">
+      <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="21">
         <keep-alive>
           <router-view />
         </keep-alive>
