@@ -18,7 +18,7 @@
 
     <hr/>
 
-    <div>
+    <div :style="bgStyle">
       <el-steps space="190px" direction="vertical">
         <el-step :status="memoStatus(m.finish, m.staleDate)"
                  v-for="(m, index) in memo"
@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import {MEMOBACKGROUND} from "@/util/imageUrl";
+
 export default {
   name: "MemoDrawer",
   props:{
@@ -118,7 +120,8 @@ export default {
     return {
       visible: false,
       staleDate: null,
-      memoMsg: ''
+      memoMsg: '',
+      bgStyle: MEMOBACKGROUND
     }
   },
   methods: {

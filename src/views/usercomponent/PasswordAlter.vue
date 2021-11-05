@@ -2,14 +2,19 @@
   <div>
     <show-window key="passwordAlter">
       <div slot="title">
-
+        <i class="el-icon-user"></i>
+        用户管理
+        <i class="el-icon-arrow-right"></i>
+        修改密码
       </div>
-      <div slot="main">
-        <el-col ::offset="1" :xs="22" :sm="18" :md="18" :lg="10" :xl="10">
-        <password-alter-from
-            @alterpassword="alterPassword"
-        />
-        </el-col>
+      <div slot="main" style="padding: 50px 0">
+        <el-row>
+          <el-col ::offset="1" :xs="22" :sm="18" :md="18" :lg="10" :xl="10">
+            <password-alter-from
+                @alterpassword="alterPassword"
+            />
+          </el-col>
+        </el-row>
       </div>
     </show-window>
   </div>

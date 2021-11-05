@@ -27,11 +27,11 @@
     </el-menu-item>`
 
   <!--点击打开侧边便签框 -->
-    <el-menu-item @click="openDrawer">
+    <el-menu-item v-if="isLogin" @click="openDrawer">
       便签
     </el-menu-item>
 
-    <el-menu-item @click="openInform">
+    <el-menu-item v-if="isLogin" @click="openInform">
       通知
     </el-menu-item>
 
@@ -39,7 +39,7 @@
     <el-submenu v-if="isLogin" id="user-manage" index="1">
       <template slot="title">
         <span>
-            <el-avatar icon="el-icon-user-solid"></el-avatar>
+            <el-avatar :src="headImg" ></el-avatar>
           {{user.userName}}
         </span>
       </template>
@@ -83,7 +83,8 @@ export default {
     return {
       activeIndex: '1',
       drawer: false,
-      memo: []
+      memo: [],
+      headImg: require('@/assets/img/head_default.png')
     };
   },
   components: {

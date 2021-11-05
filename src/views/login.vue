@@ -1,6 +1,6 @@
 <template>
 
-<div id="login">
+<div id="login" :style="bgStyle">
 
   <div id="login-from">
     <el-avatar style="margin-left: 110px" :size="80" :src="logoUrl" ></el-avatar>
@@ -21,6 +21,7 @@
 import LoginFrom from "@/components/loginfrom/LoginFrom";
 import {loginNetwork} from "@/network/user";
 import {LOGINSUCCESS} from "@/store/mutations-types";
+import {LOGINBACKGROUND} from "@/util/imageUrl";
 
 export default {
   name: "login",
@@ -29,7 +30,8 @@ export default {
   },
   data() {
     return {
-      logoUrl: require("@/assets/logo.png"),
+      bgStyle: LOGINBACKGROUND,
+      logoUrl: require("@/assets/img/logo.png"),
       createAccountPath: '/createaccount'
     }
   },
@@ -57,7 +59,8 @@ export default {
 
         }else{
           //登录失败
-         this.$message.error('登陆失败,'+ data.msg)
+         // this.$message.error('登陆失败,'+ data.msg)
+         this.$message.error('魔理沙发出警告, '+data.msg)
         }
       }).catch(e => {
         this.$message.error('出错拉,检查网络试试或联系管理员')
@@ -80,8 +83,13 @@ export default {
   margin: 100px auto;
 }
 .title{
-  font-size: 24px;
-  font-weight: 300;
+  font-size: 30px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.1) !important;
+  -webkit-text-stroke: 1px rgba(100,200,150,0.7);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+
   text-align: center;
   width: 100%;
 

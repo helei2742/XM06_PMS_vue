@@ -1,7 +1,7 @@
 <template>
 <div class="group-message-card">
       <el-card :body-style="{ padding: '0px' }">
-        <img src="../../../assets/logo.png" class="image">
+        <img :src="groupHead" class="image">
         <div style="padding: 14px;">
           <span>{{group.groupName}}</span>
           <div class="bottom clearfix">
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: "GroupMsgCard",
   props: {
@@ -25,7 +27,8 @@ export default {
     index: {
       Type: Number,
       default: 2
-    }
+    },
+
   },
   computed:{
     formatDate(){
@@ -36,7 +39,8 @@ export default {
   },
   data(){
     return {
-      dialogTableVisible: false
+      dialogTableVisible: false,
+      groupHead: require('@/assets/img/group_img_default.png')
     }
   },
   methods: {

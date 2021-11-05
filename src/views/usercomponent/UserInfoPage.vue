@@ -4,7 +4,7 @@
     <div slot="title">
       <i class="el-icon-user"></i>
       用户管理
-      -->
+      <i class="el-icon-arrow-right"></i>
       我的信息
     </div>
     <div slot="main" style="padding: 20px 10px">
@@ -16,7 +16,7 @@
           <el-descriptions-item label="手机号">{{loginUser.phone}}</el-descriptions-item>
           <el-descriptions-item label="真实姓名" :span="2">{{loginUser.trueName}}</el-descriptions-item>
           <el-descriptions-item label="注册日期">
-            <el-tag size="small">{{loginUser.createDate}}</el-tag>
+            <el-tag size="small">{{formatDate(loginUser.createDate)}}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="电子邮箱">{{loginUser.email}}</el-descriptions-item>
         </el-descriptions>
@@ -39,6 +39,11 @@ export default {
   computed: {
     loginUser(){
       return this.$store.getters.getLoginUser
+    }
+  },
+  methods:{
+    formatDate(time) {
+      return this.$formatDate(time)
     }
   }
 }

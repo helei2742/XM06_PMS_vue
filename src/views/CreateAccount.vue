@@ -1,5 +1,5 @@
 <template>
-  <div class="create-account">
+  <div class="create-account" :style="bgStyle">
     <el-row type="flex" justify="space-around">
       <el-col :xs="20" :sm="16" :md="12" :lg="10" :xl="12">
         <div class="title">注册管理系统账户</div>
@@ -18,6 +18,7 @@
 <script>
 import CreateAccountFrom from "@/components/createaccountfrom/CreateAccountFrom";
 import {createAccount} from "@/network/user";
+import {REGISTBACKGROUND} from "@/util/imageUrl";
 
 export default {
   name: "CreateAccount",
@@ -26,7 +27,8 @@ export default {
   },
   data(){
     return {
-      logoUrl: require('@/assets/logo.png')
+      bgStyle: REGISTBACKGROUND,
+      logoUrl: require('@/assets/img/logo.png')
     }
   },
   methods: {
@@ -41,7 +43,8 @@ export default {
             this.$router.push('/login')
           }, 2000)
         }else{
-          this.$message.error('注册失败，'+data.msg)
+          // this.$message.error('注册失败，'+data.msg)
+          this.$message.error('注册失败，可能是幽幽子把数据吃了（bushi)'+data.msg)
         }
 
       }).catch(e =>{

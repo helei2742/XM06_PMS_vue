@@ -23,6 +23,9 @@ npm run serve
 
 ### Compiles and minifies for production
 ```
+npm install --save-dev webpack-bundle-analyzer
+
+
 npm run build
 ```
 

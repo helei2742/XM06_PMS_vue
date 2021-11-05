@@ -33,7 +33,7 @@
 <!-- 显示头像和消息内容-->
 <!--别人发的显示在左边 -->
     <div v-if="leftOrRight(informInfo.sendUser.userIdStr)" >
-      <img  class="inform-message-head" src="../../../assets/logo.png" />
+      <img  class="inform-message-head" src="src/assets/img/logo.png" />
       <div class="inform-message-content">
         <i></i>
         {{informInfo.message}}
@@ -42,7 +42,7 @@
     </div>
 <!--自己发的显示在右-->
     <div v-else>
-      <img  class="inform-message-head right" src="../../../assets/logo.png" />
+      <img  class="inform-message-head right" src="src/assets/img/logo.png" />
       <div class="inform-message-content right">
         {{informInfo.message}}
         <i></i>
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       isShow: true,
-      headImgUrl: require("@/assets/logo.png"),
+      headImgUrl: require("@/assets/img/logo.png"),
     }
   },
   computed:{
@@ -112,7 +112,7 @@ export default {
 }
 
 .inform-info-card{
-  height: 470px;
+  height: 100%;
   background-color: rgba(1,1,1,0.1);
   overflow-y: scroll;
 }

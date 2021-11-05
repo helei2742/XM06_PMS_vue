@@ -65,6 +65,7 @@ export default {
 
       }else {
         this.$alert('验证登录失败，请刷新或重新登录')
+        this.$router.push('/login')
       }
     })
   }

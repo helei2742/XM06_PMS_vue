@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="infinite-list"  style="overflow:auto">
+  <div id="app" class="infinite-list"  :style="bgStyle">
 
     <NavBar :is-login="isLogin" :user="userIfo" @logout="logout"></NavBar>
 
@@ -9,9 +9,6 @@
     <div id="footer">
 
     </div>
-
-
-
   </div>
 </template>
 
@@ -19,6 +16,7 @@
 import NavBar from "@/components/navbar/NavBar";
 
 import {CHANGECOLORMODULE, LOGOUT} from "@/store/mutations-types";
+import {APPBACkGROUND} from "@/util/imageUrl";
 
 export default {
   name: 'app',
@@ -27,6 +25,7 @@ export default {
   },
   data(){
     return {
+      bgStyle: APPBACkGROUND,
       isShow: false,
       msgTitle: '',
       message: '',
@@ -63,12 +62,11 @@ export default {
 </script>
 
 <style>
+
 body{
   background-color:#545c64;
 }
-.main-area{
- height: calc(100vh - 49px - 48px)
-}
+
 #footer{
   position: fixed;
   height: 49px;
