@@ -1,5 +1,5 @@
 <template>
-<div class="createTask">
+<div class="createTask" key="createTask">
   <show-window>
     <div slot="title">
       <i class="el-icon-s-order"></i>
@@ -11,6 +11,7 @@
       <el-row>
         <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
           <create-task-from
+              style="margin-top: 40px"
               ref="createTaskFrom"
               :user-groups="userGroups"
               @querygroup="queryJoinedGroup"

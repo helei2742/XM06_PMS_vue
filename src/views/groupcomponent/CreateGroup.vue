@@ -1,5 +1,5 @@
 <template>
-<div class="create-group" v-if="destroyYet">
+<div class="create-group" v-if="destroyYet" key="createGroup">
 
   <show-window>
 
@@ -9,11 +9,14 @@
       <i class="el-icon-arrow-right"></i>
       <span>创建小组</span>
     </div>
-    <div slot="main">
+
+    <div slot="main" >
       <create-group-from
-        @creategroup="createGroup"
+          :card-style="cardStyle"
+          @creategroup="createGroup"
       />
     </div>
+
   </show-window>
 
 </div>
@@ -31,6 +34,11 @@ export default {
   components: {
     CreateGroupFrom,
     ShowWindow
+  },
+  computed: {
+    cardStyle(){
+      return this.$store.getters.getCardColorStyle
+    }
   },
   data(){
     return {

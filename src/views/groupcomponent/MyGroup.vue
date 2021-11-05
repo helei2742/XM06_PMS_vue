@@ -1,6 +1,6 @@
 <template>
 <div id="my-group">
-    <show-window>
+    <show-window key="myGroup">
       <div slot="title">
         <i class="el-icon-s-custom"></i>
         <span>小组管理</span>
@@ -8,9 +8,10 @@
         <span>我管理的小组</span>
       </div>
 
-      <div slot="main">
+      <div slot="main" :style="groupListStyle">
         <group-list
-          :group-list="groupList"
+            :card-style="groupListStyle"
+             :group-list="groupList"
         />
 
         <el-pagination
@@ -39,6 +40,11 @@ export default {
   components: {
     ShowWindow,
     GroupList
+  },
+  computed: {
+    groupListStyle() {
+      return this.$store.getters.getCardColorStyle
+    }
   },
   data() {
     return {

@@ -1,11 +1,13 @@
 <template>
-<div class="project-list-card">
-  <div v-for="project in projectList">
+<div class="project-list-card"  >
+  <div class="project-list-card-item" v-for="project in projectList">
   <el-card
            shadow="hover"
            :body-style="cardStyle"
            class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearfix"
+         :style="cardStyle"
+         style="padding: 20px 10px">
       <span class="project-title">{{project.projectName}}</span>
 
       <el-button style="float: right; padding: 3px 0" type="text"
@@ -31,14 +33,11 @@
       </el-descriptions>
     </div>
 
-
     <div style="margin-top: 20px">
       项目完成度：
       <el-progress :percentage="project.completionDegree"
                    :color="customColorMethod"></el-progress>
     </div>
-
-
   </el-card>
   </div>
 </div>
@@ -94,9 +93,11 @@ export default {
 
 .project-list-card{
   padding-top: 10px;
-  margin-top: 10px;
-}
 
+}
+.project-list-card-item{
+  margin-bottom: 30px;
+}
 .project-title{
   font-size: 22px;
   font-weight: bold;

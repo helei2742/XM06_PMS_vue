@@ -1,5 +1,5 @@
 <template>
-<div class="create-group-from">
+<div class="create-group-from" :style="cardStyle">
   <el-row>
     <el-col :offset="2" :span="18">
       <el-alert title="请输入组名" :closable="false"></el-alert>
@@ -34,6 +34,15 @@
 <script>
 export default {
   name: "CreateGroupFrom",
+  props: {
+    cardStyle: {
+      type: Object,
+      default() {
+        return {backgroundColor: '#b6baba',
+                color: '#202020'}
+      }
+    }
+  },
   data(){
     return {
       groupName: null,

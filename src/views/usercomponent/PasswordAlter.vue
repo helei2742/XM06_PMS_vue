@@ -1,6 +1,6 @@
 <template>
   <div>
-    <show-window>
+    <show-window key="passwordAlter">
       <div slot="title">
 
       </div>

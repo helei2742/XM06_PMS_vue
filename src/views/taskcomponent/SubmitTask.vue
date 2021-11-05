@@ -1,6 +1,6 @@
 <template>
 <div class="submit-task">
-  <ShowWindow>
+  <ShowWindow key="submitTask">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>

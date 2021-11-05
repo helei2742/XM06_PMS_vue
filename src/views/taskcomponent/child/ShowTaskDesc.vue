@@ -1,6 +1,14 @@
 <template>
-<div class="show-task-desc">
-  <el-descriptions title="任务详情" :column="1" >
+<div class="show-task-desc" :style="cardStyle">
+  <el-descriptions title="任务详情"
+                   border
+                   :style="cardStyle"
+                   :column="1"
+
+                   :label-style="{'width':'20%',
+                                  'backgroundColor': cardStyle.backgroundColor,
+                                   'color': cardStyle.color}"
+                   :content-style="cardStyle">
     <template slot="extra">
       <el-button type="success" icon="el-icon-document-add"
                  @click="submitTask(task)" size="small">提交任务</el-button>
@@ -9,12 +17,11 @@
                  @click="submitRecord(task)" size="small">提交记录</el-button>
     </template>
     <el-descriptions-item label="任务名称">{{task.taskName}}</el-descriptions-item>
-    <el-descriptions-item label="任务要求"
-      :contentStyle="{'width':'60%'}"
-    >
-      <el-input type="textarea" :value="task.description"
+    <el-descriptions-item label="任务要求">
+      <span :style="{'whiteSpace': 'pre-line'}">{{task.description}}</span>
+<!--      <el-input type="textarea" :value="task.description"
                 resize="none" autosize :readonly="true">
-      </el-input>
+      </el-input>-->
     </el-descriptions-item>
     <el-descriptions-item label="发布日期">
       <el-tag type="info">{{formatDate(task.createDate)}}</el-tag>
@@ -46,6 +53,15 @@ export default {
       type: Object,
       default() {
         return null
+      }
+    },
+    cardStyle: {
+      type: Object,
+      default() {
+        return {
+          'backgroundColor': '#b6baba',
+          'color': '#202020'
+        }
       }
     }
   },

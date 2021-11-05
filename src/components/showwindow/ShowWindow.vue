@@ -1,19 +1,16 @@
 <template>
 <div class="show-window" v-if="isClose">
   <el-row class="show-window-title">
-    <el-col :span="20">
-      <div class="show-window-title-slot hidden-sm-and-down">
+    <el-col :span="16">
+      <div class="hidden-sm-and-down">
         <slot name="title"></slot>
       </div>
     </el-col>
-
-    <el-col class="show-window-button" :span="4">
-      <div @click="reload" class="el-icon-refresh"></div>
-      <div @click="close" class="el-icon-close"></div>
-
+    <el-col :offset="2" :span="2">
       <div class="light-tool">
+        <!--选择显示模式，（白天或晚上）-->
         <el-switch
-            v-model="switchType"
+            :value="lightType"
             active-color="#3c3f41"
             inactive-color="#ffd04c"
             :active-value="1"
@@ -23,6 +20,10 @@
             inactive-icon-class="el-icon-sunny">
         </el-switch>
       </div>
+    </el-col>
+    <el-col class="show-window-button" :span="4">
+      <div @click="reload" class="el-icon-refresh"></div>
+      <div @click="close" class="el-icon-close"></div>
     </el-col>
   </el-row>
 
@@ -72,7 +73,6 @@ export default {
   },
   data() {
     return {
-      switchType: true,
       lightType: 0,
       isClose: true,
       color: this.$store.getters.getColor
@@ -80,7 +80,6 @@ export default {
   },
   activated() {
     this.lightType = this.$store.getters.getColorModule
-    this.switchType = this.lightType !== 0;
   }
 }
 </script>
@@ -96,8 +95,11 @@ export default {
   line-height: 35px;
   height: 35px;
   position: relative;
+  padding-left: 10px;
 }
-
+.show-window-button{
+  overflow: visible;
+}
 .show-window-button>div[class='el-icon-close']{
   position: absolute;
   font-size: 20px;
@@ -117,14 +119,13 @@ export default {
   cursor: pointer;
 }
 
-.show-window-title-slot{
-
-  padding-left: 15px;
-}
 
 .show-window-main{
   padding: 50px 20px;
   position: relative;
 }
-
+.light-tool{
+  margin-right: 5px;
+  margin-left: 4px;
+}
 </style>

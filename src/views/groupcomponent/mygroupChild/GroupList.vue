@@ -1,10 +1,10 @@
 <template>
-<div id="groupList" >
+<div class="my-group-list" >
 <!-- 组队列表   -->
   <el-table
+        :row-style="cardStyle"
         :data="groupList"
-        stripe
-        border
+        :header-cell-style="cardStyle"
         height="400"
         style="width: 100%">
 
@@ -22,6 +22,9 @@
           prop="createDate"
           label="创建日期"
           width="240">
+        <template slot-scope="scope">
+          {{formatDate(scope.row.createDate)}}
+        </template>
       </el-table-column>
 
       <el-table-column width="200">
@@ -44,6 +47,15 @@ export default {
       default() {
         return []
       }
+    },
+    cardStyle: {
+      type: Object,
+      default() {
+        return {
+          backgroundColor: '#b6baba',
+          color: '#202020'
+        }
+      }
     }
   },
   methods: {
@@ -55,11 +67,16 @@ export default {
           group: group
         }
       })
+    },
+    formatDate(time) {
+      return this.$formatDate(time)
     }
   }
 }
 </script>
 
 <style scoped>
-
+.my-group-list{
+  padding: 20px 10px 0 20px;
+}
 </style>

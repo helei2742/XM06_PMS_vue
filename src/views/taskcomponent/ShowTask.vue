@@ -1,6 +1,6 @@
 <template>
 <div class="show-task">
-  <show-window >
+  <show-window key="showTask">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>
@@ -33,6 +33,7 @@
         <el-col :offset="1" :xs="22" :sm="18" :md="18" :lg="18" :xl="15">
           <show-task-desc v-for="task in tasks"
                           :task="task"
+                          :card-style="getShowTaskCardStyle"
                           @submittask="submitTask"
                           @submitrecord="submitRecord"
                          />
@@ -72,6 +73,11 @@ export default {
   components:{
     ShowWindow,
     ShowTaskDesc
+  },
+  computed: {
+    getShowTaskCardStyle() {
+      return this.$store.getters.getCardColorStyle
+    }
   },
   data() {
     return {

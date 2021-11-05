@@ -1,12 +1,12 @@
 <template>
-<div id="groupList" >
+<div class="joinin-group-list" :style="cardStyle">
 <!-- 组队列表   -->
   <el-table
         :data="groupList"
-        stripe
-        border
+        :header-cell-style="cardStyle"
+        :row-style="cardStyle"
         height="400"
-        style="width: 100%">
+        style="width: 100%;background-color:transparent;">
 
       <el-table-column
           prop="groupName"
@@ -22,15 +22,19 @@
           </el-popover>
         </template>
       </el-table-column>
+
       <el-table-column
           prop="memberNum"
           label="成员数"
-          width="180">
+          width="95">
       </el-table-column>
       <el-table-column
           prop="createDate"
           label="创建日期"
           width="240">
+        <template slot-scope="scope">
+          {{formatDate(scope.row.createDate)}}
+        </template>
       </el-table-column>
 
     <el-table-column width="200">
@@ -74,6 +78,15 @@ export default {
       default() {
         return []
       }
+    },
+    cardStyle: {
+      type: Object,
+      default() {
+        return {
+          backgroundColor: '#b6baba',
+          color: '#202020'
+        }
+      }
     }
   },
   data() {
@@ -108,12 +121,19 @@ export default {
     },
     searchGroupName() {
       this.$emit('searchgroupname', this.search)
+    },
+    formatDate(time) {
+      return this.$formatDate(time)
     }
   }
 }
 </script>
 
 <style scoped>
+.joinin-group-list{
+  padding: 30px 10px;
+}
+
 .demo-table-expand {
   font-size: 0;
 }

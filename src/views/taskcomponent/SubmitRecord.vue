@@ -4,7 +4,7 @@
   任务提交记录
 -->
 <div class="submit-record" v-if="task!=null">
-  <show-window>
+  <show-window key="submitRecord">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>

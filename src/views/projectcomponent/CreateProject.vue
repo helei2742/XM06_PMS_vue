@@ -1,7 +1,7 @@
 <template>
   <div class="create-project">
 
-    <show-window>
+    <show-window key="createProject">
       <div slot="title">
         <i class="el-icon-s-finance"></i>
         <span>项目管理</span>

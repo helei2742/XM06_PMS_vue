@@ -1,6 +1,6 @@
 <template>
-<div class="group-detail" v-if="group !=null">
-  <show-window>
+<div class="group-detail" v-if="group !=null" >
+  <show-window key="groupDetail">
     <div slot="title">
       <i class="el-icon-s-custom"></i>
       <span>小组管理</span>
@@ -9,10 +9,18 @@
       <i class="el-icon-arrow-right"></i>
       <span>{{group.groupName}}</span>
     </div>
-    <div slot="main">
 
-      <el-descriptions :column="1" title="小组信息">
+    <div slot="main" style="padding: 30px 15px">
 
+      <el-descriptions :column="1"
+                       border
+                       :label-style="{'width':'20%',
+                       'backgroundColor': cardStyle.backgroundColor,
+                       'color':cardStyle.color}"
+                       :content-style="cardStyle">
+        <template slot="title" >
+          <span :style="{'color': cardStyle.color}">小组信息</span>
+        </template>
         <template slot="extra">
           <el-button @click="getInvitationCode(group.id)" type="primary" round>获取小组邀请码</el-button>
         </template>
@@ -30,8 +38,14 @@
       <hr>
       <br/>
       <br/>
-      <el-descriptions class="margin-top" title="组长信息" :column="3" >
-
+      <el-descriptions class="margin-top"
+                       :label-style="cardStyle"
+                       :content-style="cardStyle"
+                       border
+                       :column="3" >
+        <template slot="title" >
+          <span :style="{'color': cardStyle.color}">组长信息</span>
+        </template>
         <template slot="extra">
           <el-button @click="dissolveGroup" type="danger" size="small">解散小组</el-button>
         </template>
@@ -48,10 +62,14 @@
       <hr/>
       <br/>
       <br/>
-      <span>成员信息</span>
+      <span :style="{'color': cardStyle.color}">成员信息</span>
       <el-descriptions v-for="(user,index) in group.memberList"
-                       :title="'成员'+(index+1)"
-                        :column="3" border>
+                       :label-style="cardStyle"
+                       :content-style="cardStyle"
+                       :column="3" border>
+        <template slot="title">
+          <span :style="{'color': cardStyle.color}">成员{{(index+1)}}</span>
+        </template>
         <template slot="extra">
           <el-button @click="removeMember(user.id)" type="warning" size="small">移除成员</el-button>
         </template>
@@ -81,6 +99,11 @@ import {queryGroupInvitationCode,
 export default {
   name: "GroupDetail",
   components: {ShowWindow},
+  computed: {
+    cardStyle() {
+      return  this.$store.getters.getCardColorStyle
+    }
+  },
   data(){
     return {
       group: null

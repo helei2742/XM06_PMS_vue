@@ -69,7 +69,13 @@ export default {
         return null
       }
     },
-    refsName: ''
+    refsName: '',
+    cardStyle: {
+      type: Object,
+      default() {
+        return {backgroundColor: '#b6baba',color: '#202020'}
+      }
+    }
   },
   data() {
     return {
@@ -106,7 +112,6 @@ export default {
 }
 
 .inform-info-card{
-  padding: 5px 10px;
   height: 470px;
   background-color: rgba(1,1,1,0.1);
   overflow-y: scroll;

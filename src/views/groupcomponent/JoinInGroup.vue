@@ -4,7 +4,7 @@
   加入的小组
 -->
 <div class="join-in-group">
-    <show-window>
+    <show-window key="joininGroup">
       <div slot="title">
         <i class="el-icon-s-custom"></i>
         <span>小组管理</span>
@@ -18,6 +18,7 @@
 
         <group-list
             :group-list="groupList"
+            :card-style="cardColorStyle"
             @joiningroup="joinInGroup"
             @searchgroupname="searchByGroupName"
         />
@@ -54,6 +55,11 @@ import {joinInGroupNetwork, pageQueryAllGroupNetwork, queryGroupByNameNetwork} f
 export default {
   name: "JoinInGroup",
   components: {ShowWindow, GroupList},
+  computed: {
+    cardColorStyle() {
+      return this.$store.getters.getCardColorStyle
+    }
+  },
   data(){
     return {
       groupList: [],

@@ -1,6 +1,6 @@
 <template>
 <div id="joined-group">
-  <show-window>
+  <show-window key="joinedGroup">
     <div slot="title">
       <i class="el-icon-s-custom"></i>
       <span>小组管理</span>
@@ -92,7 +92,7 @@ export default {
   height: 100%;
 }
 .infinite-list{
-  height: 450px;
+  height: 80vh;
   list-style-type: none;
 }
 

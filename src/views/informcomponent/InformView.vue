@@ -1,27 +1,31 @@
 <template>
 <div>
-  <ShowWindow>
+  <ShowWindow key="informView">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>查看通知</span>
     </div>
     <div slot="main">
 
+      <div class="inform-view-main-area">
         <el-tabs :tab-position="tabPosition"
                  :stretch="true"
                  @tab-click="groupViewChangeHandler"
                  style="height: 500px"
                  type="border-card">
+
           <el-tab-pane v-for="group in groupList"
                        :lazy="true"
                        :groupId="group.id">
             <span slot="label">
-              <i v-if="notReadCount(group.id)>0" class="red-point"></i>
+              <i :style="cardStyle" v-if="notReadCount(group.id)>0" class="red-point"></i>
                 {{group.groupName}}
             </span>
 <!--  通知内容部分  -->
-            <el-col :span="22" style="height: 500px">
-              <inform-info-card :refs-name="groupName" :inform-info-list="informInfoList"/>
+            <el-col :span="24" style="height: 500px">
+              <inform-info-card :card-style="cardStyle"
+                                :refs-name="groupName"
+                                :inform-info-list="informInfoList"/>
             </el-col>
 
           </el-tab-pane>
@@ -39,6 +43,7 @@
         </el-col>
       </el-row>
 
+    </div>
     </div>
   </ShowWindow>
 </div>
@@ -90,6 +95,9 @@ export default {
         }
         return res
       }
+    },
+    cardStyle() {
+      return this.$store.getters.getCardColorStyle
     }
   },
   methods: {
