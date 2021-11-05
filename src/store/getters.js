@@ -1,5 +1,6 @@
 import {addCookie, getCookie} from "@/util/cookie";
 import {findUserByUserIdStr} from "@/network/user";
+import {SUMCOLORMODULE} from "@/store/mutations-types";
 
 export default {
   getUserIdStr(state){
@@ -19,5 +20,19 @@ export default {
       })
     }
     return state.loginUser
+  },
+  getColorModule(state) {
+    return state.colorModule
+  },
+  getColor(state) {
+    return state.color
+  },
+  getCardColorStyle(state){
+    let color = state.color
+    let colorModule = state.colorModule
+    return {
+      'backgroundColor': color[colorModule].desBgc,
+      'color': color[colorModule].fontColor
+    }
   }
 }

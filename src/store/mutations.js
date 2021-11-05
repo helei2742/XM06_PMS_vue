@@ -12,5 +12,8 @@ export default {
   },
   checkSuccess(state, payload) {
     state.loginUser = payload.loginUser
+  },
+  changeColorModule(state, payload) {
+    state.colorModule = payload.colorModule
   }
 }

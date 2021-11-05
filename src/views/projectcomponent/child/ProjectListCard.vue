@@ -1,7 +1,9 @@
 <template>
 <div class="project-list-card">
-  <el-card v-for="project in projectList"
+  <div v-for="project in projectList">
+  <el-card
            shadow="hover"
+           :body-style="cardStyle"
            class="box-card">
     <div slot="header" class="clearfix">
       <span class="project-title">{{project.projectName}}</span>
@@ -10,13 +12,17 @@
                  @click="toProjectDetail(project)">
         查看详情
       </el-button>
-
     </div>
 
-    <div>
-      <el-descriptions title="" border :column="1">
-        <el-descriptions-item label="项目描述" :content-style="{'white-space': 'pre-line'}">
-          {{project.projectDesc}}
+    <div :style="cardStyle">
+      <el-descriptions title="" border
+                       :column="1"
+                       :label-style="cardStyle"
+                       :content-style="cardStyle">
+        <el-descriptions-item label="项目描述">
+          <span :style="{'whiteSpace': 'pre-line'}">
+            {{project.projectDesc}}
+          </span>
         </el-descriptions-item>
 
         <el-descriptions-item label="创建日期">
@@ -34,7 +40,7 @@
 
 
   </el-card>
-
+  </div>
 </div>
 </template>
 
@@ -45,6 +51,13 @@ export default {
     projectList: {
       type: Array,
       default: []
+    },
+    cardStyle: {
+      type: Object,
+      default: {
+        backgroundColor: '#b6baba',
+        color: '#202020'
+      }
     }
   },
   computed: {

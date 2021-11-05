@@ -10,7 +10,7 @@
 
       <div slot="main">
         <!-- 选择按钮套件-->
-        <el-row class="project-list-select">
+        <el-row class="project-list-select" >
           <el-button :type="this.queryType === 1?'success':'primary'"
                      @click="handleTypeChange(1)" size="mini">我创建的项目</el-button>
           <el-button :type="this.queryType === 2?'success':'primary'"
@@ -47,7 +47,7 @@
               </el-empty>
             </div>
 
-             <project-list-card :project-list="projectList"/>
+             <project-list-card :card-style="getProjectListCardStyle" :project-list="projectList"/>
           </el-col>
         </el-row>
 
@@ -98,6 +98,9 @@ export default {
   computed: {
     isShowPublicBtn(){
       return this.queryType !== 3
+    },
+    getProjectListCardStyle() {
+      return this.$store.getters.getCardColorStyle
     }
   },
   methods: {
@@ -193,7 +196,6 @@ export default {
 <style scoped>
 .project-list-area{
   margin-top: 20px;
-  background-color: #84ceff;
   padding: 35px 10px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }

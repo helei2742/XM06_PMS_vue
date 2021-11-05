@@ -13,7 +13,7 @@
       </div>
 
       <div slot="main">
-        <el-row>
+        <el-row style="margin-top: 20px">
         <el-col :offset="3" :span="18">
 
         <group-list

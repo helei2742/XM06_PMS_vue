@@ -9,13 +9,16 @@
     <div id="footer">
 
     </div>
+
+
+
   </div>
 </template>
 
 <script>
 import NavBar from "@/components/navbar/NavBar";
 
-import {LOGOUT} from "@/store/mutations-types";
+import {CHANGECOLORMODULE, LOGOUT} from "@/store/mutations-types";
 
 export default {
   name: 'app',
@@ -28,7 +31,8 @@ export default {
       msgTitle: '',
       message: '',
       type: '',
-      height: 0
+      height: 0,
+      lightModule: false
     }
   },
   computed:{
@@ -48,6 +52,10 @@ export default {
       console.log('登出')
       this.$store.commit(LOGOUT)
       this.$router.push('/login')
+    },
+    colorModuleChange(colorModule){
+      this.$store.commit(CHANGECOLORMODULE, {colorModule: colorModule})
+      console.log(this.$store.getters.getColorModule)
     }
   }
 
@@ -73,4 +81,5 @@ body{
 .submit-task-from div[class='el-upload-dragger']{
   width: 280px;
 }
+
 </style>

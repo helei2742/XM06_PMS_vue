@@ -10,16 +10,29 @@
     <el-col class="show-window-button" :span="4">
       <div @click="reload" class="el-icon-refresh"></div>
       <div @click="close" class="el-icon-close"></div>
+
+      <div class="light-tool">
+        <el-switch
+            v-model="switchType"
+            active-color="#3c3f41"
+            inactive-color="#ffd04c"
+            :active-value="1"
+            :inactive-value="0"
+            @change="colorModuleChange"
+            active-icon-class="el-icon-moon"
+            inactive-icon-class="el-icon-sunny">
+        </el-switch>
+      </div>
     </el-col>
   </el-row>
 
   <el-row>
     <el-col :span="24">
       <div class="show-window-main"
-           :style="{'backgroundColor': color[lightType].bgcColor}">
+           :style="bgcColor">
 
         <div style="position: relative; border-radius: 20px;padding: 10px 0"
-             :style="{'backgroundColor': color[lightType].slotAreaBgc}">
+             :style="slotAreaColor">
           <slot name="main">
 
           </slot>
@@ -33,28 +46,41 @@
 </template>
 
 <script>
+import {CHANGECOLORMODULE} from "@/store/mutations-types";
+
 export default {
   name: "ShowWindow",
+  computed: {
+    bgcColor(){
+      return {'backgroundColor': this.color[this.lightType].bgcColor}
+    },
+    slotAreaColor(){
+      return {'backgroundColor': this.color[this.lightType].slotAreaBgc}
+    }
+  },
   methods: {
     close(){
       this.isClose = false
     },
     reload(){
       this.$forceUpdate()
-    }
-  },
-  props: {
-    lightType: {
-      type: Number,
-      default: 0
+    },
+    colorModuleChange(module) {
+      this.lightType = module
+      this.$store.commit(CHANGECOLORMODULE, {colorModule: module})
     }
   },
   data() {
     return {
+      switchType: true,
+      lightType: 0,
       isClose: true,
-      color: [{bgcColor: '#50bdff', slotAreaBgc: '#84ceff'},
-              {bgcColor: '#202020', slotAreaBgc: '#333333'}]
+      color: this.$store.getters.getColor
     }
+  },
+  activated() {
+    this.lightType = this.$store.getters.getColorModule
+    this.switchType = this.lightType !== 0;
   }
 }
 </script>
