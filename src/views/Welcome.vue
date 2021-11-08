@@ -32,7 +32,7 @@ export default {
 .title{
 
   position: absolute;
-  font-size: 120px;
+  font-size: 5vh;
   font-weight: 800;
 
   -webkit-text-stroke: 4px rgba(255,255,255,1);
@@ -40,7 +40,7 @@ export default {
   -webkit-background-clip: text;
 
   left: 50%;
-  margin-left: -50vh;
+  margin-left: -25vh;
 }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
-<div>
+<div class="memo-drawer">
   <el-drawer
-      :size="'40%'"
+      :size="drawerSize"
       title="便签"
       :visible.sync="isShow"
       direction="ltr"
@@ -19,15 +19,21 @@
     <hr/>
 
     <div :style="bgStyle">
-      <el-steps space="190px" direction="vertical">
-        <el-step :status="memoStatus(m.finish, m.staleDate)"
-                 v-for="(m, index) in memo"
-                 :title="'便签'+(index+1)+'('+(m.staleDate-new Date().getTime()<0?'已过期':'进行中')+')'" >
-          <template slot="description">
+      <el-timeline >
+        <el-timeline-item size="20px"
+                          v-for="m in memo"
+                          :color="iconColor(m.finish,m.staleDate)"
+                          :icon="memoIcon(m.finish,m.staleDate)"
+                          :timestamp="formatDate(m.staleDate)"
+                          placement="top">
+          <el-card :body-style="cardColor">
+            <h4>{{ m.memo }}</h4>
+            <p :style="{color: iconColor(m.finish,m.staleDate)}">
+              创建时间:
+              {{formatDate(m.createDate)+'('+(m.staleDate-new Date().getTime()<0?'已过期':'进行中')+')'}}
+            </p>
+
             <div>
-              <div>代办事项：{{m.memo}}</div>
-              <div>过期日期：{{formatDate(m.staleDate)}}</div>
-              <div>创建日期：{{formatDate(m.createDate)}}</div>
               <el-popconfirm
                   v-if="!m.finish"
                   confirm-button-text='是的'
@@ -43,7 +49,6 @@
                   确认完成
                 </el-button>
               </el-popconfirm>
-
               <el-popconfirm
                   confirm-button-text='是的'
                   cancel-button-text='算了'
@@ -58,10 +63,11 @@
                 </el-button>
               </el-popconfirm>
             </div>
-          </template>
-        </el-step>
-      </el-steps>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
     </div>
+
   </el-drawer>
 
 <!--添加标签弹出框-->
@@ -107,18 +113,33 @@ export default {
     }
   },
   computed:{
-    memoStatus(){
+    memoIcon(){
       return function (isFinish, slateDate) {
-        if(isFinish) return 'success'
-        if(slateDate < new Date().getTime()) return 'error'
-        if(slateDate - new Date().getTime() < 24*60*60*1000) return 'process'
-        return 'wait'
+        if(isFinish) return 'el-icon-check'
+        if(slateDate < new Date().getTime()) return 'el-icon-close'
+        if(slateDate - new Date().getTime() < 24*60*60*1000) return 'el-icon-s-promotion'
+        return 'el-icon-s-promotion'
       }
+    },
+    iconColor() {
+      return function (isFinish, slateDate) {
+        if(isFinish) return '#5bdb5b'
+        if(slateDate < new Date().getTime()) return '#fe315d'
+        if(slateDate - new Date().getTime() < 24*60*60*1000) return '#af873d'
+        return '#06304e'
+      }
+    },
+    cardColor() {
+      let c = this.$store.getters.getCardColorStyle
+      c.width = '80%'
+      return c
     }
   },
   data() {
     return {
       visible: false,
+      screenWidth: null,
+      drawerSize: '40%',
       staleDate: null,
       memoMsg: '',
       bgStyle: MEMOBACKGROUND
@@ -140,6 +161,26 @@ export default {
     },
     confirmFinish(memoId){
       this.$emit('confirmfinish', memoId)
+    }
+  },
+  mounted() {
+    //监听屏幕尺寸
+    this.screenWidth = document.body.clientWidth
+    window.onresize = () =>{
+      return (()=>{
+        this.screenWidth = document.body.clientWidth
+      })()
+    }
+  },
+  watch: {
+    screenWidth: {
+      handler: function (val, oldVal){
+        if(val < 1080){
+          this.drawerSize= '80%'
+        }else {
+          this.drawerSize = '40%'
+        }
+      }
     }
   }
 }

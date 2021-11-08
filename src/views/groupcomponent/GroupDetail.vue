@@ -1,5 +1,5 @@
 <template>
-<div class="group-detail" v-if="group !=null" >
+<div class="group-detail" v-if="group !== null" >
   <show-window key="groupDetail">
     <div slot="title">
       <i class="el-icon-s-custom"></i>
@@ -92,7 +92,9 @@
 
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
-import {queryGroupInvitationCode,
+import {
+  queryGroupByNameNetwork,
+  queryGroupInvitationCode,
   removeGroupMemberNetwork,
   dissolveGroupNetwork} from "@/network/group";
 
@@ -110,26 +112,46 @@ export default {
     }
   },
   activated() {
-    //处理数据
-    let group = this.$route.query.group
-    if(group.memberList === undefined){
-      this.$router.push('/index/welcome')
-      return
-    }
 
-    for (let i = 0; i < group.memberList.length; i++) {
-      let member = group.memberList[i]
-      if(member.id === group.managerId){
-        group.manager = member
-        group.memberList.splice(i-1,1)
-        break
+    let groupName = this.$route.query.groupName
+
+    if(groupName != null){
+      queryGroupByNameNetwork(groupName).then(data => {
+        if(data.code === 200) {
+          let group = data.result
+          this.group = this.fixGroup(group)
+        }
+      })
+    }else {
+      let group = this.$route.query.group
+      if(group.memberList === undefined){
+        this.$router.push('/index/welcome')
+        return
       }
+      //处理数据
+
+      this.group = this.fixGroup(group)
     }
-    this.group = group
   },
   methods:{
     formatDate(time){
       return this.$formatDate(time);
+    },
+    /**
+     * 处理group数据信息
+     * @param group
+     * @returns {*}
+     */
+    fixGroup(group) {
+      for (let i = 0; i < group.memberList.length; i++) {
+        let member = group.memberList[i]
+        if(member.id === group.managerId){
+          group.manager = member
+          group.memberList.splice(i-1,1)
+          break
+        }
+      }
+      return group
     },
     //获取小组邀请码方法
     getInvitationCode(groupId){
@@ -184,6 +206,7 @@ export default {
         }
       })
     }
+
   }
 }
 </script>

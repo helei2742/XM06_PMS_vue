@@ -1,4 +1,48 @@
 import {request} from "@/network/request";
+
+/**
+ * 排序条件，按照创建时间降序查询
+ * @type {number}
+ */
+export const CREATEDATEDESC = 1
+/**
+ * 排序条件，按照创建时间升序查询
+ * @type {number}
+ */
+export const CREATEDATEASC = 2
+/**
+ * 排序条件，按照完成度降序查询
+ * @type {number}
+ */
+export const COMPLETIONDEGREEDESC = 3
+/**
+ * 排序条件，按照创建时间升序查询
+ * @type {number}
+ */
+export const COMPLETIONDEGREEASC = 4
+
+
+/**
+ * 查询条件。根据用户id查找项目
+ * @type {number}
+ */
+export const PAGEQUERYPROJECTBYUSERID = 1
+/**
+ * 查询条件。根据用户加入的小组查找项目
+ * @type {number}
+ */
+export const PAGEQUERYUSERJOINEDGROUPPROJECT = 2
+/**
+ * 查询条件。查找公公共项目
+ * @type {number}
+ */
+export const PAGEQUERYPUBLICPROJECT = 3
+/**
+ * 查询条件。项目名称模糊查询
+ * @type {number}
+ */
+export const PAGEQUERYNAMELIKEPROJECT = 4
+
 /**
  *
  * @param createForm

@@ -4,7 +4,7 @@
 
 <!--  侧边便签框-->
     <memo-drawer
-      :is-show.sync="drawer"
+      :is-show="drawer"
       :memo="memo"
       @removememo="removeMemo"
       @addmemo="addMemo"

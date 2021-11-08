@@ -7,19 +7,23 @@
       <i class="el-icon-arrow-right"></i>
       我的信息
     </div>
-    <div slot="main" style="padding: 20px 10px">
-
+    <div slot="main" style="padding: 20px 10px;overflow: scroll">
       <el-row>
         <el-col :span="18" :offset="2">
-        <el-descriptions title="基本信息" direction="vertical" :column="4" border>
-          <el-descriptions-item label="用户名">{{loginUser.userName}}</el-descriptions-item>
-          <el-descriptions-item label="手机号">{{loginUser.phone}}</el-descriptions-item>
-          <el-descriptions-item label="真实姓名" :span="2">{{loginUser.trueName}}</el-descriptions-item>
-          <el-descriptions-item label="注册日期">
-            <el-tag size="small">{{formatDate(loginUser.createDate)}}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item label="电子邮箱">{{loginUser.email}}</el-descriptions-item>
-        </el-descriptions>
+          <div style="min-width: 380px;">
+            <el-descriptions title="基本信息"
+                             direction="vertical"
+                             :column="4"
+                             border>
+              <el-descriptions-item label="用户名">{{loginUser.userName}}</el-descriptions-item>
+              <el-descriptions-item label="手机号">{{loginUser.phone}}</el-descriptions-item>
+              <el-descriptions-item label="真实姓名" :span="2">{{loginUser.trueName}}</el-descriptions-item>
+              <el-descriptions-item label="注册日期">
+                <el-tag size="small">{{formatDate(loginUser.createDate)}}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="电子邮箱">{{loginUser.email}}</el-descriptions-item>
+            </el-descriptions>
+          </div>
         </el-col>
       </el-row>
 

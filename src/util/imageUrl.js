@@ -1,5 +1,5 @@
 export const APPBACkGROUND = {
-    backgroundImage: "url(" + require("@/assets/img/app_background.png") + ")",
+    backgroundImage: "url(" + require("@/assets/img/app_background.jpg") + ")",
     backgroundRepeat: "repeat",
     backgroundSize: "100%",
     marginTop: "5px",

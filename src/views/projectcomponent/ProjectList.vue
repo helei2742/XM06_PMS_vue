@@ -11,21 +11,33 @@
       <div slot="main">
         <!-- 选择按钮套件-->
         <el-row class="project-list-select" >
-          <el-button :type="this.queryType === 1?'success':'primary'"
-                     @click="handleTypeChange(1)" size="mini">我创建的项目</el-button>
-          <el-button :type="this.queryType === 2?'success':'primary'"
-                     @click="handleTypeChange(2)" size="mini">我加入小组的项目</el-button>
-          <el-button :type="this.queryType === 3?'success':'primary'"
-                     @click="handleTypeChange(3)" size="mini">查看公开的项目</el-button>
-          <div style="padding: 8px 0">
-          <el-select v-model="orderType" placeholder="请选择" size="mini">
-            <el-option label="创建时间降序" :value="1"/>
-            <el-option label="创建时间升序" :value="2"/>
-            <el-option label="完成度降序" :value="3"/>
-            <el-option label="完成度升序" :value="4"/>
-          </el-select>
-          <el-button type="success" size="mini" @click="handleOrderType">排序</el-button>
-          </div>
+          <el-col :span="24">
+            <el-button :type="this.queryType === allQueryType.userCreateProject?'success':'primary'"
+                       @click="handleTypeChange(allQueryType.userCreateProject)" size="mini">我创建的项目</el-button>
+            <el-button :type="this.queryType === allQueryType.joinedGroupProject?'success':'primary'"
+                       @click="handleTypeChange(allQueryType.joinedGroupProject)" size="mini">我加入小组的项目</el-button>
+            <el-button :type="this.queryType === allQueryType.publicProject?'success':'primary'"
+                       @click="handleTypeChange(allQueryType.publicProject)" size="mini">查看公开的项目</el-button>
+          </el-col>
+
+          <el-col :span="18">
+            <el-input v-model="queryProjectName" placeholder="请输入项目名称" size="mini" style="width: 30%"></el-input>
+            <el-button :type="this.queryType === allQueryType.nameLikeProject?'success':'primary'"
+                       @click="handleTypeChange(allQueryType.nameLikeProject)" size="mini">小组名查找</el-button>
+          </el-col>
+
+          <el-col>
+            <div style="padding: 8px 0">
+              <el-select v-model="orderType" placeholder="请选择" size="mini">
+                <el-option label="创建时间降序" :value="allSortType.createDateDesc"/>
+                <el-option label="创建时间升序" :value="allSortType.createDateAsc"/>
+                <el-option label="完成度降序" :value="allSortType.completionDegreeDesc"/>
+                <el-option label="完成度升序" :value="allSortType.completionDegreeAsc"/>
+              </el-select>
+              <el-button type="success" size="mini" @click="handleOrderType">排序</el-button>
+            </div>
+          </el-col>
+
         </el-row>
 
         <!--项目展示区域-->
@@ -76,19 +88,39 @@
 import ShowWindow from "@/components/showwindow/ShowWindow";
 import ProjectListCard from "@/views/projectcomponent/child/ProjectListCard";
 import {queryProjectListNetwork} from "@/network/project.js"
-
+import {CREATEDATEDESC, CREATEDATEASC, COMPLETIONDEGREEASC, COMPLETIONDEGREEDESC} from "@/network/project.js";
+import {PAGEQUERYPROJECTBYUSERID,
+        PAGEQUERYPUBLICPROJECT,
+        PAGEQUERYUSERJOINEDGROUPPROJECT,
+        PAGEQUERYNAMELIKEPROJECT} from "@/network/project.js";
 
 export default {
   name: "ProjectList",
   components: {ProjectListCard, ShowWindow},
   data() {
     return {
+      allQueryType:{
+        userCreateProject: PAGEQUERYPROJECTBYUSERID,
+        publicProject: PAGEQUERYPUBLICPROJECT,
+        joinedGroupProject: PAGEQUERYUSERJOINEDGROUPPROJECT,
+        nameLikeProject: PAGEQUERYNAMELIKEPROJECT
+      },
+      allSortType: {
+        createDateDesc: CREATEDATEDESC,
+        createDateAsc: CREATEDATEASC,
+        completionDegreeDesc: COMPLETIONDEGREEDESC,
+        completionDegreeAsc: COMPLETIONDEGREEASC
+      },
+      //查询条件相关
       queryType: 0,
       orderType: 1,
       isShowAll: true,
+      queryProjectName: '',
+      //显示列表相关
       projectList: [],
       privateList: [],
       allList:[],
+      //分页相关
       currentPage: 1,
       limit: 3,
       total: 0,
@@ -145,7 +177,16 @@ export default {
      * 查询类型改变方法
      **/
     handleTypeChange(type){
-      if(type === this.queryType) return
+      //小组名查询
+      if(type === this.allQueryType.nameLikeProject){
+        if(this.queryProjectName == null
+            || this.queryProjectName === '') {
+          this.$message.warning('请输入项目名称')
+          return
+        }
+      }else {
+        if(type === this.queryType) return
+      }
       this.currentPage = 1
       this.queryType = type
       this.privateList = []
@@ -153,6 +194,9 @@ export default {
       this.isShowAll = true
       this.queryProjectList(type)
     },
+    /**
+     *  排序类型发生改变
+     */
     handleOrderType(){
       this.currentPage = 1
       this.privateList = []
@@ -171,6 +215,7 @@ export default {
       query.limit = this.limit
       query.page = this.currentPage
       query.orderType = this.orderType
+      query.projectName = this.queryProjectName
 
       queryProjectListNetwork(query).then(data => {
         console.log(data)

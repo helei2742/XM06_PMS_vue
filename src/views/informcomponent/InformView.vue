@@ -74,8 +74,8 @@ export default {
       userId: null,
       groupId: null,
       websocket: null,
-      baseUrl: 'ws://127.0.0.1:9000/XM06/api/websocket/'
-      // baseUrl: 'ws://www.ylxteach.net/XM06/api/websocket/'
+      // baseUrl: 'ws://127.0.0.1:9000/XM06/api/websocket/'
+      baseUrl: 'ws://www.ylxteach.net/XM06/api/websocket/'
     }
   },
   computed:{

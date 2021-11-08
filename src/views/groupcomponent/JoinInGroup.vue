@@ -23,17 +23,18 @@
             @searchgroupname="searchByGroupName"
         />
 
-          <el-pagination
-              v-show="isShowPagination"
-              class="pagination"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="pageSize"
-              :pager-count="7"
-              layout="total, prev, pager, next, jumper"
-              :total="total">
-          </el-pagination>
-          <el-button type="primary" >导出列表</el-button>
+          <div style="overflow: scroll">
+        <el-pagination
+            v-show="isShowPagination"
+            class="pagination"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :pager-count="7"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+          </div>
         </el-col>
         </el-row>
 

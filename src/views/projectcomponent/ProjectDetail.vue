@@ -1,5 +1,5 @@
 <template>
-<div class="project-detail" >
+<div class="project-detail" v-if="project!=null">
 
   <show-window key="projectDetail">
     <div slot="title">
@@ -14,7 +14,7 @@
     </div>
 
     <div slot="main">
-      {{project}}
+      <project-detail-card :project="project"/>
     </div>
   </show-window>
 </div>
@@ -22,16 +22,23 @@
 
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
+import ProjectDetailCard from "@/views/projectcomponent/child/ProjectDetailCard";
+
 export default {
   name: "ProjectDetail",
-  components: {ShowWindow},
+  components: {
+    ShowWindow,
+    ProjectDetailCard
+  },
   data() {
     return {
       project: null
     }
   },
   activated() {
+
     this.project = this.$route.query.project
+    console.log(this.project)
   }
 }
 </script>

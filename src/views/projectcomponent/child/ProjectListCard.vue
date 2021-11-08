@@ -30,6 +30,19 @@
         <el-descriptions-item label="创建日期">
           {{formatDate(project.createDate)}}
         </el-descriptions-item>
+
+        <el-descriptions-item label="参与小组">
+          <el-dropdown>
+            <el-button type="primary">
+              鼠标悬浮查看<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="group in project.groupList" >
+                <span @click="toGroupDetail(group.groupName)">{{ group.groupName }}</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-descriptions-item>
       </el-descriptions>
     </div>
 
@@ -76,12 +89,27 @@ export default {
         return '#67c23a'
       }
     },
+    /**
+     * 点击查看项目详情按钮调用
+     * @param project
+     */
     toProjectDetail(project) {
       console.log(project)
       this.$router.push({
         path: '/index/projectdetail',
         query: {
           project: project
+        }
+      })
+    },
+    /**
+     * 点击悬浮查看中的小组按钮调用
+     */
+    toGroupDetail(groupName) {
+      this.$router.push({
+        path: '/index/groupdetail',
+        query: {
+          groupName: groupName
         }
       })
     }

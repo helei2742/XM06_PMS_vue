@@ -67,6 +67,12 @@ body{
   background-color:#545c64;
 }
 
+/*
+div::-webkit-scrollbar{
+  display:none
+}
+*/
+
 #footer{
   position: fixed;
   height: 49px;
@@ -81,11 +87,13 @@ body{
   width: 280px;
 }
 
-
 .my-group-list >div[class='el-table el-table--fit el-table--enable-row-hover el-table--enable-row-transition']{
   background-color: transparent;
 }
 
+.project-detail-card div[class="el-descriptions__body"]{
+  background-color: transparent;
+}
 /*
   description 去边框 start
 */
@@ -101,6 +109,9 @@ body{
 /*
   description 去边框 end
 */
+
+
+
 
 /* =================  通知界面修改element组件样式 start =============================== */
 .project-list-card div[class='el-card__header'] {

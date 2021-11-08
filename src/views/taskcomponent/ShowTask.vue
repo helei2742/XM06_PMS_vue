@@ -30,7 +30,7 @@
       </el-row>
 
       <el-row class="task-list-area">
-        <el-col :offset="1" :xs="22" :sm="18" :md="18" :lg="18" :xl="15">
+        <el-col :offset="1" :xs="18" :sm="18" :md="18" :lg="18" :xl="15">
           <show-task-desc v-for="task in tasks"
                           :task="task"
                           :card-style="getShowTaskCardStyle"
@@ -51,7 +51,6 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
-
 
     </div>
 

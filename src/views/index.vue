@@ -24,7 +24,9 @@
           :with-header="false"
           :show-close="false"
           direction="ttb">
+        <div style="background-color:#595559;height: 100%">
         <SideBar/>
+        </div>
       </el-drawer>
 
     </el-row>
