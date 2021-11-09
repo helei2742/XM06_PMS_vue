@@ -35,6 +35,8 @@ const CreateProject = () => import('@/views/projectcomponent/CreateProject')
 const ProjectList = () => import('@/views/projectcomponent/ProjectList')
 const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
 
+const FaceInfoRegister = () => import('@/views/facecomponent/FaceInfoRegister')
+
 const routes = [
   {
     path:'/',
@@ -162,6 +164,13 @@ const routes = [
           title: '项目详情'
         },
         component: ProjectDetail
+      },
+      {
+        path: 'faceregisterpage',
+        meta: {
+          title: '人脸信息录入'
+        },
+        component: FaceInfoRegister
       }
     ]
   },

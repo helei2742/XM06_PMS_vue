@@ -45,6 +45,7 @@
       </template>
 
       <el-menu-item @click="toUserInfoPage" index="1-1">我的信息</el-menu-item>
+      <el-menu-item @click="toFaceRegisterPage" index="1-2">人脸信息录入</el-menu-item>
       <el-menu-item index="1-2" @click="open">退出登录</el-menu-item>
 
       <el-menu-item>
@@ -113,6 +114,9 @@ export default {
     toUserInfoPage(){
       this.$router.push('/index/myinfo')
     },
+    toFaceRegisterPage() {
+      this.$router.push('/index/faceregisterpage')
+    }
     alterPwd(){
       console.log('---')
       this.$router.push('/index/passwordalter')
