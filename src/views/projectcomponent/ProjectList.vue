@@ -21,9 +21,11 @@
           </el-col>
 
           <el-col :span="18">
+            <div style="padding: 8px 0 0">
             <el-input v-model="queryProjectName" placeholder="请输入项目名称" size="mini" style="width: 30%"></el-input>
             <el-button :type="this.queryType === allQueryType.nameLikeProject?'success':'primary'"
                        @click="handleTypeChange(allQueryType.nameLikeProject)" size="mini">小组名查找</el-button>
+            </div>
           </el-col>
 
           <el-col>

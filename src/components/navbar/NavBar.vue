@@ -116,7 +116,7 @@ export default {
     },
     toFaceRegisterPage() {
       this.$router.push('/index/faceregisterpage')
-    }
+    },
     alterPwd(){
       console.log('---')
       this.$router.push('/index/passwordalter')

@@ -41,3 +41,15 @@ export function downloadFileNetwork(filePath){
     },
   })
 }
+
+export function uploadFacesNetWork(userId, facesJson){
+  return request({
+    url: 'face/faceImgUpload',
+    data:{
+      userId,
+      facesJson
+    },
+    timeout: 20000,
+    method: 'post'
+  })
+}
