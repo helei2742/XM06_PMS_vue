@@ -1,11 +1,23 @@
 <template>
 
   <div id="index">
-    <el-row >
+    <el-row type="flex" justify="center">
+
 <!--侧边框-->
-      <el-col id="aside" :xs="0" :sm="4" :md="4" :lg="3" :xl="3">
-        <SideBar/>
-      </el-col>
+      <el-collapse-transition>
+        <div v-if="isShowSidebar"
+             :style="$store.getters.getAppBgc"
+             class="aside">
+            <SideBar/>
+        </div>
+      </el-collapse-transition>
+
+<!--  占位，本来的sidebar位置-->
+      <div v-if="isShowSidebar"
+           class="hidden-sm-and-down"
+           style="width: 232px">
+      </div>
+
 <!--主要区域-->
       <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="21">
         <keep-alive exclude="SubmitTask GroupDetail">
@@ -13,21 +25,12 @@
         </keep-alive>
       </el-col>
 
-<!-- 屏幕缩小到sm后侧边栏的汉堡按钮-->
+<!-- 汉堡按钮-->
       <el-button id="side-bar-open"
-                 class="hidden-sm-and-up"
-                 @click="drawer= true"
-                 size="mini"
-                 icon="el-icon-s-operation"></el-button>
-      <el-drawer
-          :visible.sync="drawer"
-          :with-header="false"
-          :show-close="false"
-          direction="ttb">
-        <div style="background-color:#595559;height: 100%">
-        <SideBar/>
-        </div>
-      </el-drawer>
+                 @click="isShowSidebar=!isShowSidebar"
+                 circle
+                 icon="el-icon-s-operation">
+      </el-button>
 
     </el-row>
   </div>
@@ -37,7 +40,6 @@
 <script>
 import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
-import {findUserByUserIdStr} from "@/network/user";
 
 import {CHECKSUCCESS} from "@/store/mutations-types";
 
@@ -49,32 +51,25 @@ export default {
   },
   data(){
     return {
-      drawer: false
+      drawer: false,
+      isShowSidebar: true
     }
   },
   mounted() {
-    let s = this.$store.getters.getUserIdStr
-    console.log('index.vue组件挂载完成')
 
-    /**
-     * 验证登录用户
-     */
-    findUserByUserIdStr(s).then((data)=>{
-      console.log(data)
-      if(data.code === 200){
-        let user = data.result
-        this.$store.commit(CHECKSUCCESS, {loginUser: user})
 
-      }else {
-        this.$alert('验证登录失败，请刷新或重新登录')
-        this.$router.push('/login')
-      }
-    })
+
+    //初始化时根据屏幕大小决定是否显示侧边框
+    let size = this.$store.getters.getScreenSize
+    if(size.width < 980){
+      this.isShowSidebar = false
+    }
   }
 }
 </script>
 
 <style scoped>
+
 
 #main-area{
 /*  position: absolute;
@@ -83,17 +78,18 @@ export default {
   /*background-color: rgba(100,100,100,0.2);*/
 }
 
-#aside{
-/*  position: absolute;
-  left: 0;*/
-  height: calc(100vh - 120px);
-  background-color: rgba(100, 100, 100, 0.8);
+.aside{
+  width: 232px;
+  position: fixed;
+  left: 0;
+  z-index: 1000;
 }
 
 #side-bar-open{
   position: fixed;
-  top:74px;
-  left:9px;
+  top:12px;
+  left:15px;
+  z-index: 100000;
 }
 
 </style>

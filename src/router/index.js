@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {Upload} from "element-ui";
 
 Vue.use(VueRouter)
 
@@ -11,6 +12,7 @@ VueRouter.prototype.push = function push(location) {
 const Index = () => import('@/views/index.vue')
 const Login = () => import('@/views/login.vue')
 const Welcome = () => import('@/views/Welcome.vue')
+const Introduce = () => import('@/views/Introduce')
 
 const CreateAccount = () => import('@/views/CreateAccount.vue')
 
@@ -36,11 +38,12 @@ const ProjectList = () => import('@/views/projectcomponent/ProjectList')
 const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
 
 const FaceInfoRegister = () => import('@/views/facecomponent/FaceInfoRegister')
+const UploadFIleToRegister = () => import('@/views/facecomponent/UploadFileTORegister')
 
 const routes = [
   {
     path:'/',
-    redirect: '/index'
+    redirect: '/introduce'
   },
   {
     path: '/index',
@@ -171,6 +174,13 @@ const routes = [
           title: '人脸信息录入'
         },
         component: FaceInfoRegister
+      },
+      {
+        path: 'facefileupload',
+        meta: {
+          title: '视频上传人类信息'
+        },
+        component: UploadFIleToRegister
       }
     ]
   },
@@ -187,6 +197,13 @@ const routes = [
       title: '创建账户'
     },
     component: CreateAccount
+  },
+  {
+    path: '/introduce',
+    meta: {
+      title: '项目介绍'
+    },
+    component: Introduce
   }
 ]
 

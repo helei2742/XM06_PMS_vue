@@ -9,12 +9,11 @@
       <span>人脸信息录入</span>
     </div>
 
-    <div slot="main">
+    <div slot="main" style="text-align: center; height: 65vh">
       <el-button @click="startFaceInfoReg">立即录入</el-button>
       <el-button @click="uploadVideo">选择视频上传录入</el-button>
     </div>
   </ShowWindow>
-
 
   <el-dialog
       title="人脸采集"
@@ -23,22 +22,24 @@
       :fullscreen="true"
       >
 
-    <div>当前采集了{{imgCount}}</div>
-    <div style="position: relative" v-if="!isFaceImgUploadSuccess" >
-      <canvas id="output" ref="output"></canvas>
-      <video id="video" ref="video" src="" autoplay></video>
-    </div>
 
-    <div v-else>
-      信息上传完毕
-    </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button :disabled="!isFaceImgUploadSuccess" type="primary"
-                 @click="handleYes">
-        确 定
-      </el-button>
-    </span>
 
+    <el-row type="flex" justify="center">
+    <el-col :offset="1" :xs="26" :sm="18" :md="14" :lg="10" :xl="10">
+
+      <face-connect v-if="!isFaceImgUploadSuccess"
+                    :img-save-times="200"
+                    @imgConnected="uploadFaces"
+                    :need-img-count="100"/>
+
+      <el-result v-else icon="success" title="生成成功" subTitle="点击返回到主页面">
+        <template slot="extra">
+          <el-button type="primary" @click="isStart = false" size="medium">返回</el-button>
+        </template>
+      </el-result>
+
+    </el-col>
+    </el-row>
   </el-dialog>
 
 </div>
@@ -46,110 +47,42 @@
 
 <script>
 import ShowWindow from '@/components/showwindow/ShowWindow'
-import {uploadFacesNetWork} from "@/network/file";
-
+import {uploadFacesNetWork} from "@/network/face";
+import FaceConnect from "@/components/faceconnect/FaceConnect";
 
 export default {
   name: "FaceInfoRegister",
   components: {
+    FaceConnect,
     ShowWindow
   },
   data(){
     return {
       isStart: false,
       isFaceImgUploadSuccess: false,
-      back: null,
-      backContext: null,
-      interval: null,
-      video: null,
-      mediaStream: null,
-      imgCount: 0,
-      needImgCount: 70,
-      faces: []
     }
   },
   methods: {
-    /**
-     *  点击确定
-     */
-    handleYes(){
-      this.reset()
-      this.isStart = false
-    },
+
     /**
      * 点击关闭
      */
     handleClose(done) {
-      console.log('---')
       this.$confirm('将取消人脸信息录入，确认关闭？')
-          .then(_ => {
-            this.reset()
-            done();
-          })
-          .catch(_ => {});
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
     },
 
     /**
      * 点击立即采集按钮调用
      */
     startFaceInfoReg() {
-      this.$message.warning('3秒后开始采集人像')
-
-      setTimeout(()=>{
-
-        navigator.mediaDevices.getUserMedia({video:true}).then(stream => {
-          this.mediaStream = stream
-          document.getElementById("video").srcObject = this.mediaStream
-
-          if(this.interval != null) clearInterval(this.interval)
-          this.interval = null
-          this.init()
-          this.$message('人脸采集已开始')
-
-        }).catch(error => {
-          console.log(error)
-        })
-
-        this.isStart = true
-      }, 3000)
-
+      this.isStart = true
     },
     uploadVideo(){
-
-    },
-
-    /**
-     * 重置人脸采集
-     */
-    reset(){
-      this.isFaceImgUploadSuccess = false
-      this.interval = null
-      this.mediaStream =  null
-      this.imgCount = 0
-      this.faces = []
-    },
-
-    /***
-     * 初始化人脸采集
-     */
-    init(){
-      this.back = this.$refs.output
-      this.backContext = this.$refs.output.getContext('2d')
-      this.video = this.$refs.video
-
-      this.interval = setInterval(() => {
-        this.backContext.drawImage(this.video,0,0,this.back.width,this.back.height)
-        let imgBase64 = this.back.toDataURL('image/jpg', 1);
-        this.faces.push(imgBase64)
-
-        if(++this.imgCount >= this.needImgCount) {
-          clearInterval(this.interval)
-          //关掉媒体流
-          this.mediaStream.getTracks()[0].stop()
-          this.uploadFaces(this.faces)
-        }
-      }, 300)
-
+      this.$router.push('/index/facefileupload')
     },
 
     /**
@@ -158,7 +91,6 @@ export default {
      */
     uploadFaces(faces){
       let uid = this.$store.getters.getLoginUser.id
-      console.log(faces)
       let json = JSON.stringify(faces)
 
       const loading = this.$loading({
@@ -171,32 +103,20 @@ export default {
       uploadFacesNetWork(uid, json).then(data => {
         if(data.code === 200) {
           this.isFaceImgUploadSuccess = true
-          loading.close()
+
         }else {
           this.$alert('人脸信息上传失败,' + data.msg)
-          loading.close()
         }
       }).catch(e=>{
+        this.$message.error('出错了')
+      }).finally(()=>{
         loading.close()
       })
     }
-
   }
-
 }
 </script>
 
 <style scoped>
 
-#video{
-  width: 100%;
-  height: 80vh;
-}
-
-#output{
-  visibility: hidden;
-  position: absolute;
-  width: 100%;
-  height: 80vh;
-}
 </style>

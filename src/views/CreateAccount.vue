@@ -60,6 +60,7 @@ export default {
 .create-account{
   background-color: #fff;
   height: 100vh;
+  padding: 0 0 50px;
 }
 .title{
   font-size: 30px;

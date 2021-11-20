@@ -3,7 +3,8 @@
   <el-drawer
       :size="drawerSize"
       title="便签"
-      :visible.sync="isShow"
+      :visible.sync="isShowMemo"
+      @open="openMemo"
       direction="ltr"
   >
 
@@ -21,12 +22,13 @@
     <div :style="bgStyle">
       <el-timeline >
         <el-timeline-item size="20px"
+                          :style="{width: '80%'}"
                           v-for="m in memo"
                           :color="iconColor(m.finish,m.staleDate)"
                           :icon="memoIcon(m.finish,m.staleDate)"
                           :timestamp="formatDate(m.staleDate)"
                           placement="top">
-          <el-card :body-style="cardColor">
+          <el-card>
             <h4>{{ m.memo }}</h4>
             <p :style="{color: iconColor(m.finish,m.staleDate)}">
               创建时间:
@@ -64,6 +66,7 @@
               </el-popconfirm>
             </div>
           </el-card>
+
         </el-timeline-item>
       </el-timeline>
     </div>
@@ -103,7 +106,7 @@ import {MEMOBACKGROUND} from "@/util/imageUrl";
 export default {
   name: "MemoDrawer",
   props:{
-    isShow: {
+    isShowMemo: {
       type: Boolean,
       default: false
     },
@@ -113,6 +116,14 @@ export default {
     }
   },
   computed:{
+    drawerSize(){
+      let screenWidth = this.$store.getters.getScreenSize.width
+      if(screenWidth < 1080){
+        return '80%'
+      }else {
+        return '40%'
+      }
+    },
     memoIcon(){
       return function (isFinish, slateDate) {
         if(isFinish) return 'el-icon-check'
@@ -129,17 +140,11 @@ export default {
         return '#06304e'
       }
     },
-    cardColor() {
-      let c = this.$store.getters.getCardColorStyle
-      c.width = '80%'
-      return c
-    }
   },
   data() {
     return {
       visible: false,
       screenWidth: null,
-      drawerSize: '40%',
       staleDate: null,
       memoMsg: '',
       bgStyle: MEMOBACKGROUND
@@ -161,26 +166,9 @@ export default {
     },
     confirmFinish(memoId){
       this.$emit('confirmfinish', memoId)
-    }
-  },
-  mounted() {
-    //监听屏幕尺寸
-    this.screenWidth = document.body.clientWidth
-    window.onresize = () =>{
-      return (()=>{
-        this.screenWidth = document.body.clientWidth
-      })()
-    }
-  },
-  watch: {
-    screenWidth: {
-      handler: function (val, oldVal){
-        if(val < 1080){
-          this.drawerSize= '80%'
-        }else {
-          this.drawerSize = '40%'
-        }
-      }
+    },
+    openMemo(){
+      console.log(this.isShowMemo)
     }
   }
 }

@@ -13,8 +13,7 @@
           <create-task-from
               style="margin-top: 40px"
               ref="createTaskFrom"
-              :user-groups="userGroups"
-              @querygroup="queryJoinedGroup"
+              :user-groups="myGroups"
               @createtask="createTask"
           />
         </el-col>
@@ -30,6 +29,7 @@ import ShowWindow from "@/components/showwindow/ShowWindow";
 import CreateTaskFrom from "@/views/taskcomponent/child/CreateTaskFrom";
 import {queryJoinedGroupAllNetwork} from "@/network/group";
 import {createTaskNetwork} from "@/network/task";
+import {RELOADMYGROUP} from "@/store/mutations-types-groupmodule";
 
 export default {
   name: "CreateTask",
@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      userGroups: null
+      myGroups: null
     }
   },
   methods:{
@@ -53,23 +53,24 @@ export default {
         }
       })
     },
-    queryJoinedGroup(){
-      if(this.userGroups != null && this.userGroups.length !== 0){
-        return
-      }
-      let userId = this.$store.getters.getLoginUser.id
-      queryJoinedGroupAllNetwork(userId).then(data=>{
-        if(data.code === 200){
-          this.userGroups = data.result
-          console.log(this.userGroups)
-        }else {
-          this.$message.error('出错了，'+data.msg)
-        }
-      })
-    }
+    // queryJoinedGroup(){
+    //   if(this.userGroups != null && this.userGroups.length !== 0){
+    //     return
+    //   }
+    //   let userId = this.$store.getters.getLoginUser.id
+    //   queryJoinedGroupAllNetwork(userId).then(data=>{
+    //     if(data.code === 200){
+    //       this.userGroups = data.result
+    //       console.log(this.userGroups)
+    //     }else {
+    //       this.$message.error('出错了，'+data.msg)
+    //     }
+    //   })
+    // }
   },
   mounted() {
-    this.queryJoinedGroup()
+    this.$store.dispatch(RELOADMYGROUP)
+    this.myGroups = this.$store.getters.getMyGroup
   }
 }
 </script>

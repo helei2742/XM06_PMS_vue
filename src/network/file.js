@@ -29,8 +29,8 @@ export function submitTaskFileNetwork(userId, taskId, description, form, uploadP
 
 export function downloadFileNetwork(filePath){
   return download({
-    url: 'http://www.ylxteach.net/XM06/file/download',
-    // url: 'http://localhost:9000/XM06/file/download',
+    // url: 'http://www.ylxteach.net/XM06/file/download',
+    url: 'http://localhost:9000/XM06/file/download',
     params: {
       filePath,
     },
@@ -42,14 +42,4 @@ export function downloadFileNetwork(filePath){
   })
 }
 
-export function uploadFacesNetWork(userId, facesJson){
-  return request({
-    url: 'face/faceImgUpload',
-    data:{
-      userId,
-      facesJson
-    },
-    timeout: 20000,
-    method: 'post'
-  })
-}
+

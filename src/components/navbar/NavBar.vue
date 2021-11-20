@@ -1,70 +1,118 @@
 <template>
-  <div>
-<div class="line"></div>
+  <div class="navbar" :style="navbarStyle">
+    <div class="line"></div>
 
 <!--  侧边便签框-->
     <memo-drawer
-      :is-show="drawer"
+      :is-show-memo="drawer"
       :memo="memo"
       @removememo="removeMemo"
       @addmemo="addMemo"
       @confirmfinish="confirmFinish"
     />
 
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu-demo"
+      mode="horizontal"
+      active-text-color="#ffd04b"
+      background-color="transparent"
+      @select="handleSelect">
 
-  <el-menu
-  :default-active="activeIndex"
-  class="el-menu-demo"
-  mode="horizontal"
-  @select="handleSelect"
-  background-color="#545c64"
-  text-color="#fff"
-  active-text-color="#ffd04b">
 
-<!--  返回上一路由-->
-    <el-menu-item @click="pageback" index="2">
-      返回
-    </el-menu-item>`
+      <el-menu-item style="margin-left: 57px"
+                    @click="pageback" index="2">
+        <el-tooltip effect="dark"
+                    content="上一页面"
+                    placement="bottom">
+          <i class="el-icon-back" style="font-size: 24px"></i>
+        </el-tooltip>
+      </el-menu-item>`
 
-  <!--点击打开侧边便签框 -->
-    <el-menu-item v-if="isLogin" @click="openDrawer">
-      便签
-    </el-menu-item>
+      <el-menu-item  v-if="isLogin" index="3">
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            <el-tooltip effect="dark"
+                        content="更多功能"
+                        placement="bottom">
+              <i class="el-icon-menu" style="font-size: 24px"></i>
+            </el-tooltip>
+          </span>
 
-    <el-menu-item v-if="isLogin" @click="openInform">
-      通知
-    </el-menu-item>
+          <el-dropdown-menu slot="dropdown">
+            <div style="width: 220px;margin: 10px;text-align: center">
+              <el-row>
+
+<!--      打开便签          -->
+                <el-col :span="8">
+                  <el-tooltip effect="dark"
+                              content="便签"
+                              placement="bottom">
+
+                    <i class="el-icon-edit-outline more-func-icon"
+                       :key="'openDrawer'"
+                       @click.stop="openDrawer">
+                    </i>
+                  </el-tooltip>
+                  <div>便签</div>
+                </el-col>
+
+<!--      打开通知      -->
+                <el-col :span="8">
+                  <el-tooltip effect="dark"
+                              content="通知"
+                              placement="bottom">
+                    <i class="el-icon-s-comment more-func-icon"
+                       @click="openInform"
+                       :key="'openInform'"
+                      ></i>
+                  </el-tooltip>
+                  <div>通知</div>
+                </el-col>
+              </el-row>
+
+            </div>
+
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-menu-item>
+
 
   <!--登录-->
-    <el-submenu v-if="isLogin" id="user-manage" index="1">
+    <el-submenu v-if="isLogin"
+                id="user-manage"
+                popper-class="bgcClass"
+                index="1">
       <template slot="title">
-        <span>
+        <div style="width: 100px;overflow: hidden">
             <el-avatar :src="headImg" ></el-avatar>
-          {{user.userName}}
-        </span>
+             {{user.userName}}
+        </div>
       </template>
 
       <el-menu-item @click="toUserInfoPage" index="1-1">我的信息</el-menu-item>
-      <el-menu-item @click="toFaceRegisterPage" index="1-2">人脸信息录入</el-menu-item>
-      <el-menu-item index="1-2" @click="open">退出登录</el-menu-item>
-
+      <el-menu-item @click="toFaceRegisterPage" index="1-2">人脸信息修改或录入</el-menu-item>
+      <el-menu-item index="1-3" @click="open">退出登录</el-menu-item>
       <el-menu-item>
-      <el-dropdown>
-          <span style="color: red" class="el-dropdown-link">
-            信息修改<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item icon="el-icon-plus">修改基本信息</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-circle-check">
-          <span @click="alterPwd"> 修改密码</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-
-      </el-dropdown>
+        <el-dropdown>
+            <span style="color: red" class="el-dropdown-link">
+              信息修改<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+          <el-dropdown-menu slot="dropdown" >
+            <el-dropdown-item icon="el-icon-plus">修改基本信息</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-delete">
+              <span @click="deleteFaceInfo">删除人脸信息</span>
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-circle-check">
+            <span @click="alterPwd"> 修改密码</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-menu-item>
-      </el-submenu>
+    </el-submenu>
+
   <!--    未登录-->
-    <el-menu-item v-else id="not-login" @click="toLoginPage">
+    <el-menu-item v-if="!isLogin" id="not-login" @click="toLoginPage">
       点击登录
     </el-menu-item>
 
@@ -78,8 +126,18 @@ import MemoDrawer from '@/components/memodrawer/MemoDrawer'
 
 import {queryMemosByUserIdNetwork,removeUserMemoNetwork
   ,addMemoNetwork, confirmMemoNetwork} from "@/network/memo";
+import {faceDropNetWork} from "@/network/face";
 
 export default {
+
+  components: {
+    MemoDrawer
+  },
+  computed: {
+    navbarStyle() {
+      return this.$store.getters.getNavbarBgi
+    }
+  },
   data() {
     return {
       activeIndex: '1',
@@ -88,19 +146,20 @@ export default {
       headImg: require('@/assets/img/head_default.png')
     };
   },
-  components: {
-    MemoDrawer
-  },
   props:{
     user:{
-      Type: Object,
+      type: Object,
       default(){
         return {userName: '张三', trueName: '真正的张三'}
       }
     },
     isLogin:{
-      Type: Boolean,
+      type: Boolean,
       default: false
+    },
+    navbarBgc: {
+      type: String,
+      default: 'transparent'
     }
   },
   methods: {
@@ -120,6 +179,9 @@ export default {
     alterPwd(){
       console.log('---')
       this.$router.push('/index/passwordalter')
+    },
+    openInform(){
+      this.$router.push('/index/informview')
     },
     pageback(){
       this.$router.back()
@@ -149,7 +211,6 @@ export default {
       this.drawer = true
       let userId = this.$store.getters.getLoginUser.id
       queryMemosByUserIdNetwork(userId).then(data=>{
-        console.log(data)
 
         if(data.code === 200){
           this.memo = data.result
@@ -199,15 +260,38 @@ export default {
         }
       })
     },
-    openInform(){
-      this.$router.push('/index/informview')
+
+    deleteFaceInfo() {
+      this.$confirm('此操作将永久删除人脸信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let userId = this.$store.getters.getLoginUser.id
+        faceDropNetWork(userId).then(data=>{
+          if(data.code === 200){
+            this.$message.success('已收到删除要求，请前往邮箱确认')
+          }else {
+            this.$message.error('出错了'+data.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      })
     }
+
   }
 }
 </script>
 
 <style scoped>
+
+
 #user-manage{
+
   position: absolute;
   right: 0;
   top: 0;
@@ -220,4 +304,11 @@ export default {
   right: 0;
 }
 
+.more-func-icon{
+  font-size: 45px;
+}
+.more-func-icon:hover{
+  cursor: pointer;
+  color: #ffcf49;
+}
 </style>

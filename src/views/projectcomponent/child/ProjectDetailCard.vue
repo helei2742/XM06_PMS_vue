@@ -1,20 +1,27 @@
 <template>
   <div class="project-detail-card">
     <el-row >
-      <el-col :span="8" >
+      <el-col :xs="22" :sm="22" :md="22" :lg="8" :xl="10">
         <ProjectBaseInfoCard :project="project"/>
       </el-col>
 
-      <el-col :offset="1" :span="15" >
+      <el-col  :xs="22" :sm="22" :md="22" :lg="14" :xl="10" >
         <project-cpt-degree :project="project"/>
       </el-col>
     </el-row>
+
+    <el-row>
+      <el-col :offset="2" :span="22">
+
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
 <script>
-import ProjectBaseInfoCard from "@/components/projectbaseinfocard/ProjectBaseInfoCard";
-import ProjectCptDegree from "@/components/projectCptDegree/ProjectCptDegree";
+import ProjectBaseInfoCard from "@/views/projectcomponent/child/projectbaseinfocard/ProjectBaseInfoCard";
+import ProjectCptDegree from "@/views/projectcomponent/child/projectCptDegree/ProjectCptDegree";
 export default {
   name: "ProjectDetailCard",
   components: {

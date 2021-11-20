@@ -9,7 +9,7 @@ import {request} from "@/network/request";
 export function createTaskNetwork(from){
   return request({
     url: '/task/add',
-    params:{
+    data:{
       taskName: from.name,
       groupId: from.groupId,
       deadline: from.date,
@@ -32,7 +32,7 @@ export function createTaskNetwork(from){
 export function pageQueryUserTaskNetwork(userId, page, limit, type, groupId){
   return request({
     url: '/task/pageQueryUserTask',
-    params: {
+    data: {
       page,
       limit,
       userId,
@@ -52,7 +52,7 @@ export function pageQueryUserTaskNetwork(userId, page, limit, type, groupId){
 export function queryTaskRecordNetwork(taskId){
   return request({
     url: '/task/taskSubmitRecord',
-    params: {
+    data: {
       taskId,
       limit: 100
     },

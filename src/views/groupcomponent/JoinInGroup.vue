@@ -23,17 +23,17 @@
             @searchgroupname="searchByGroupName"
         />
 
-          <div style="overflow: scroll">
-        <el-pagination
-            v-show="isShowPagination"
-            class="pagination"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :pager-count="7"
-            layout="total, prev, pager, next, jumper"
-            :total="total">
-        </el-pagination>
+          <div class="scroll-pagination" style="overflow: scroll">
+            <el-pagination
+                v-show="isShowPagination"
+                class="pagination"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="pageSize"
+                :pager-count="7"
+                layout="total, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
           </div>
         </el-col>
         </el-row>
@@ -81,7 +81,6 @@ export default {
         if(data.code === 200){
           this.groupList = [data.result]
           this.groupList[0].memberNum = this.groupList[0].memberList.length
-          this.groupList[0].createDate = this.$formatDate(this.groupList[0].createDate)
           this.isShowPagination = false
           this.$message.success({
             message: '查询成功'
@@ -133,7 +132,7 @@ export default {
         list.forEach(group => {
           group.memberNum = group.memberList.length
           this.groupList.push(group)
-        });
+        })
         this.total = pageInfo.total
       })
     }
@@ -149,6 +148,9 @@ export default {
   height: 100%;
 }
 .pagination{
-margin-top: 20px;
+  margin-top: 20px;
+}
+.scroll-pagination::-webkit-scrollbar{
+  display: none;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
 <div class="group-message-card">
-      <el-card :body-style="{ padding: '0px' }">
-        <img :src="groupHead" class="image">
-        <div style="padding: 14px;">
-          <span>{{group.groupName}}</span>
-          <div class="bottom clearfix">
-            <el-button @click="showMemberIfo" type="text" class="button">查看小组详情</el-button>
-          </div>
+    <el-card :body-style="{ padding: '0px' }">
+      <img :src="groupHead" class="image">
+      <div style="padding: 14px;background-color:#cdbdbe">
+        <span>{{group.groupName}}</span>
+        <div class="bottom clearfix">
+          <el-button @click="showMemberIfo" type="text" class="button">查看小组详情</el-button>
         </div>
-      </el-card>
+      </div>
+    </el-card>
 </div>
 </template>
 
@@ -74,8 +74,9 @@ export default {
 }
 
 .image {
-  width: 100%;
+  height: 400px;
   display: block;
+  margin: 0 auto;
 }
 
 .clearfix:before,

@@ -13,8 +13,18 @@
       </span>
     </div>
 
-    <div slot="main">
+    <div slot="main" style="padding-bottom: 100px;text-align: center">
       <project-detail-card :project="project"/>
+
+      <hr/>
+      <el-link @click="queryProjectRecord">点击查看该项目的提交记录</el-link>
+      <hr/>
+      <project-update-record
+          v-if="isShowUpdateRecord"
+          @loadMoreRecord="loadMoreRecord"
+          @downloadSubmit="downloadFile"
+          :is-show-load-more="isHaveMore"
+          :record-list="recordList"/>
     </div>
   </show-window>
 </div>
@@ -24,21 +34,96 @@
 import ShowWindow from "@/components/showwindow/ShowWindow";
 import ProjectDetailCard from "@/views/projectcomponent/child/ProjectDetailCard";
 
+import {downloadFileNetwork} from "@/network/file";
+import {convertRes2Blob} from "@/util/fileUtil";
+
+import {pageQueryProjectUpdateRecordNetwork, queryProjectByIdNetwork} from "@/network/project"
+import ProjectUpdateRecord from "@/views/projectcomponent/child/projectupdaterecord/ProjectUpdateRecord";
+
 export default {
   name: "ProjectDetail",
   components: {
+    ProjectUpdateRecord,
     ShowWindow,
     ProjectDetailCard
   },
+  computed: {
+    isHaveMore() {
+      if(this.recordList.length > 0){
+        return this.haveNextPage
+      }else{
+        return false
+      }
+    }
+  },
   data() {
     return {
-      project: null
+      project: {},
+      currentPage: 1,
+      limit: 5,
+      recordList: [],
+      haveNextPage: false,
+      isShowUpdateRecord: false
+    }
+  },
+  methods: {
+
+    /**
+     * 查询项目记录
+     */
+    queryProjectRecord() {
+      this.isShowUpdateRecord = true
+      let projectId = this.project.id
+      pageQueryProjectUpdateRecordNetwork(projectId,
+          this.currentPage, this.limit).then(data=>{
+
+            if(data.code === 200) {
+              let pageInfo = data.result
+              this.haveNextPage = pageInfo.hasNextPage
+              this.recordList.push(...pageInfo.list)
+
+            }else {
+              this.$message.error('出错了，' + data.msg)
+            }
+      })
+    },
+    loadMoreRecord(){
+      if(this.haveNextPage) {
+        this.currentPage++
+        this.queryProjectRecord()
+      }
+    },
+    /**
+     * 下载文件， src为服务器资源路径
+     * @param src
+     */
+    downloadFile(src) {
+      if(src === null || src === ''){
+        this.$alert('资源路径不能为空')
+        return
+      }
+      downloadFileNetwork(src).then( response =>{
+        convertRes2Blob(response)
+      })
     }
   },
   activated() {
 
-    this.project = this.$route.query.project
-    console.log(this.project)
+    //进入时，如果没有project， 进行网络请求获取
+    let project = this.$route.query.project
+    if(project.id === undefined){
+      let projectId = this.$route.query.projectId
+      queryProjectByIdNetwork(projectId).then(data => {
+        if(data.code === 200) {
+          this.project = data.result
+        }else {
+          this.$message.error('加载失败，请稍后重试')
+        }
+      })
+
+    }else {
+      this.project = project
+    }
   }
 }
 </script>

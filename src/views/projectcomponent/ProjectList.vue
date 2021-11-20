@@ -9,6 +9,7 @@
       </div>
 
       <div slot="main">
+
         <!-- 选择按钮套件-->
         <el-row class="project-list-select" >
           <el-col :span="24">
@@ -61,7 +62,8 @@
               </el-empty>
             </div>
 
-             <project-list-card :card-style="getProjectListCardStyle" :project-list="projectList"/>
+             <project-list-card :card-style="getProjectListCardStyle"
+                                :project-list="projectList"/>
           </el-col>
         </el-row>
 

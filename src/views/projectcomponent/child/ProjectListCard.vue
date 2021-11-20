@@ -48,8 +48,9 @@
 
     <div style="margin-top: 20px">
       项目完成度：
-      <el-progress :percentage="project.completionDegree"
-                   :color="customColorMethod"></el-progress>
+      <el-progress :percentage="Math.floor(project.completionDegree * 100)"
+                   :color="customColorMethod(project.completionDegree * 100)">npm run s
+      </el-progress>
     </div>
   </el-card>
   </div>
@@ -98,7 +99,8 @@ export default {
       this.$router.push({
         path: '/index/projectdetail',
         query: {
-          project: project
+          project: project,
+          projectId: project.id
         }
       })
     },

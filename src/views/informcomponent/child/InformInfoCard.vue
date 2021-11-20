@@ -3,13 +3,14 @@
 <div :ref="refsName" class="inform-info-card">
 <!-- 没有消息的显示-->
   <el-empty v-if="informInfoList==null||informInfoList.length<1"
-            description="没有消息哦">
+            description="没有消息哦（还没写定时持久化，存内存里的少用~~）">
   </el-empty>
+
   <div v-for="informInfo in informInfoList" class="inform-info-card-row">
 
 <!-- 消息上方显示姓名和日期 -->
     <div v-if="leftOrRight(informInfo.sendUser.userIdStr)">
-      <el-link  href="#" target="_blank">
+      <el-link   target="_blank">
         {{informInfo.sendUser.username}}
       </el-link>
       <el-tag type="info" size="mini" style="margin: 0 15px">
@@ -22,7 +23,7 @@
       <el-tag type="info" size="mini" style="margin: 0 15px">
         {{formatDate(informInfo.sendDate)}}
       </el-tag>
-      <el-link  href="#" target="_blank" style="margin-right: 10px">
+      <el-link   target="_blank" style="margin-right: 10px">
         {{informInfo.sendUser.username}}
       </el-link>
     </div>
@@ -33,7 +34,7 @@
 <!-- 显示头像和消息内容-->
 <!--别人发的显示在左边 -->
     <div v-if="leftOrRight(informInfo.sendUser.userIdStr)" >
-      <img  class="inform-message-head" src="src/assets/img/logo.png" />
+      <img  class="inform-message-head" :src="headImgUrl" />
       <div class="inform-message-content">
         <i></i>
         {{informInfo.message}}
@@ -42,7 +43,7 @@
     </div>
 <!--自己发的显示在右-->
     <div v-else>
-      <img  class="inform-message-head right" src="src/assets/img/logo.png" />
+      <img  class="inform-message-head right" :src="headImgUrl" />
       <div class="inform-message-content right">
         {{informInfo.message}}
         <i></i>
@@ -80,7 +81,7 @@ export default {
   data() {
     return {
       isShow: true,
-      headImgUrl: require("@/assets/img/logo.png"),
+      headImgUrl: require("@/assets/img/head_default.png"),
     }
   },
   computed:{

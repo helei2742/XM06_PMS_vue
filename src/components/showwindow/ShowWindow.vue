@@ -6,7 +6,8 @@
         <slot name="title"></slot>
       </div>
     </el-col>
-    <el-col :offset="2" :span="2">
+
+    <el-col :offset="2" :span="4">
       <div class="light-tool">
         <!--选择显示模式，（白天或晚上）-->
         <el-switch
@@ -15,12 +16,14 @@
             inactive-color="#ffd04c"
             :active-value="1"
             :inactive-value="0"
-            @change="colorModuleChange"
+            @change.self="colorModuleChange"
             active-icon-class="el-icon-moon"
             inactive-icon-class="el-icon-sunny">
         </el-switch>
+
       </div>
     </el-col>
+
     <el-col class="show-window-button" :span="4">
       <div @click="reload" class="el-icon-refresh"></div>
       <div @click="close" class="el-icon-close"></div>
@@ -86,16 +89,21 @@ export default {
 
 <style scoped>
 .show-window{
-  width: calc(100% - 4px);
+  width: calc(100% - 14px);
   border: 2px solid rgba(100,100,100,0.5);
-  background-color: #ffffff;
+  background-color: transparent;
+  margin-top: 5px;
+  margin-left: 8px;
+  border-radius: 12px;
 }
 .show-window-title{
-  background-color: rgba(100,100,100,0.5);
+  /*background-color: rgba(100,100,100,0.5);*/
+  background-color: transparent;
   line-height: 35px;
   height: 35px;
   position: relative;
   padding-left: 10px;
+  border-bottom: 1px rgba(100,100,100,0.5) solid;
 }
 .show-window-button{
   overflow: visible;

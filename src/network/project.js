@@ -52,6 +52,7 @@ export const PAGEQUERYNAMELIKEPROJECT = 4
             isPublic: false,
             groups: [],
             desc: ''
+            creatorId: 0
           }
  * @returns {AxiosPromise}
  */
@@ -89,6 +90,63 @@ export function queryProjectListNetwork(projectQuery) {
   return request({
     url: '/project/queryProjectList',
     data: projectQuery,
+    method: 'post'
+  })
+}
+
+
+/**
+ * 更新项目信息网络请求
+ * @param form  类型为DataForm     需包含
+ *                      userId          提交用户id
+ *                      projectId       项目id
+ *                      submitDesc      提交描述
+ *                      submitDegree    提交的进度
+ *                      file            提交的文件 （可以没有）
+ * @param uploadProgressEvent
+ * @returns {AxiosPromise}
+ */
+export function updateProjectDegreeNetwork(form, uploadProgressEvent){
+  return request({
+    url: '/project/submitProjectDegree',
+    data: form,
+    onUploadProgress: uploadProgressEvent,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 根据项目id查找项目网络请求
+ * @param projectId
+ * @returns {AxiosPromise}
+ */
+export function queryProjectByIdNetwork(projectId){
+  return request({
+    url: '/project/queryById',
+    data: {
+      projectId
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 分页查询项目的提交记录
+ * @param projectId
+ * @param page
+ * @param limit
+ */
+export function pageQueryProjectUpdateRecordNetwork(projectId, page, limit){
+  return  request({
+    url: '/project/pageQueryRecordList',
+    data: {
+      projectId,
+      page,
+      limit
+    },
     method: 'post'
   })
 }

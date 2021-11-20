@@ -7,7 +7,9 @@
     </el-form-item>
 
     <el-form-item label="是否公开" prop="isPublic">
-      <el-switch v-model="ruleForm.isPublic"></el-switch>
+      <el-switch v-model="ruleForm.isPublic" inactive-color="#d0f1ee">
+
+      </el-switch>
     </el-form-item>
 
     <el-form-item label="负责小组" prop="groups">
