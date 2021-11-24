@@ -188,7 +188,8 @@ export default {
     //移除成员方法
     removeMember(userId) {
       let groupId = this.group.id
-      let managerId = this.group.managerId
+      let managerId = this.$store.getters.getLoginUser.id
+
       //弹出确认框
       this.$alert('是否移除该成员', '警告', {
         confirmButtonText: '确定',
@@ -214,7 +215,8 @@ export default {
         type: 'warning'
       }).then(() => {
         let groupId = this.group.id
-        let managerId = this.group.managerId
+        let managerId = this.$store.getters.getLoginUser.id
+
         dissolveGroupNetwork(managerId, groupId).then(data=>{
           console.log(data)
           if(data.code === 200){

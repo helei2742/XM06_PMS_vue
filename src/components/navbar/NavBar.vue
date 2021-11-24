@@ -208,20 +208,26 @@ export default {
         })
       }).catch(e=>{})
     },
-    //打开便签栏
-    openDrawer(){
+
+    load(){
       this.drawer = true
       let userId = this.$store.getters.getLoginUser.id
       this.loading = true
       queryMemosByUserIdNetwork(userId).then(data=>{
         if(data.code === 200){
-          this.memo = data.result
+          this.memo.splice(0,this.memo.length)
+          this.memo.push(...data.result)
         }else{
           this.$message.error('出错啦', data.msg)
         }
       }).finally(()=>{
         this.loading = false
       })
+    },
+
+    //打开便签栏
+    openDrawer(){
+      this.load()
     },
     //移除便签
     removeMemo(memoId){
@@ -230,12 +236,15 @@ export default {
         console.log(data)
         if(data.code === 200){
           this.$message.success('移除便签成功')
+          this.load()
         }else {
           this.$message.error('移除便签失败'+data.msg)
         }
       })
     },
-    //添加便签
+    /**
+     * 添加便签
+     */
     addMemo(info){
       let userId = this.$store.getters.getLoginUser.id
       let memo = info.memo
@@ -246,25 +255,32 @@ export default {
         console.log(data)
         if(data.code === 200){
           this.$message.success('添加便签成功')
+          this.load()
         }else{
           this.$message.error('添加标签失败'+data.msg)
         }
       })
-
     },
-    //确认便签已完成
+    /**
+     * 确认便签完成
+     * @param memoId
+     */
     confirmFinish(memoId){
       let userId = this.$store.getters.getLoginUser.id
       confirmMemoNetwork(userId, memoId).then(data=>{
         console.log(data)
         if(data.code === 200){
           this.$message.success('确认完成成功')
+          this.load()
         }else {
           this.$message.error('确认失败'+data.msg)
         }
       })
     },
 
+    /**
+     * 点击删除人脸信息按钮
+     */
     deleteFaceInfo() {
       this.$confirm('此操作将永久删除人脸信息, 是否继续?', '提示', {
         confirmButtonText: '确定',

@@ -19,7 +19,7 @@
       <project-detail-card :project="project"/>
 
       <hr/>
-      <el-link @click="queryProjectRecord">点击查看该项目的提交记录</el-link>
+      <el-link v-if="!isClick" @click="queryProjectRecord">点击查看该项目的提交记录</el-link>
       <hr/>
 
       <project-update-record
@@ -71,6 +71,7 @@ export default {
       limit: 5,
       recordList: [],
       haveNextPage: false,
+      isClick: false,
       isShowUpdateRecord: false,
       loading: false
     }
@@ -84,6 +85,7 @@ export default {
       this.isShowUpdateRecord = true
       let projectId = this.project.id
       this.loading = true
+      this.isClick = true
 
       pageQueryProjectUpdateRecordNetwork(projectId,
           this.currentPage, this.limit).then(data=>{
@@ -140,6 +142,7 @@ export default {
         this.recordList = []
         this.isShowUpdateRecord = false
         this.haveNextPage = false
+        this.isClick = false
       }
       this.project = project
     }

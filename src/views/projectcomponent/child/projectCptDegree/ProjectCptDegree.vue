@@ -59,7 +59,8 @@ export default {
   },
   computed:{
     maxDegree() {
-      return Math.floor(1 - this.project.completionDegree)
+      console.log(this.project.completionDegree)
+      return 1 - Math.floor(this.project.completionDegree*100)/100
     }
   },
   data() {
