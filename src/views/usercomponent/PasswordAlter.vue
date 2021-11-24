@@ -1,6 +1,12 @@
 <template>
   <div>
-    <show-window key="passwordAlter">
+    <show-window
+        v-loading="loading"
+        element-loading-text="正在修改密码"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        key="passwordAlter">
+
       <div slot="title">
         <i class="el-icon-user"></i>
         用户管理
@@ -33,6 +39,11 @@ export default {
     PasswordAlterFrom,
     ShowWindow
   },
+  data(){
+    return {
+      loading: false
+    }
+  },
   methods: {
 
     /**
@@ -41,9 +52,8 @@ export default {
      */
     alterPassword(from) {
       from.id = this.$store.getters.getLoginUser.id
-      console.log(from)
+      this.loading = true
       alterPwdNetwork(from).then(data => {
-        console.log(data)
         if(data.code === 200){
           this.$store.commit(LOGOUT)
 
@@ -62,6 +72,8 @@ export default {
             message: '出错了, '+data.msg
           })
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }
 

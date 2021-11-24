@@ -4,6 +4,7 @@
 
 <!--  侧边便签框-->
     <memo-drawer
+        v-loading="loading"
       :is-show-memo="drawer"
       :memo="memo"
       @removememo="removeMemo"
@@ -143,7 +144,8 @@ export default {
       activeIndex: '1',
       drawer: false,
       memo: [],
-      headImg: require('@/assets/img/head_default.png')
+      headImg: require('@/assets/img/head_default.png'),
+      loading: false
     };
   },
   props:{
@@ -210,13 +212,15 @@ export default {
     openDrawer(){
       this.drawer = true
       let userId = this.$store.getters.getLoginUser.id
+      this.loading = true
       queryMemosByUserIdNetwork(userId).then(data=>{
-
         if(data.code === 200){
           this.memo = data.result
         }else{
           this.$message.error('出错啦', data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     },
     //移除便签

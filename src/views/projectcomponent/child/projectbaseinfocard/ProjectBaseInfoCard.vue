@@ -1,6 +1,9 @@
 <template>
 <div class="project-detail-card-baseInfo">
+  <el-skeleton v-if="project.projectName===undefined" :rows="12" animated/>
+
   <el-descriptions
+      v-else
       :column="1">
     <template slot="title">
       <span style="color: #000000">项目基本信息</span>

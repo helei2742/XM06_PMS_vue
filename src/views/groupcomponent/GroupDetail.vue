@@ -22,7 +22,12 @@
           <span :style="{'color': cardStyle.color}">小组信息</span>
         </template>
         <template slot="extra">
-          <el-button @click="getInvitationCode(group.id)" type="primary" round>获取小组邀请码</el-button>
+          <el-button @click="getInvitationCode(group.id)"
+                     type="primary"
+                     v-if="isManager"
+                     round>
+            获取小组邀请码
+          </el-button>
         </template>
         <el-descriptions-item label="小组名">{{group.groupName}}</el-descriptions-item>
         <el-descriptions-item label="组长用户名">{{group.manager.userName}}</el-descriptions-item>
@@ -46,8 +51,14 @@
         <template slot="title" >
           <span :style="{'color': cardStyle.color}">组长信息</span>
         </template>
+
         <template slot="extra">
-          <el-button @click="dissolveGroup" type="danger" size="small">解散小组</el-button>
+          <el-button @click="dissolveGroup"
+                     v-if="isManager"
+                     type="danger"
+                     size="small">
+            解散小组
+          </el-button>
         </template>
 
         <el-descriptions-item label="用户名">{{group.manager.userName}}</el-descriptions-item>
@@ -66,13 +77,19 @@
       <el-descriptions v-for="(user,index) in group.memberList"
                        :label-style="cardStyle"
                        :content-style="cardStyle"
-                       :column="3" border>
+                       :column="3"
+                       border>
+
         <template slot="title">
           <span :style="{'color': cardStyle.color}">成员{{(index+1)}}</span>
         </template>
-        <template slot="extra">
-          <el-button @click="removeMember(user.id)" type="warning" size="small">移除成员</el-button>
+
+        <template v-if="isManager" slot="extra">
+          <el-button @click="removeMember(user.id)"
+                     type="warning"
+                     size="small">移除成员</el-button>
         </template>
+
         <el-descriptions-item label="用户名">{{user.userName}}</el-descriptions-item>
         <el-descriptions-item label="真实姓名">{{user.trueName}}</el-descriptions-item>
         <el-descriptions-item label="手机号">{{user.phone}}</el-descriptions-item>
@@ -93,10 +110,10 @@
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
 import {
-  queryGroupByNameNetwork,
   queryGroupInvitationCode,
   removeGroupMemberNetwork,
-  dissolveGroupNetwork} from "@/network/group";
+  dissolveGroupNetwork, queryGroupByNameNetwork
+} from "@/network/group";
 
 export default {
   name: "GroupDetail",
@@ -104,6 +121,10 @@ export default {
   computed: {
     cardStyle() {
       return  this.$store.getters.getCardColorStyle
+    },
+    isManager() {
+      let userId = this.$store.getters.getLoginUser.id
+      return userId === this.group.managerId
     }
   },
   data(){
@@ -113,23 +134,18 @@ export default {
   },
   activated() {
 
-    let groupName = this.$route.query.groupName
-
-    if(groupName != null){
-      queryGroupByNameNetwork(groupName).then(data => {
+    let group = this.$route.query.group
+    console.log(group)
+    if(group.groupName === undefined){
+      let groupName = this.$route.query.groupName
+      queryGroupByNameNetwork(groupName).then(data=>{
         if(data.code === 200) {
-          let group = data.result
-          this.group = this.fixGroup(group)
+          this.group = this.fixGroup(data.result)
+        }else {
+          this.$message.error('加载失败，请稍后重试')
         }
       })
     }else {
-      let group = this.$route.query.group
-      if(group.memberList === undefined){
-        this.$router.push('/index/welcome')
-        return
-      }
-      //处理数据
-
       this.group = this.fixGroup(group)
     }
   },
@@ -147,12 +163,13 @@ export default {
         let member = group.memberList[i]
         if(member.id === group.managerId){
           group.manager = member
-          group.memberList.splice(i-1,1)
+          group.memberList.splice(i,1)
           break
         }
       }
       return group
     },
+
     //获取小组邀请码方法
     getInvitationCode(groupId){
       let managerId = this.$store.getters.getLoginUser.id
@@ -188,25 +205,31 @@ export default {
         }
       })
     },
+
     //解散小组方法
     dissolveGroup(){
-      this.$alert('是否解散该小组', '警告', {
+      this.$confirm('此操作将永久解散小组, 是否继续?', '提示', {
         confirmButtonText: '确定',
-        callback: action => {
-          let groupId = this.group.id
-          let managerId = this.group.managerId
-          dissolveGroupNetwork(managerId, groupId).then(data=>{
-            console.log(data)
-            if(data.code === 200){
-              this.$message.success('解散小组'+this.group.groupName+'成功')
-            }else{
-              this.$message.error('解散小组失败,'+data.msg)
-            }
-          })
-        }
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let groupId = this.group.id
+        let managerId = this.group.managerId
+        dissolveGroupNetwork(managerId, groupId).then(data=>{
+          console.log(data)
+          if(data.code === 200){
+            this.$message.success('解散小组'+this.group.groupName+'成功')
+          }else{
+            this.$message.error('解散小组失败,'+data.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
-
   }
 }
 </script>

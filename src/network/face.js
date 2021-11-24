@@ -29,7 +29,7 @@ export function uploadFaceMp4NetWork(userId, mp4, uploadProgressEvent){
 
 export function trainFaceInfoNetWork(userId, savePath){
   return request({
-    url: '/face/trainFaceInfo',
+    url: '/face/trainVideoFaceInfo',
     data: {
       userId,
       savePath

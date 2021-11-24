@@ -1,17 +1,21 @@
 <template>
 <div class="project-detail-card-cpt-degree" v-if="project != null">
-  <div style="display: inline-block">
+  <el-skeleton v-if="project.projectName===undefined" :rows="10" animated/>
+  <div v-else>
+  <div  style="display: inline-block">
     <el-progress type="circle"
                  :width="200"
                  :color="getDegreeColor(project.completionDegree*100)"
                  :percentage="Math.floor(project.completionDegree*100)">
     </el-progress>
 
+
     <div class="submit-degree-btn">
+      提交进度
       <el-input-number  size="mini"
                         v-model="submitDegree"
                         :precision="2"
-                        :max="1"
+                        :max="maxDegree"
                         :min="0"
                         step-strictly
                         :step="0.01"
@@ -37,6 +41,7 @@
   <el-button @click="updateProject" style="display: block;margin: 0 auto">
     更新项目进度
   </el-button>
+  </div>
 </div>
 </template>
 
@@ -52,6 +57,11 @@ export default {
       default: null
     }
   },
+  computed:{
+    maxDegree() {
+      return Math.floor(1 - this.project.completionDegree)
+    }
+  },
   data() {
     return {
       submitDesc: '',
@@ -60,12 +70,6 @@ export default {
     }
   },
   methods: {
-    handleDegreeMinus(){
-      this.submitDegree--
-    },
-    handleDegreePlus(){
-      this.submitDegree++
-    },
     getDegreeColor(degree) {
       if (degree < 30) {
         return '#ff0000'

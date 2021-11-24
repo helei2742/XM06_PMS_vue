@@ -41,7 +41,6 @@
 import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
 
-import {CHECKSUCCESS} from "@/store/mutations-types";
 
 
 export default {
@@ -81,6 +80,7 @@ export default {
 .aside{
   width: 232px;
   position: fixed;
+  height: 100vh;
   left: 0;
   z-index: 1000;
 }

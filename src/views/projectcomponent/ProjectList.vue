@@ -1,6 +1,12 @@
 <template>
   <div class="project-list">
-    <show-window key="projectList">
+    <show-window
+        v-loading="loading"
+        element-loading-text="加载数据中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        key="projectList">
+
       <div slot="title">
         <i class="el-icon-s-finance"></i>
         <span>项目管理</span>
@@ -128,7 +134,10 @@ export default {
       currentPage: 1,
       limit: 3,
       total: 0,
-      createProjectPath: '/index/createproject'
+
+      createProjectPath: '/index/createproject',
+      //正在加载
+      loading: false
     }
   },
   computed: {
@@ -221,6 +230,7 @@ export default {
       query.orderType = this.orderType
       query.projectName = this.queryProjectName
 
+      this.loading = true
       queryProjectListNetwork(query).then(data => {
         console.log(data)
         if(data.code === 200){
@@ -232,7 +242,7 @@ export default {
         }else {
           this.$message.error('查询项目列表失败,'+data.msg)
         }
-      })
+      }).finally(()=> {this.loading = false})
     },
 
     toCreateProjectPage() {

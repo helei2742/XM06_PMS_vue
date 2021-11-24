@@ -1,6 +1,11 @@
 <template>
 <div class="show-task">
-  <show-window key="showTask">
+  <show-window
+      v-loading="loading"
+      element-loading-text="加载数据中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      key="showTask">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>
@@ -20,12 +25,14 @@
 
         <el-select style="margin-left: 10px" size="mini"
                    v-model="queryGroup" placeholder="根据小组查询">
+<!--    查询小组条件放到store中缓存-->
           <el-option v-for="group in this.$store.getters.getJoinedGroup"
                      :key="group.groupName"
                      :label="group.groupName"
                      :value="group.id">
           </el-option>
         </el-select>
+
         <el-button type="primary" @click="typeChange(6)" size="mini">查询</el-button>
       </el-row>
 
@@ -86,15 +93,15 @@ export default {
       total: 0,
       creator: null,
       queryType: 1,// 1代表全部，2代表我发布的，3代表正在进行的，4代表过期的，5代表已提交的
-      queryGroup: null
+      queryGroup: null,
+      loading: false
     }
   },
   methods: {
     pageQueryUserTask(page, limit){
-      console.log(this.queryGroup)
       let userId = this.$store.getters.getLoginUser.id
+      this.loading = true
       pageQueryUserTaskNetwork(userId, page, limit, this.queryType, this.queryGroup).then(data=>{
-        console.log(data)
         let pageInfo = data.result
         if(data.code === 200){
           this.tasks = pageInfo.list
@@ -102,7 +109,10 @@ export default {
         }else {
           this.$message.error('出错了,'+data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
+
     },
     handleCurrentChange(index){
       this.pageQueryUserTask(index, this.limit)
@@ -123,7 +133,8 @@ export default {
       this.$router.push({
         path:'/index/submittask',
         query: {
-          task
+          task,
+          taskId: task.id
         }
       })
     },
@@ -131,13 +142,15 @@ export default {
       this.$router.push({
         path: '/index/submitrecord',
         query:{
-          task
+          taskName: task.taskName,
+          taskId: task.id
         }
       })
     }
   },
   mounted() {
     this.pageQueryUserTask(this.page, this.limit)
+    //查询的小组条件从store中获取，刷新的时候重新加载
     this.$store.dispatch(RELOADJOINEDGROUP)
   }
 }

@@ -2,6 +2,7 @@
 <div class="project-detail" v-if="project!=null">
 
   <show-window key="projectDetail">
+
     <div slot="title">
       <i class="el-icon-s-finance"></i>
       <span>项目管理</span>
@@ -14,13 +15,20 @@
     </div>
 
     <div slot="main" style="padding-bottom: 100px;text-align: center">
+
       <project-detail-card :project="project"/>
 
       <hr/>
       <el-link @click="queryProjectRecord">点击查看该项目的提交记录</el-link>
       <hr/>
+
       <project-update-record
           v-if="isShowUpdateRecord"
+          v-loading="loading"
+          element-loading-text="加载数据中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+
           @loadMoreRecord="loadMoreRecord"
           @downloadSubmit="downloadFile"
           :is-show-load-more="isHaveMore"
@@ -63,7 +71,8 @@ export default {
       limit: 5,
       recordList: [],
       haveNextPage: false,
-      isShowUpdateRecord: false
+      isShowUpdateRecord: false,
+      loading: false
     }
   },
   methods: {
@@ -74,6 +83,8 @@ export default {
     queryProjectRecord() {
       this.isShowUpdateRecord = true
       let projectId = this.project.id
+      this.loading = true
+
       pageQueryProjectUpdateRecordNetwork(projectId,
           this.currentPage, this.limit).then(data=>{
 
@@ -85,6 +96,8 @@ export default {
             }else {
               this.$message.error('出错了，' + data.msg)
             }
+      }).finally(()=>{
+        this.loading = false
       })
     },
     loadMoreRecord(){
@@ -122,6 +135,12 @@ export default {
       })
 
     }else {
+      //进入不同的项目详情时，清除之前的状态
+      if(project.id !== this.project.id){
+        this.recordList = []
+        this.isShowUpdateRecord = false
+        this.haveNextPage = false
+      }
       this.project = project
     }
   }

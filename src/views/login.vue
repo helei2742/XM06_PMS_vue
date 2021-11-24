@@ -97,8 +97,7 @@ export default {
      * 点击人脸识别登录按钮
      */
     handleFaceLogin(){
-      console.log(this.$refs.loginfrom)
-      this.username = this.$refs.loginfrom.username
+      this.$refs.loginfrom.username = this.username
       this.isFaceLogin = true
     },
     toCreateAccount() {
@@ -146,13 +145,12 @@ export default {
 
       const loading = this.$loading({
         lock: true,
-        text: '正在解析视频分析人脸信息',
+        text: '正在登录',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
 
       loginNetwork(userName, userPwd).then(data =>{
-        console.log('服务器返回数据',data)
         if(data.code === 200){
           let userIfo = data.result
           this.$store.commit(LOGINSUCCESS, userIfo)
@@ -164,7 +162,6 @@ export default {
 
         }else{
           //登录失败
-         // this.$message.error('登陆失败,'+ data.msg)
          this.$message.error('魔理沙发出警告, '+data.msg)
         }
       }).catch(e => {

@@ -1,6 +1,12 @@
 <template>
 <div class="createTask" key="createTask">
-  <show-window>
+  <show-window
+      v-loading="loading"
+      element-loading-text="创建任务中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
+
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>
@@ -13,7 +19,7 @@
           <create-task-from
               style="margin-top: 40px"
               ref="createTaskFrom"
-              :user-groups="myGroups"
+              :user-groups="this.$store.getters.getMyGroup"
               @createtask="createTask"
           />
         </el-col>
@@ -39,38 +45,26 @@ export default {
   },
   data() {
     return {
-      myGroups: null
+      loading: false
     }
   },
   methods:{
     createTask(from){
-      createTaskNetwork(from).then(data =>{
-        console.log(data)
+      this.loading = true
+      setTimeout(()=>{      createTaskNetwork(from).then(data =>{
         if(data.code === 200){
           this.$message.success('发布任务成功')
         }else {
           this.$message.error(data.msg)
         }
-      })
+      }).finally(()=>{
+        this.loading = false
+      })},2000)
+
     },
-    // queryJoinedGroup(){
-    //   if(this.userGroups != null && this.userGroups.length !== 0){
-    //     return
-    //   }
-    //   let userId = this.$store.getters.getLoginUser.id
-    //   queryJoinedGroupAllNetwork(userId).then(data=>{
-    //     if(data.code === 200){
-    //       this.userGroups = data.result
-    //       console.log(this.userGroups)
-    //     }else {
-    //       this.$message.error('出错了，'+data.msg)
-    //     }
-    //   })
-    // }
   },
   mounted() {
     this.$store.dispatch(RELOADMYGROUP)
-    this.myGroups = this.$store.getters.getMyGroup
   }
 }
 </script>

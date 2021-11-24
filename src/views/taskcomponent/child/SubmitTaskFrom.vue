@@ -1,8 +1,11 @@
 <template>
+
 <div class="submit-task-from" v-if="task!=null">
 
-  <el-descriptions :colon="false" title="提交任务" :column="1" >
-    <el-descriptions-item label="任务名称">{{task.taskName}}</el-descriptions-item>
+  <el-descriptions :colon="false"
+                   title="提交任务"
+                   :column="1" >
+    <el-descriptions-item  label="任务名称">{{task.taskName}}</el-descriptions-item>
     <el-descriptions-item label="任务要求"
                           :contentStyle="{'width':'60%'}"
     >
@@ -60,10 +63,6 @@ export default {
       default(){
         return null
       }
-    },
-    submitUrl: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -84,7 +83,9 @@ export default {
       this.percentVisible = false
     },
     submitUpload(){
-      this.percentVisible = true
+      if(this.fileForm != null){
+        this.percentVisible = true
+      }
       const uploadProgressEvent = progressEvent => {
         this.progressPercent = (progressEvent.loaded / progressEvent.total * 100 | 0)
       }
@@ -103,5 +104,7 @@ export default {
 </script>
 
 <style scoped>
-
+.submit-task-from{
+  background-color: transparent;
+}
 </style>

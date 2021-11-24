@@ -11,6 +11,26 @@ export function debounce (fn, t) {
     }, delay)
   }
 }
+// export function debounce(fn, wait, immediate){
+//   immediate = immediate || false;
+//   let timer = null;
+//   let count = 0;
+//   return function () {
+//     let _this = this;
+//     let _arg = arguments;
+//     clearTimeout(timer);
+//     if (immediate && !count) {
+//       fn.apply(_this, _arg);
+//       count++;
+//     } else {
+//       timer = setTimeout(function () {
+//         console.log(this);
+//         fn.apply(_this, _arg);
+//         count++;
+//       }, wait);
+//     }
+//   }
+// }
 
 export function throttle (fn, t) {
   let flag = true

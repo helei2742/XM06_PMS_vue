@@ -12,7 +12,6 @@
       <el-row>
         <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
           <submit-task-from
-            :submit-url="submitUrl"
             :task="task"/>
         </el-col>
       </el-row>
@@ -24,6 +23,7 @@
 <script>
 import ShowWindow from '@/components/showwindow/ShowWindow'
 import SubmitTaskFrom from "@/views/taskcomponent/child/SubmitTaskFrom";
+import {queryTaskInfoNetwork} from "@/network/task";
 
 export default {
   name: "SubmitTask",
@@ -33,16 +33,23 @@ export default {
   },
   data() {
     return {
-      task: null,
-      submitUrl: 'http://localhost:9000/pms/task/submitTask'
+      task: null
     }
   },
   mounted() {
-    this.task = this.$route.query.task
-    if(this.$route.query.task === undefined) {
-      this.$router.push('index/welcome')
+    let task = this.$route.query.task
+    let taskId = this.$route.query.taskId
+    if(task.id === undefined) {
+      queryTaskInfoNetwork(taskId).then(data=>{
+        if(data.code === 200){
+          this.task = data.result
+        }else {
+          this.$message.error('出错了，请稍后重试')
+        }
+      })
+    }else {
+      this.task = task
     }
-    console.log(this.task)
   }
 }
 </script>

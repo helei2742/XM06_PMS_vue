@@ -14,7 +14,8 @@
            class="infinite-wrapper"
            style="overflow:auto">
 
-        <ul  class="infinite-list"
+        <ul  ref="scrollArea"
+             class="infinite-list"
              :infinite-scroll-disabled="disabled"
              v-infinite-scroll="load" >
           <el-row>
@@ -27,7 +28,8 @@
           </el-row>
         </ul>
 
-        <el-row style="height: 60px" v-if="loading"
+        <el-row style="height: 60px"
+                v-if="loading"
                 v-loading="loading"
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading"
@@ -71,6 +73,7 @@ export default {
   },
   data() {
     return {
+      scrollHeight: 0,
       joinedGroup: [],
       currentPage: 1,
       limit: 3,
@@ -85,11 +88,9 @@ export default {
     },
     //网络请求加入小组的分页数据
     queryJoinedGroup(currentPage, limit){
-      console.log(currentPage, this.totalPage)
       this.loading = true
       let userId = this.$store.getters.getLoginUser.id
       queryJoinedGroupNetwork(userId, currentPage, limit).then(data =>{
-        this.loading = false
         let pageInfo = data.result
         if(data.code === 200){
           if(pageInfo.list.length !== 0){
@@ -99,18 +100,17 @@ export default {
             this.isShowGroupList = true
             this.$message.success('加载成功')
           }
-          console.log(this.currentPage, this.totalPage, '---')
         }else {
           this.$message.error('加载失败')
         }
+      }).finally(()=>{
+        this.loading = false
       })
-
-
     },
 
     toJoinInPage(){
       this.$router.push('/index/joiningroup')
-    }
+    },
   },
   mounted() {
     this.queryJoinedGroup(1,this.limit)

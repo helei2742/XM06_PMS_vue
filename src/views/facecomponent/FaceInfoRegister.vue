@@ -27,10 +27,11 @@
     <el-row type="flex" justify="center">
     <el-col :offset="1" :xs="26" :sm="18" :md="14" :lg="10" :xl="10">
 
-      <face-connect v-if="!isFaceImgUploadSuccess"
+      <face-connect ref="faceConnect"
+                    v-if="!isFaceImgUploadSuccess"
                     :img-save-times="200"
                     @imgConnected="uploadFaces"
-                    :need-img-count="100"/>
+                    :need-img-count="70"/>
 
       <el-result v-else icon="success" title="生成成功" subTitle="点击返回到主页面">
         <template slot="extra">
@@ -70,6 +71,7 @@ export default {
     handleClose(done) {
       this.$confirm('将取消人脸信息录入，确认关闭？')
         .then(_ => {
+          this.$refs.faceConnect.reset()
           done();
         })
         .catch(_ => {});
@@ -95,7 +97,7 @@ export default {
 
       const loading = this.$loading({
         lock: true,
-        text: '正在上传分析人类信息',
+        text: '正在上传分析人脸信息',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })

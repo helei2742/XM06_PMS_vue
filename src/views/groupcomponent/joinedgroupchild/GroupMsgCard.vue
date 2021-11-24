@@ -49,6 +49,7 @@ export default {
       this.$router.push({
         path: '/index/groupdetail',
         query: {
+          groupName: this.group.groupName,
           group: this.group
         }
       })

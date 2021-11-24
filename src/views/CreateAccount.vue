@@ -33,9 +33,14 @@ export default {
   },
   methods: {
     createAccount(user) {
-      console.log(user)
+      const loading = this.$loading({
+        lock: true,
+        text: '正在创建用户',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+
       createAccount(user).then((data) => {
-        console.log(data)
         if(data.code === 200){
           this.$message.success('注册成功，请前往邮箱确认')
 
@@ -49,6 +54,8 @@ export default {
 
       }).catch(e =>{
         this.$message.error('注册失败，请稍后重试')
+      }).finally(()=>{
+        loading.close()
       })
     }
 

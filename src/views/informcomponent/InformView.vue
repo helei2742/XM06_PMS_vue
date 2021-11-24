@@ -17,6 +17,7 @@
           <el-tab-pane v-for="group in groupList"
                        :lazy="true"
                        :groupId="group.id">
+<!--  给小组的名称标签    -->
             <span slot="label">
               <i :style="cardStyle"
                  v-if="notReadCount(group.id)>0" class="red-point">
@@ -25,12 +26,23 @@
             </span>
 
 <!--  通知内容部分  -->
-            <el-col :span="24" style="height: 500px">
-              <inform-info-card :card-style="cardStyle"
-                                :refs-name="groupName"
+            <el-col :span="24"
+                    v-loading="loading"
+                    element-loading-text="加载数据中"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)"
+                    style="height: 500px;">
+              <inform-info-card
+                                :ref="group.id"
+                                @queryHistory="queryGroupHistory"
+                                :group-id="group.id"
+                                :card-style="cardStyle"
+                                :refs-name="group.groupName"
                                 :inform-info-list="informInfoList"/>
+
             </el-col>
           </el-tab-pane>
+
         </el-tabs>
 
 <!--输入框-->
@@ -57,6 +69,8 @@ import ShowWindow from '@/components/showwindow/ShowWindow'
 import InformInfoCard from '@/views/informcomponent/child/InformInfoCard'
 
 import {queryJoinedGroupAllNetwork} from "@/network/group";
+import {clearNotReadNetWork, queryHistoryGroupInformNetwork} from "@/network/inform";
+import {debounce} from "@/util/baseUtil";
 
 export default {
   name: "InformView",
@@ -66,6 +80,8 @@ export default {
   },
   data() {
     return {
+      loading: false,
+
       groupList: null,   //小组列表
       groupIdMapList: {}, // 小组id映射到小组的消息列表
       groupIdMapSocket: {}, //小组id映射到对于的websocke实例
@@ -75,11 +91,17 @@ export default {
       userId: null,
       groupId: null,           // 当前小组id
       websocket: null,       // 当前小组对于的websocket
-      // baseUrl: 'ws://127.0.0.1:9000/XM06/api/websocket'
-      baseUrl: 'ws://www.ylxteach.net/XM06/api/websocket'
+      baseUrl: 'ws://127.0.0.1:9000/XM06/api/websocket'
+      // baseUrl: 'ws://www.ylxteach.net/XM06/api/websocket'
     }
   },
   computed:{
+    debounceMessageNotify(){
+      return debounce(this.messageNotify, 15000)
+    },
+    /**
+     * 屏幕宽度动态改变tab的位置
+     */
     tabPosition() {
       let screenWidth = this.$store.getters.getScreenSize.width
       if(screenWidth < 735){
@@ -111,8 +133,9 @@ export default {
     }
   },
   methods: {
-
-    //点击窗口左侧导航条的回调
+    /**
+     * 点击窗口左侧导航条的回调
+     */
     groupViewChangeHandler(tabPaneComponent){
       let groupId = tabPaneComponent.$attrs.groupId
 
@@ -134,9 +157,16 @@ export default {
       }
 
       //发送消息到服务器，让列表中的消息为已读
-      if(notReadList.length > 0){
-        this.websocket.send(JSON.stringify({notReadList: notReadList}))
-      }
+      clearNotReadNetWork(this.userId,this.groupId,notReadList).then(data=>{
+        console.log(data)
+        if(data.code === 200){
+          for (let informInfo of this.informInfoList) {
+            informInfo.notRead = false
+          }
+        }else {
+          this.$message.error('出错了，请返回主页刷新重试')
+        }
+      })
     },
 
     //关闭WebSocket连接
@@ -155,7 +185,11 @@ export default {
         this.$message.error('发送消息失败')
       }
     },
-    //初始化websocket
+
+    /**
+     * 初始化相应组的websocket，
+     * 并填充 groupIdMapSocket, groupIdMapList两个容器
+     */
     initWebSocket(groupId, groupIdMapSocket, groupIdMapList){
       let websocket = null
       if ('WebSocket' in window) {
@@ -172,24 +206,21 @@ export default {
         //接收到消息的回调方法
         websocket.onmessage = (event)=> {
           let informInfo = JSON.parse(event.data)
-
           console.log(informInfo)
-          if(informInfo.clear){
-            for (let inform of this.informInfoList) {
-              inform.notRead = false
-            }
-            return
-          }
 
+          //存储消息，并重新排序
           groupIdMapList[groupId].push(informInfo)
+          groupIdMapList[groupId].sort((i1,i2)=>{
+            return i1.sendDate - i2.sendDate
+          })
           let sendUserId = parseInt(informInfo.sendUser.userIdStr)
 
           if(this.userId !== sendUserId && informInfo.notRead){
-            this.$notify({
-              title: '消息提示',
-              message: '收到了一条来自'+this.groupName(groupId)+'小组的消息'
-            })
+            this.debounceMessageNotify()
           }
+
+          console.log(this.$refs[groupId])
+          this.$refs[groupId][0].scrollToBottom()
         }
         //连接关闭的回调方法
         websocket.onclose = function () {
@@ -202,15 +233,49 @@ export default {
 
         //存储该websocket
         groupIdMapSocket[groupId] = websocket
-        console.log(groupIdMapSocket)
       } else {
         alert('当前浏览器 Not support websocket')
       }
+    },
+
+    messageNotify(){
+      this.$notify({
+        title: '消息提示',
+        message: '收到了一条小组的消息',
+        duration: 0
+      })
+    },
+    /**
+     * 调用网络请求，获取小组的消息记录
+     *  query中包含属性 groupId, limit, page
+     */
+    queryGroupHistory(query){
+
+      this.loading = true
+      queryHistoryGroupInformNetwork(query).then(data=>{
+        if(data.code === 200){
+          let pageInfo = data.result
+          this.groupIdMapList[query.groupId].push(...pageInfo.list)
+          this.groupIdMapList[query.groupId].sort((i1,i2)=>{
+            return i1.sendDate - i2.sendDate
+          })
+
+          if(!pageInfo.hasNextPage){
+            console.log( this.$refs[query.groupId] )
+            this.$refs[query.groupId][0].noMoreHistory()
+          }
+        }else {
+          this.$message.error('查询消息记录失败'+data.msg)
+        }
+      }).finally(()=>{
+        this.loading = false
+      })
     }
   },
   mounted() {
     //获取加入的小组
     this.userId = this.$store.getters.getLoginUser.id
+
     queryJoinedGroupAllNetwork(this.userId).then(data=>{
       console.log(data)
       if(data.code === 200){
@@ -223,8 +288,9 @@ export default {
             let key = group.id
             this.groupIdMapList[key] = []
             this.groupIdMapSocket[key] = null
-            this.initWebSocket(key,this.groupIdMapSocket,this.groupIdMapList)
+            this.initWebSocket(key, this.groupIdMapSocket, this.groupIdMapList)
           }
+
           this.groupId = this.groupList[0].id
           this.websocket = this.groupIdMapSocket[this.groupId]
           this.informInfoList = this.groupIdMapList[this.groupId]

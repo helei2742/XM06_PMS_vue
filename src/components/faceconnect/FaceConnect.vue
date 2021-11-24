@@ -13,18 +13,19 @@
   </div>
   <br/>
 
-  <div class="video-box">
-    <canvas id="canvas" ref="output"  width="320" height="240"></canvas>
-    <video id="video" ref="video" width="320" height="240" autoplay preload muted></video>
-    <canvas id="screenshotCanvas"  width="320" height="240"></canvas>
+  <div class="video-box" style="width: 320px;height: 240px">
+    <canvas id="canvas" ref="output" width="320" height="240" ></canvas>
+    <video id="video" ref="video" width="320" height="240"  autoplay preload muted></video>
+    <canvas id="screenshotCanvas"   width="320" height="240" ></canvas>
   </div>
-
+  <br/>
   <div v-if="isShowButton" style="text-align: center">
     <el-button icon="el-icon-refresh-right"
                type="warning"
                @click="reset">重置</el-button>
     <el-button icon="el-icon-coordinate"
                type="success"
+               :disabled="isStart"
                @click="startConnect">开始</el-button>
   </div>
 
@@ -34,8 +35,8 @@
 
 <script>
 
-import tracking from '@/assets/tracking/build/tracking'
-import '@/assets/tracking/build/data/face-min'
+import tracking from '@/assets/js/tracking'
+import '@/assets/js/face-min'
 
 import {throttle,debounce} from "@/util/baseUtil";
 
@@ -64,7 +65,7 @@ export default {
     isShowProgress: {
       type: Boolean,
       default: true
-    },
+    }
   },
   data() {
     return {
@@ -73,6 +74,7 @@ export default {
       video: null,
       imgCount: 0,
       faces: [],              //存储的图片的base64码,
+      isStart: false,
 
       noFaceFrame: 0,      //记录没有脸出现了多少帧
       multiFaceFrame: 0    // 记录多个脸出现了多少帧
@@ -107,10 +109,12 @@ export default {
   },
   methods: {
     startConnect(){
+      this.isStart = true
       this.init()
     },
 
     reset(){
+      this.isStart = false
       this.imgCount = 0
       this.faces = []
       let canvas = document.getElementById('canvas')
@@ -179,6 +183,11 @@ export default {
           if(++this.multiFaceFrame>150){
             this.throttleMultiFaceAlert()
           }
+          event.data.forEach((rect) => {
+            //画框
+            context.strokeStyle = '#ff0000'
+            context.strokeRect(rect.x, rect.y, rect.width, rect.height)
+          })
         }
       })
 
@@ -237,14 +246,14 @@ export default {
   position: relative;
   /*width: 100%;*/
   /*height: 100%;*/
-  width: 320px;
-  height: 300px;
+  /*width: 320px;*/
+  /*height: 300px;*/
 }
 .face-connect #video,#canvas{
   /*width: 100%;*/
   /*height: 100%;*/
-  width: 320px;
-  height: 240px;
+  /*width: 320px;*/
+  /*height: 240px;*/
   position: absolute;
   top:0;
   left: 0;

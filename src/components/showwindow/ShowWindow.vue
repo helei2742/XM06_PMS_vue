@@ -1,5 +1,6 @@
 <template>
-<div class="show-window" v-if="isClose">
+<div class="show-window"
+     v-if="isClose">
   <el-row class="show-window-title">
     <el-col :span="16">
       <div class="hidden-sm-and-down">

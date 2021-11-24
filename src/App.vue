@@ -105,10 +105,7 @@ export default {
         this.$store.commit(CHECKSUCCESS, {loginUser: user})
 
         // this.$alert('人脸相关尚未完成，请勿使用！！！')
-        this.$message.success('欢迎回来:'+ user.userName+',即将进入系统')
-        setTimeout(()=>{
-          this.$router.push('/index/welcome')
-        },2000)
+        this.$message.success('欢迎回来:'+ user.userName)
       }else {
         this.$message('您还未登录，请先前往登录')
         this.$router.push('/introduce')
@@ -149,10 +146,10 @@ export default {
 </script>
 
 <style>
-#app{
-  min-height: 100vh
 
-;
+#app{
+  position: relative;
+  min-height: 100vh;
 }
 /*
 div::-webkit-scrollbar{
@@ -161,13 +158,13 @@ div::-webkit-scrollbar{
 */
 
 #footer{
-  position: fixed;
+  position: absolute;
   height: 49px;
-  bottom: 0;
-
+  bottom: -150px;
   left: 0;
   right: 0;
-  /*background-color: rgba(100, 100, 100, 0.8);*/
+  background-color: rgba(100, 100, 100, 0.8);
+
 }
 
 .submit-task-from div[class='el-upload-dragger']{
@@ -226,6 +223,16 @@ div[class='el-tabs el-tabs--left el-tabs--border-card']>div[class='el-tabs__head
 div[class='el-tabs el-tabs--top el-tabs--border-card']>div[class='el-tabs__header is-top']{
   background-color: transparent;
   margin-right: 0!important;
+}
+
+.submit-task-from .el-descriptions__body{
+  background-color: transparent;
+}
+.submit-task-from .el-textarea__inner{
+  background-color: transparent;
+}
+.submit-task-from > .el-textarea > textarea{
+  box-shadow: 0 0 2px rgba(100,100,100,0.3);
 }
 /* =================  通知界面修改element组件样式 end  =============================== */
 </style>

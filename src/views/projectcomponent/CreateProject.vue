@@ -1,7 +1,12 @@
 <template>
   <div class="create-project">
 
-    <show-window key="createProject">
+    <show-window
+        v-loading="loading"
+        element-loading-text="发布任务中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        key="createProject">
       <div slot="title">
         <i class="el-icon-s-finance"></i>
         <span>项目管理</span>
@@ -37,19 +42,23 @@ export default {
   },
   data() {
     return {
-      groupList: []
+      groupList: [],
+      loading: false
     }
   },
   methods:{
     createProject(projectForm){
       projectForm.creatorId = this.$store.getters.getLoginUser.id
+      this.loading = true
+
       createProjectNetwork(projectForm).then(data=>{
-        console.log(data)
         if(data.code === 200){
           this.$message.success('创建成功')
         }else {
           this.$message.error('创建失败' + decodeURI(data.msg))
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }
   },

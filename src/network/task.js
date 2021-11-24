@@ -43,7 +43,19 @@ export function pageQueryUserTaskNetwork(userId, page, limit, type, groupId){
   })
 }
 
-
+/**
+ * 根据taskId, 查询任务信息
+ * @param taskId
+ */
+export function queryTaskInfoNetwork(taskId){
+  return request({
+    url: '/task/queryByTaskId',
+    params: {
+      taskId
+    },
+    method: 'post'
+  })
+}
 
 /**
  * 查询任务的提交记录的网络请求

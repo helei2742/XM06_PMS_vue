@@ -1,5 +1,6 @@
 <template>
-<div class="submit-record-table">
+
+  <div class="submit-record-table">
   <el-table
       v-if="recordList!==[]"
       :data="recordList"
@@ -56,7 +57,8 @@
               resize="none" autosize :readonly="true">
     </el-input>
   </el-dialog>
-</div>
+
+  </div>
 
 </template>
 
@@ -69,7 +71,7 @@ export default {
   props: {
     recordList: {
       type: Array,
-      default: []
+      default: null
     }
   },
   data() {
@@ -93,7 +95,6 @@ export default {
      * @param record
      */
     lookDesc(index, record){
-      console.log(record)
       this.currentRecord = record
       this.dialogVisible = true
     },

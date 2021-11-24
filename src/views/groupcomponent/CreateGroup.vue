@@ -1,7 +1,12 @@
 <template>
 <div class="create-group" v-if="destroyYet" key="createGroup">
 
-  <show-window>
+  <show-window
+    v-loading="loading"
+    element-loading-text="创建小组中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
 
     <div slot="title">
       <i class="el-icon-s-custom"></i>
@@ -42,7 +47,8 @@ export default {
   },
   data(){
     return {
-      destroyYet: true
+      destroyYet: true,
+      loading: false
     }
   },
   methods: {
@@ -50,13 +56,15 @@ export default {
     createGroup(groupInfo) {
       let loginUser = this.$store.getters.getLoginUser
       groupInfo.managerId = loginUser.id
+      this.loading = true
       createGroupNetwork(groupInfo).then(data=>{
-        console.log(data)
         if(data.code === 200){
           this.$message.success('创建小组成功')
         }else{
-          this.$message.error('创建失败,', data.msg)
+          this.$message.error('创建失败,'+data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }
   }

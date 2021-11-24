@@ -35,6 +35,11 @@ export default {
         let userId = context.getters.getLoginUser.id
         context.commit(LOADMYGROUP, {userId: userId})
       }
+    },
+    reloadCurrentShowGroup(context){
+      if(context.rootState.groupStore.currentShowGroup == null){
+
+      }
     }
   },
   mutations: {
