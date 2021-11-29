@@ -2,7 +2,7 @@
 <div class="create-group-from" :style="cardStyle">
 
   <el-row>
-    <el-col :offset="2" :span="12">
+    <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
 
       <el-form :model="form" :rules="rules" ref="createForm">
         <el-form-item label="小组名" label-width="100px" prop="groupName">

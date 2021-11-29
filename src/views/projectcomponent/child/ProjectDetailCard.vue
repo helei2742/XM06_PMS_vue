@@ -10,12 +10,6 @@
       </el-col>
     </el-row>
 
-    <el-row>
-      <el-col :offset="2" :span="22">
-
-      </el-col>
-    </el-row>
-
   </div>
 </template>
 

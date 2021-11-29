@@ -22,7 +22,7 @@
 
 <script>
 import ShowWindow from '@/components/showwindow/ShowWindow'
-import SubmitTaskFrom from "@/views/taskcomponent/child/SubmitTaskFrom";
+import SubmitTaskFrom from "@/views/taskcomponent/submittaskchild/SubmitTaskFrom";
 import {queryTaskInfoNetwork} from "@/network/task";
 
 export default {

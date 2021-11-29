@@ -54,8 +54,8 @@
 
 <script>
 import LoginFrom from "@/components/loginfrom/LoginFrom";
-import {loginNetwork} from "@/network/user";
-import {LOGINSUCCESS} from "@/store/mutations-types";
+import {findUserByUserIdStr, loginNetwork} from "@/network/user";
+import {CHECKSUCCESS, LOGINSUCCESS} from "@/store/mutations-types";
 import {LOGINBACKGROUND} from "@/util/imageUrl";
 import FaceConnect from "@/components/faceconnect/FaceConnect";
 import {faceLoginNetWork} from "@/network/face";
@@ -123,14 +123,24 @@ export default {
           let userIfo = data.result
           this.$store.commit(LOGINSUCCESS, userIfo)
           this.$message.success('登录成功，即将进入系统')
-
           setTimeout(()=>{
-            this.$router.push('/index')
-          }, 2000)
+            findUserByUserIdStr(userIfo.userIdStr).then((data)=>{
+              if(data.code === 200){
+                let user = data.result
+                this.$router.push('/index')
+                this.$store.commit(CHECKSUCCESS, {loginUser: user})
+              }else {
+                this.$message('验证用户失败')
+
+              }
+            })
+
+          }, 1500)
+
+          this.$router.push('/introduce')
         }else {
           this.$message('登录失败,'+data.msg)
         }
-
       }).finally(()=>{
         loading.close()
       })
@@ -155,21 +165,27 @@ export default {
           let userIfo = data.result
           this.$store.commit(LOGINSUCCESS, userIfo)
           this.$message.success('登录成功，即将进入系统')
-
           setTimeout(()=>{
-            this.$router.push('/index')
-          }, 2000)
-
+            findUserByUserIdStr(userIfo.userIdStr).then((data)=>{
+              if(data.code === 200){
+                let user = data.result
+                this.$router.push('/index')
+                this.$store.commit(CHECKSUCCESS, {loginUser: user})
+              }else {
+                this.$message('验证用户失败')
+              }
+            })
+          }, 1500)
         }else{
           //登录失败
-         this.$message.error('魔理沙发出警告, '+data.msg)
+         this.$message.error('登录失败, '+data.msg)
         }
+
       }).catch(e => {
         this.$message.error('出错拉,检查网络试试或联系管理员')
       }).finally(()=>{
         loading.close()
       })
-
     }
   }
 }
@@ -178,9 +194,8 @@ export default {
 <style scoped>
 #login{
   margin-top: -100px;
-  height: calc(100vh - 49px);
-  background-color: #fff;
-  padding-top: 70px;
+  min-height: calc(100vh - 49px);
+  padding: 70px 0 50px;
 }
 #login-from{
   width: 300px;

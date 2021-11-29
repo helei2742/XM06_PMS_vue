@@ -20,6 +20,17 @@
 
     <div slot="main">
       <submit-record-table :record-list="recordList"/>
+      <div style="text-align: center">
+        <el-pagination
+            :small="isUseSmall"
+            :pager-count="5"
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="limit"
+            layout="total,prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+      </div>
     </div>
   </show-window>
 </div>
@@ -28,9 +39,9 @@
 <script>
 import ShowWindow from '@/components/showwindow/ShowWindow'
 
-import SubmitRecordTable from '@/views/taskcomponent/child/SubmitRecordTable'
+import SubmitRecordTable from '@/views/taskcomponent/submitrecord/SubmitRecordTable'
 
-import {queryTaskRecordNetwork} from "@/network/task";
+import {queryTaskRecordNetwork, queryTaskRecordOfUserNetwork} from "@/network/task";
 
 
 export default {
@@ -42,28 +53,46 @@ export default {
   data() {
     return {
       taskName: '',
-      recordList: null,
-      loading: false
+      loading: false,
+      recordList: [],
+      currentPage: 1,
+      limit: 15,
+      total: 0
+    }
+  },
+  computed:{
+    isUseSmall(){
+      return this.$store.getters.getScreenSize.width < 765;
+    }
+  },
+  methods:{
+    handleCurrentChange(val){
+      this.queryTaskRecordOfUser(val)
+    },
+    queryTaskRecord(taskId, page){
+      this.loading = true
+      queryTaskRecordNetwork(taskId, page, this.limit).then(data =>{
+        if(data.code === 200){
+          let pageInfo = data.result
+          this.recordList = pageInfo.list
+          this.total = pageInfo.total
+        }else {
+          this.$message.error('出错了，'+data.msg)
+        }
+      }).finally(()=>{
+        this.loading = false
+      })
     }
   },
   /**
    * 路由进入的方法，发送请求获取任务提交记录数据
    */
   activated() {
-    this.taskName = this.$route.query.taskName
+    let taskName = this.$route.query.taskName
     let taskId = this.$route.query.taskId
-    this.loading = true
-    queryTaskRecordNetwork(taskId).then(data =>{
-      if(data.code === 200){
-        let pageInfo = data.result
-        this.recordList = pageInfo.list
-        console.log(this.recordList)
-      }else {
-        this.$message.error('出错了，'+data.msg)
-      }
-    }).finally(()=>{
-      this.loading = false
-    })
+    if(taskName !== this.taskName){
+      this.queryTaskRecord(taskId, 1)
+    }
   }
 }
 </script>

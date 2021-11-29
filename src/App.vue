@@ -2,18 +2,22 @@
   <div id="app" :style="appStyle">
 
 
-    <NavBar :is-login="isLogin"
-            :navbar-bgc="appStyle.backgroundColor"
-            :user="userIfo"
-            @logout="logout"></NavBar>
+    <div id="nav-bar">
+      <NavBar :navbar-bgc="appStyle.backgroundColor"
+              :user="userIfo"
+              @logout="logout"></NavBar>
+    </div>
 
-    <router-view class="main-area"/>
+
+    <div id="main-area">
+      <router-view/>
+    </div>
 
     <to-top @toTop="toTopClick"
             v-if="isShowToTopBtn"/>
 
     <div id="footer">
-
+      <h2 style="font-weight: 300">本项目由四川大学2019级研究与开发实践小组XM06完成</h2>
     </div>
   </div>
 </template>
@@ -146,25 +150,26 @@ export default {
 </script>
 
 <style>
-
+html{
+  height: 100%;
+}
 #app{
-  position: relative;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow: auto;
 }
-/*
-div::-webkit-scrollbar{
-  display:none
-}
-*/
+
 
 #footer{
-  position: absolute;
-  height: 49px;
-  bottom: -150px;
-  left: 0;
-  right: 0;
-  background-color: rgba(100, 100, 100, 0.8);
-
+  height: 150px;
+  background-color: rgba(100, 100, 100, 0.4);
+  text-align: center;
+  padding: 15px;
+  flex: 0;
+}
+#main-area{
+  flex: 1;
 }
 
 .submit-task-from div[class='el-upload-dragger']{
@@ -174,10 +179,26 @@ div::-webkit-scrollbar{
 .my-group-list >div[class='el-table el-table--fit el-table--enable-row-hover el-table--enable-row-transition']{
   background-color: transparent;
 }
+ .task-submit-list .el-table.el-table--fit.el-table--scrollable-x.el-table--enable-row-hover.el-table--enable-row-transition{
+  background-color: transparent;
+}
 
 .project-detail-card div[class="el-descriptions__body"]{
   background-color: transparent;
 }
+.show-task-desc div[class="el-descriptions__body"]{
+  background-color: transparent;
+}
+.user-info div[class="el-descriptions__body"]{
+  background-color: transparent;
+}
+.user-info .el-descriptions-item__label.is-bordered-label{
+  background-color: transparent;
+}
+.task-detail-base-info-card .el-descriptions__body {
+  background-color: transparent;
+}
+
 /*
   description 去边框 start
 */

@@ -6,10 +6,12 @@ import ElementUi from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/display.css';
 import '@/assets/css/reset.css'
+import * as echarts from 'echarts'
+//需要挂载到Vue原型上
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 Vue.use(ElementUi)
-
 
 Date.prototype.Format = function (fmt) {
   let o = {
@@ -35,6 +37,7 @@ Date.prototype.Format = function (fmt) {
 Vue.prototype.$formatDate = (num)=>{
     return new Date(num).Format("yyyy年MM月dd日HH时mm分ss秒")
 }
+
 
 new Vue({
   router,

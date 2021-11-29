@@ -22,6 +22,27 @@ export function queryHistoryGroupInformNetwork(query){
 }
 
 /**
+ * 获取保存在服务器内存中的小组消息记录，
+ *             {
+ *                userId: Number, 用户id
+ *                groupId: Number, 小组id
+ *              }
+ * @param query
+ * @returns {AxiosPromise}
+ */
+export function queryInformIn3dayNetwork(query){
+  return request({
+    url: '/inform/queryInformIn3day',
+    data: {
+      userId: query.userId,
+      groupId: query.groupId
+    },
+    method: 'post'
+  })
+}
+
+
+/**
  * 清除用户在某一组的未读消息
  * @param userId
  * @param groupId

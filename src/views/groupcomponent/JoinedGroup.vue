@@ -127,7 +127,6 @@ export default {
 .infinite-wrapper{
   width: 100%;
   height: 530px;
-
 }
 .infinite-list{
   list-style-type: none;

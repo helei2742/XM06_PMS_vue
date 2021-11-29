@@ -8,6 +8,7 @@
     <div slot="main">
 
       <div class="inform-view-main-area">
+
         <el-tabs :tab-position="tabPosition"
                  :stretch="true"
                  @tab-click="groupViewChangeHandler"
@@ -69,7 +70,7 @@ import ShowWindow from '@/components/showwindow/ShowWindow'
 import InformInfoCard from '@/views/informcomponent/child/InformInfoCard'
 
 import {queryJoinedGroupAllNetwork} from "@/network/group";
-import {clearNotReadNetWork, queryHistoryGroupInformNetwork} from "@/network/inform";
+import {clearNotReadNetWork, queryHistoryGroupInformNetwork, queryInformIn3dayNetwork} from "@/network/inform";
 import {debounce} from "@/util/baseUtil";
 
 export default {
@@ -155,18 +156,20 @@ export default {
           notReadList.push(informInfo.id)
         }
       }
-
-      //发送消息到服务器，让列表中的消息为已读
-      clearNotReadNetWork(this.userId,this.groupId,notReadList).then(data=>{
-        console.log(data)
-        if(data.code === 200){
-          for (let informInfo of this.informInfoList) {
-            informInfo.notRead = false
+      if(notReadList.length > 0){
+        //发送消息到服务器，让列表中的消息为已读
+        clearNotReadNetWork(this.userId,this.groupId,notReadList).then(data=>{
+          console.log(data)
+          if(data.code === 200){
+            for (let informInfo of this.informInfoList) {
+              informInfo.notRead = false
+            }
+          }else {
+            this.$message.error('出错了，请返回主页刷新重试')
           }
-        }else {
-          this.$message.error('出错了，请返回主页刷新重试')
-        }
-      })
+        })
+      }
+
     },
 
     //关闭WebSocket连接
@@ -219,7 +222,6 @@ export default {
             this.debounceMessageNotify()
           }
 
-          console.log(this.$refs[groupId])
           this.$refs[groupId][0].scrollToBottom()
         }
         //连接关闭的回调方法
@@ -250,26 +252,41 @@ export default {
      *  query中包含属性 groupId, limit, page
      */
     queryGroupHistory(query){
-
-      this.loading = true
-      queryHistoryGroupInformNetwork(query).then(data=>{
-        if(data.code === 200){
-          let pageInfo = data.result
-          this.groupIdMapList[query.groupId].push(...pageInfo.list)
-          this.groupIdMapList[query.groupId].sort((i1,i2)=>{
-            return i1.sendDate - i2.sendDate
-          })
-
-          if(!pageInfo.hasNextPage){
-            console.log( this.$refs[query.groupId] )
-            this.$refs[query.groupId][0].noMoreHistory()
+      if(query.isInformIn3day){
+        console.log('3tian内的')
+        this.loading = true
+        queryInformIn3dayNetwork(query).then(data=>{
+          if(data.code === 200){
+            this.groupIdMapList[query.groupId].push(...data.result)
+            this.groupIdMapList[query.groupId].sort((i1,i2)=>{
+              return i1.sendDate - i2.sendDate
+            })
           }
-        }else {
-          this.$message.error('查询消息记录失败'+data.msg)
-        }
-      }).finally(()=>{
-        this.loading = false
-      })
+        }).finally(()=>{
+          this.loading = false
+        })
+      }
+      else {
+        this.loading = true
+        queryHistoryGroupInformNetwork(query).then(data=>{
+          if(data.code === 200){
+            let pageInfo = data.result
+            this.groupIdMapList[query.groupId].push(...pageInfo.list)
+            this.groupIdMapList[query.groupId].sort((i1,i2)=>{
+              return i1.sendDate - i2.sendDate
+            })
+
+            if(!pageInfo.hasNextPage){
+              console.log( this.$refs[query.groupId] )
+              this.$refs[query.groupId][0].noMoreHistory()
+            }
+          }else {
+            this.$message.error('查询消息记录失败'+data.msg)
+          }
+        }).finally(()=>{
+          this.loading = false
+        })
+      }
     }
   },
   mounted() {

@@ -4,11 +4,12 @@
 
 <!-- 没有消息的显示-->
   <el-empty v-if="informInfoList==null||informInfoList.length<1"
-            description="还没有未读消息">
+            :image="emptyImgUrl"
+            :description="refsName+'小组还没有未读消息'">
   </el-empty>
 
   <div style="text-align: center">
-    <el-link v-if="haveHistory" @click="queryHistoryInform">点击查找历史消息</el-link>
+    <el-link v-if="haveHistory" @click="queryHistoryInform">查找历史消息</el-link>
     <span v-else>没有更多的消息了</span>
   </div>
 
@@ -93,9 +94,11 @@ export default {
     return {
       isShow: true,
       headImgUrl: require("@/assets/img/head_default.png"),
+      emptyImgUrl: require("@/assets/img/empty.gif"),
       currentPage: 1,
       limit: 20,
-      haveHistory: true
+      haveHistory: true,
+      informIn3day: true  // 是否查询3天内的消息，（存放内存)
     }
   },
   computed:{
@@ -124,8 +127,10 @@ export default {
         userId: this.$store.getters.getLoginUser.id,
         groupId: this.groupId,
         page: this.currentPage++,
-        limit: this.limit
+        limit: this.limit,
+        isInformIn3day: this.informIn3day
       })
+      this.informIn3day = false
     },
     scrollToBottom() {
       //滚动条滑倒最下面

@@ -18,6 +18,10 @@
 
       <project-detail-card :project="project"/>
 
+      <user-submit-degree-chart ref="userSubmitDegreeChart"/>
+
+      <user-submit14-day-chart ref="userSubmit14dayChart"/>
+
       <hr/>
       <el-link v-if="!isClick" @click="queryProjectRecord">点击查看该项目的提交记录</el-link>
       <hr/>
@@ -47,10 +51,14 @@ import {convertRes2Blob} from "@/util/fileUtil";
 
 import {pageQueryProjectUpdateRecordNetwork, queryProjectByIdNetwork} from "@/network/project"
 import ProjectUpdateRecord from "@/views/projectcomponent/child/projectupdaterecord/ProjectUpdateRecord";
+import UserSubmitDegreeChart from "@/views/projectcomponent/child/charts/UserSubmitDegreeChart";
+import UserSubmit14DayChart from "@/views/projectcomponent/child/charts/UserSubmit14DayChart";
 
 export default {
   name: "ProjectDetail",
   components: {
+    UserSubmit14DayChart,
+    UserSubmitDegreeChart,
     ProjectUpdateRecord,
     ShowWindow,
     ProjectDetailCard
@@ -126,8 +134,9 @@ export default {
 
     //进入时，如果没有project， 进行网络请求获取
     let project = this.$route.query.project
+    let projectId = this.$route.query.projectId
     if(project.id === undefined){
-      let projectId = this.$route.query.projectId
+
       queryProjectByIdNetwork(projectId).then(data => {
         if(data.code === 200) {
           this.project = data.result
@@ -146,6 +155,11 @@ export default {
       }
       this.project = project
     }
+
+    //重新加载图表信息
+    this.$refs.userSubmit14dayChart.loadChart(projectId)
+    this.$refs.userSubmitDegreeChart.loadChart(projectId)
+
   }
 }
 </script>

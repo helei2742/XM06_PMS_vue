@@ -14,7 +14,7 @@
         <span>我管理的小组</span>
       </div>
 
-      <div slot="main" :style="groupListStyle">
+      <div slot="main" >
         <group-list
             :card-style="groupListStyle"
              :group-list="groupList"

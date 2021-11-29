@@ -5,12 +5,12 @@
       <i class="el-icon-user"></i>
       用户管理
       <i class="el-icon-arrow-right"></i>
-      我的信息
+      用户信息
     </div>
-    <div slot="main" style="padding: 20px 10px;overflow: scroll">
+    <div slot="main" style="padding: 20px 10px;overflow-x: scroll">
       <el-row>
         <el-col :span="18" :offset="2">
-          <div style="min-width: 380px;">
+          <div class="user-info" :style="this.$store.getters.getCardColorStyle">
             <el-descriptions title="基本信息"
                              direction="vertical"
                              :column="4"
@@ -54,5 +54,10 @@ export default {
 </script>
 
 <style scoped>
-
+.user-info{
+  min-width: 300px;
+  max-width: 760px;
+  border: 1px solid #ffffff;
+  border-radius: 7px;
+}
 </style>

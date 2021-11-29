@@ -21,7 +21,28 @@ export function createTaskNetwork(from){
 }
 
 /**
+*    修改任务信息接口，form需有以下属性
+ *        {
+          taskName: String,
+          deadline: number,
+          description: String
+        }
+ * @param form
+ * @returns {AxiosPromise}
+ */
+export function alterTaskNetWork(form) {
+  return request({
+    url: '/task/alterTask',
+    data: form,
+    method: 'post'
+  })
+}
+
+/**
  * 分页查询用户的任务信息的网络请求
+ *  "该方法包含了多种查询方式，type类型：（2.查询用户创建的任务，3.查询还没过期的任务，" +
+ "4，查询用户已经提交过的任务，5.查询过期的任务、6。查看小组的任务，7、查看未提交的任务, 1、或其他，查看所有任务)" +
+ "对应的其他需要的参数有（1或其他.userId, 2.userId,3.userId,4.userId,5.userId,6.groupId,7.userId"
  * @param userId
  * @param page
  * @param limit
@@ -60,13 +81,45 @@ export function queryTaskInfoNetwork(taskId){
 /**
  * 查询任务的提交记录的网络请求
  * @param taskId
+ * @param page
+ * @param limit
  */
-export function queryTaskRecordNetwork(taskId){
+export function queryTaskRecordNetwork(taskId,page, limit){
   return request({
     url: '/task/taskSubmitRecord',
     data: {
       taskId,
-      limit: 100
+      page,
+      limit
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 查询用户的所有提交记录
+ * @param userId
+ */
+export function queryTaskRecordOfUserNetwork(userId, page, limit){
+  return request({
+    url:'/task/userSubmitRecord',
+    data: {
+      userId,
+      page,
+      limit
+    },
+    method: 'post'
+  })
+}
+/**
+ * 查询任务提交记录图表信息
+ * @param taskId
+ */
+export function queryTaskSubmitChartsNetwork(taskId){
+  return request({
+    url: '/task/queryTaskSubmitCharts',
+    data:{
+      taskId
     },
     method: 'post'
   })

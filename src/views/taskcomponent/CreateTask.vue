@@ -13,6 +13,7 @@
       <i class="el-icon-arrow-right"></i>
       <span>发部任务</span>
     </div>
+
     <div slot="main">
       <el-row>
         <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
@@ -32,8 +33,7 @@
 
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
-import CreateTaskFrom from "@/views/taskcomponent/child/CreateTaskFrom";
-import {queryJoinedGroupAllNetwork} from "@/network/group";
+import CreateTaskFrom from "@/views/taskcomponent/createtaskchild/CreateTaskFrom";
 import {createTaskNetwork} from "@/network/task";
 import {RELOADMYGROUP} from "@/store/mutations-types-groupmodule";
 

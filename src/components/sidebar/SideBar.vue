@@ -41,6 +41,7 @@
           <el-menu-item-group>
             <el-menu-item index="2-1" @click="createTask">发布任务</el-menu-item>
             <el-menu-item index="2-2" @click="showTask">查看任务</el-menu-item>
+            <el-menu-item index="2-3" @click="myTaskSubmitRecord">查看我的提交</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
 
@@ -89,6 +90,7 @@ export default {
 
       createTaskPath: '/index/createtask',
       showTaskPath: '/index/showtask',
+      myTaskSubmitRecordPath: '/index/mytasksubmitrecord',
 
       createProjectPath: '/index/createproject',
       projectListPath: '/index/projectlist'
@@ -119,6 +121,10 @@ export default {
     showTask() {
       this.$router.push(this.showTaskPath)
     },
+
+    myTaskSubmitRecord(){
+      this.$router.push(this.myTaskSubmitRecordPath)
+    },
     createProject() {
       this.$router.push(this.createProjectPath)
     },
@@ -148,7 +154,7 @@ export default {
   width: 100%;
   top:0;
   left: 0;
-  height: 500px;
+  bottom: 150px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -156,7 +162,7 @@ export default {
 .public-inform{
   position: absolute;
   left: 0;
-  top: 500px;
+  bottom: 0;
   width: 100%;
   border-top: 1px rgba(100,100,100,0.7) solid;
   height: 145px;

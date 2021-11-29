@@ -1,11 +1,11 @@
 <template>
-
   <div class="submit-record-table">
   <el-table
       v-if="recordList!==[]"
       :data="recordList"
-      stripe
-      style="width: 100%">
+      :row-style="this.$store.getters.getCardColorStyle"
+      :header-cell-style=" this.$store.getters.getCardColorStyle"
+      style="width: 100%;min-width:830px">
     <el-table-column
         type="index"
         width="50">
@@ -16,12 +16,29 @@
         label="提交者用户名"
         width="180">
     </el-table-column>
-
+    <el-table-column
+        prop="user.trueName"
+        label="提交者姓名"
+        width="100">
+    </el-table-column>
     <el-table-column
         label="提交日期"
     >
       <template slot-scope="scope">
         {{submitDate(scope.row.submitDate)}}
+      </template>
+    </el-table-column>
+
+    <el-table-column
+        width="140">
+      <template slot-scope="scope">
+        <el-button
+            size="mini"
+            type="info"
+            icon="el-icon-info"
+            @click="taskDetail(scope.row)">
+          查看任务详情
+        </el-button>
       </template>
     </el-table-column>
 
@@ -36,6 +53,7 @@
         </el-button>
       </template>
     </el-table-column>
+
     <el-table-column
         width="140">
       <template slot-scope="scope">
@@ -89,6 +107,15 @@ export default {
     }
   },
   methods: {
+    taskDetail(taskRecord){
+      this.$router.push({
+        path: '/index/taskdetail',
+        query:{
+          task: {},
+          taskId: taskRecord.taskId
+        }
+      })
+    },
     /**
      * 查看详情提交记录详情的回调
      * @param index
@@ -120,5 +147,8 @@ export default {
 </script>
 
 <style scoped>
-
+.submit-record-table{
+  margin: 40px;
+  overflow-x: scroll;
+}
 </style>

@@ -2,7 +2,7 @@
   <div class="create-account" :style="bgStyle">
     <el-row type="flex" justify="space-around">
       <el-col :xs="20" :sm="16" :md="12" :lg="10" :xl="12">
-        <div class="title">注册管理系统账户</div>
+        <div class="title">注册项目管理系统账户</div>
       </el-col>
     </el-row>
 
@@ -66,13 +66,17 @@ export default {
 <style scoped>
 .create-account{
   background-color: #fff;
-  height: 100vh;
+  min-height: calc(100vh);
   padding: 0 0 50px;
 }
 .title{
-  font-size: 30px;
-  font-weight: 900;
+
   text-align: center;
+  font-size: 32px;
+  letter-spacing: 6px;
+  font-weight: 500;
+  margin-bottom: 10px;
+
   padding: 70px 0 20px;
 }
 </style>

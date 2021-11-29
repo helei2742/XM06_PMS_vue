@@ -1,27 +1,46 @@
 <template>
 <div class="show-task-desc" :style="cardStyle">
   <el-descriptions title="任务详情"
-                   border
-                   :style="cardStyle"
-                   :column="1"
-
-                   :label-style="{'width':'20%',
-                                  'backgroundColor': cardStyle.backgroundColor,
-                                   'color': cardStyle.color}"
-                   :content-style="cardStyle">
+                   :column="1">
     <template slot="extra">
-      <el-button type="success" icon="el-icon-document-add"
-                 @click="submitTask(task)" size="small">提交任务</el-button>
-
-      <el-button type="primary" icon="el-icon-document-add"
-                 @click="submitRecord(task)" size="small">提交记录</el-button>
+      <el-button  size="mini" @click="taskDetail(task)">
+        详情
+      </el-button>
+      <el-dropdown>
+        <el-button type="select" size="mini">
+          更多<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <el-button type="success"
+                       icon="el-icon-upload2"
+                       @click="submitTask(task)"
+                       size="small">
+              提交任务
+            </el-button>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <el-button type="primary"
+                       icon="el-icon-s-claim"
+                       @click="submitRecord(task)"
+                       size="small">
+              提交记录
+            </el-button>
+          </el-dropdown-item>
+          <el-dropdown-item v-if="task.creatorId === this.$store.getters.getLoginUser.id">
+            <el-button type="warning"
+                       @click="alterTask(task)"
+                       icon="el-icon-edit"
+                       size="small">
+              修改任务
+            </el-button>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </template>
     <el-descriptions-item label="任务名称">{{task.taskName}}</el-descriptions-item>
     <el-descriptions-item label="任务要求">
       <span :style="{'whiteSpace': 'pre-line'}">{{task.description}}</span>
-<!--      <el-input type="textarea" :value="task.description"
-                resize="none" autosize :readonly="true">
-      </el-input>-->
     </el-descriptions-item>
     <el-descriptions-item label="发布日期">
       <el-tag type="info">{{formatDate(task.createDate)}}</el-tag>
@@ -96,11 +115,28 @@ export default {
         this.$message.error('任务已过期，不能提交')
         return
       }
-
       this.$emit('submittask', task)
+    },
+    taskDetail(task){
+      this.$router.push({
+        path: '/index/taskdetail',
+        query:{
+          task: task,
+          taskId: task.id
+        }
+      })
     },
     submitRecord(task){
       this.$emit('submitrecord', task)
+    },
+    alterTask(task) {
+      this.$router.push({
+        path: '/index/altertask',
+        query:{
+          task: task,
+          taskId: task.id
+        }
+      })
     }
   }
 }

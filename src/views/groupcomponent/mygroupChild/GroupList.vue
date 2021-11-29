@@ -3,10 +3,10 @@
 <!-- 组队列表   -->
   <el-table
         :row-style="cardStyle"
-        :data="groupList"
         :header-cell-style="cardStyle"
-        height="400"
-        style="width: 100%">
+        :data="groupList"
+        height="372"
+        style="width: 700px">
 
       <el-table-column
           prop="groupName"
@@ -64,7 +64,8 @@ export default {
       this.$router.push({
         path: '/index/groupdetail',
         query: {
-          group: group
+          group: group,
+          groupName: group.groupName
         }
       })
     },
@@ -77,6 +78,8 @@ export default {
 
 <style scoped>
 .my-group-list{
-  padding: 20px 10px 0 20px;
+  margin: 40px auto 5px;
+  width: 700px;
+  border-radius: 6px;
 }
 </style>

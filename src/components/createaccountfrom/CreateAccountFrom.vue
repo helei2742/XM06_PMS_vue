@@ -111,7 +111,7 @@ export default {
 
 .create-account-from{
   background-color: rgba(200,200,200,0.7);
-  padding: 20px 0;
+  padding: 80px 0 100px;
 }
 
 </style>

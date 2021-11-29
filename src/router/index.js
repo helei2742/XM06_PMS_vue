@@ -28,8 +28,12 @@ const PasswordAlterPage = () => import('@/views/usercomponent/PasswordAlter.vue'
 
 const CreateTask = () => import('@/views/taskcomponent/CreateTask.vue')
 const ShowTask = () => import('@/views/taskcomponent/ShowTask.vue')
+const AlterTask = () => import('@/views/taskcomponent/AlterTask')
+const TaskDetail = () => import('@/views/taskcomponent/TaskDetail')
+const MyTaskSubmitRecord = () => import('@/views/taskcomponent/MyTaskSubmitRecord')
 const SubmitTask = () => import('@/views/taskcomponent/SubmitTask')
 const SubmitRecord = () => import('@/views/taskcomponent/SubmitRecord')
+
 
 const InformView = () => import('@/views/informcomponent/InformView')
 
@@ -132,6 +136,27 @@ const routes = [
           title: '提交任务'
         },
         component: SubmitTask
+      },
+      {
+        path: 'altertask',
+        meta: {
+          title: '修改任务信息',
+        },
+        component: AlterTask
+      },
+      {
+        path: 'mytasksubmitrecord',
+        meta:{
+          title: '查看我的提交'
+        },
+        component: MyTaskSubmitRecord
+      },
+      {
+        path: 'taskdetail',
+        meta:{
+          title: '任务详情'
+        },
+        component: TaskDetail
       },
       {
         path: 'submitrecord',

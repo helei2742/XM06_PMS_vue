@@ -25,13 +25,14 @@ export default {
       localUserIdStr = state.userIdStr
     //store 和cookie 都没有，根本没登录过，直接返回
     if(localUserIdStr===null||localUserIdStr===undefined||localUserIdStr ==='')
-      return
+      return null
 
-    if(state.loginUser == null){
-      findUserByUserIdStr(localUserIdStr).then(res =>{
-        state.loginUser = res.result
-      })
-    }
+    // if(state.loginUser == null){
+    //   console.log('-----------')
+    //   findUserByUserIdStr(localUserIdStr).then(res =>{
+    //     state.loginUser = res.result
+    //   })
+    // }
     return state.loginUser
   },
 

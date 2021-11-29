@@ -17,37 +17,36 @@
       <div slot="main">
 
         <!-- 选择按钮套件-->
-        <el-row class="project-list-select" >
-          <el-col :span="24">
+        <div class="project-list-select" >
+          <div>
             <el-button :type="this.queryType === allQueryType.userCreateProject?'success':'primary'"
                        @click="handleTypeChange(allQueryType.userCreateProject)" size="mini">我创建的项目</el-button>
+          </div>
+          <div>
             <el-button :type="this.queryType === allQueryType.joinedGroupProject?'success':'primary'"
                        @click="handleTypeChange(allQueryType.joinedGroupProject)" size="mini">我加入小组的项目</el-button>
+          </div>
+
+          <div>
             <el-button :type="this.queryType === allQueryType.publicProject?'success':'primary'"
                        @click="handleTypeChange(allQueryType.publicProject)" size="mini">查看公开的项目</el-button>
-          </el-col>
-
-          <el-col :span="18">
-            <div style="padding: 8px 0 0">
-            <el-input v-model="queryProjectName" placeholder="请输入项目名称" size="mini" style="width: 30%"></el-input>
+          </div>
+          <div>
+            <el-select v-model="orderType" placeholder="请选择" size="mini">
+              <el-option label="创建时间降序" :value="allSortType.createDateDesc"/>
+              <el-option label="创建时间升序" :value="allSortType.createDateAsc"/>
+              <el-option label="完成度降序" :value="allSortType.completionDegreeDesc"/>
+              <el-option label="完成度升序" :value="allSortType.completionDegreeAsc"/>
+            </el-select>
+            <el-button type="success" size="mini" @click="handleOrderType">排序</el-button>
+          </div>
+          <div>
+            <el-input v-model="queryProjectName" placeholder="请输入项目名称" size="mini" style="width: 65%"></el-input>
             <el-button :type="this.queryType === allQueryType.nameLikeProject?'success':'primary'"
                        @click="handleTypeChange(allQueryType.nameLikeProject)" size="mini">小组名查找</el-button>
-            </div>
-          </el-col>
+          </div>
 
-          <el-col>
-            <div style="padding: 8px 0">
-              <el-select v-model="orderType" placeholder="请选择" size="mini">
-                <el-option label="创建时间降序" :value="allSortType.createDateDesc"/>
-                <el-option label="创建时间升序" :value="allSortType.createDateAsc"/>
-                <el-option label="完成度降序" :value="allSortType.completionDegreeDesc"/>
-                <el-option label="完成度升序" :value="allSortType.completionDegreeAsc"/>
-              </el-select>
-              <el-button type="success" size="mini" @click="handleOrderType">排序</el-button>
-            </div>
-          </el-col>
-
-        </el-row>
+        </div>
 
         <!--项目展示区域-->
         <el-row class="project-list-area">
@@ -259,7 +258,12 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 .project-list-select{
-  left: 30px;
-  top: 15px;
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+  padding-left: 10px;
+}
+.project-list-select>div{
+  margin: 10px 5px;
 }
 </style>

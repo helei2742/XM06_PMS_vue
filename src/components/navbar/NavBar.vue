@@ -85,7 +85,7 @@
                 popper-class="bgcClass"
                 index="1">
       <template slot="title">
-        <div style="width: 100px;overflow: hidden">
+        <div class="navbar-username">
             <el-avatar :src="headImg" ></el-avatar>
              {{user.userName}}
         </div>
@@ -137,6 +137,9 @@ export default {
   computed: {
     navbarStyle() {
       return this.$store.getters.getNavbarBgi
+    },
+    isLogin() {
+      return this.$store.getters.getLoginUser !== null
     }
   },
   data() {
@@ -154,10 +157,6 @@ export default {
       default(){
         return {userName: '张三', trueName: '真正的张三'}
       }
-    },
-    isLogin:{
-      type: Boolean,
-      default: false
     },
     navbarBgc: {
       type: String,
@@ -222,6 +221,7 @@ export default {
         }
       }).finally(()=>{
         this.loading = false
+
       })
     },
 
@@ -308,10 +308,14 @@ export default {
 </script>
 
 <style scoped>
-
-
+.navbar-username{
+  width: 100%;
+  overflow: hidden;
+}
+.navbar-username:hover{
+  overflow: visible;
+}
 #user-manage{
-
   position: absolute;
   right: 0;
   top: 0;
