@@ -9,6 +9,25 @@
          :style="cardStyle"
          style="padding: 20px 10px">
       <span class="project-title">{{project.projectName}}</span>
+      <div style="float: right;margin-left: 10px;">
+        <el-dropdown>
+          <span class="el-dropdown-link" >
+            <el-button icon="el-icon-setting"
+                       class="setting-button">
+            </el-button>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item >
+              <span @click="toAlterProject">
+                修改项目信息
+              </span>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              删除项目
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
       <el-button style="float: right; padding: 3px 0" type="text"
                  @click="toProjectDetail(project)">
@@ -38,7 +57,7 @@
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-for="group in project.groupList" >
-                <span @click="toGroupDetail(group.groupName)">{{ group.groupName }}</span>
+                <span @click="toGroupDetail(group)">{{ group.groupName }}</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -104,14 +123,18 @@ export default {
         }
       })
     },
+    toAlterProject(){
+      this.$router.push('/index/alterproject')
+    },
     /**
      * 点击悬浮查看中的小组按钮调用
      */
-    toGroupDetail(groupName) {
+    toGroupDetail(group) {
       this.$router.push({
         path: '/index/groupdetail',
         query: {
-          groupName: groupName
+          group: group,
+          groupName: group.groupName
         }
       })
     }
@@ -144,5 +167,9 @@ export default {
 }
 .clearfix:after {
   clear: both
+}
+
+.setting-button{
+  font-size: 25px;padding: 0;border: none;background-color:transparent;
 }
 </style>

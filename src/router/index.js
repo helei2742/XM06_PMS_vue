@@ -40,6 +40,8 @@ const InformView = () => import('@/views/informcomponent/InformView')
 const CreateProject = () => import('@/views/projectcomponent/CreateProject')
 const ProjectList = () => import('@/views/projectcomponent/ProjectList')
 const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
+const AlterProject = () => import('@/views/projectcomponent/AlterProject')
+
 
 const FaceInfoRegister = () => import('@/views/facecomponent/FaceInfoRegister')
 const UploadFIleToRegister = () => import('@/views/facecomponent/UploadFileTORegister')
@@ -192,6 +194,13 @@ const routes = [
           title: '项目详情'
         },
         component: ProjectDetail
+      },
+      {
+        path: 'alterproject',
+        meta:{
+          title: '修改项目信息'
+        },
+        component: AlterProject
       },
       {
         path: 'faceregisterpage',

@@ -22,7 +22,7 @@ export default new Vuex.Store({
     //appColor 为页面的背景颜色
     color: [{bgcColor: '#ffffff', slotAreaBgc: '#dcdfe6',
               appColor: '#ffffff', navbarBgi: 'radial-gradient(circle, #ffffff,#ccffff)',
-              desBgc: '#ebebeb', fontColor: '#202020'},
+              desBgc: '#eeeff3', fontColor: '#202020'},
 
             {bgcColor: '#202020', slotAreaBgc: '#333333',
               appColor: '#545c64', navbarBgi: 'radial-gradient(circle,#999999, #000000)',

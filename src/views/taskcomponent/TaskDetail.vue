@@ -16,7 +16,7 @@
     <div slot="main">
       <el-row :gutter="1">
         <el-col :xs="22" :sm="22" :md="22" :lg="6" :xl="6">
-          <task-detail-base-info-card :task="task"/>
+            <task-detail-base-info-card :task="task"/>
         </el-col>
         <el-col :xs="22" :sm="22" :md="22" :lg="16" :xl="16">
           <task-chart-card ref="taskChartCard"

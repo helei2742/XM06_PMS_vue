@@ -6,7 +6,7 @@
         :header-cell-style="cardStyle"
         :data="groupList"
         height="372"
-        style="width: 700px">
+        style="min-width: 600px;width: 100%;">
 
       <el-table-column
           prop="groupName"
@@ -27,7 +27,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="200">
+      <el-table-column width="100">
           <template slot-scope="scope">
             <el-button  @click="detail(scope.row)">详情</el-button>
           </template>

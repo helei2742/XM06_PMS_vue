@@ -101,7 +101,7 @@ export default {
   data() {
     return {
       page: 1,
-      limit: 4,
+      limit: 6,
       tasks: [],
       total: 0,
       creator: null,

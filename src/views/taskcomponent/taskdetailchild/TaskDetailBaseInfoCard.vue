@@ -74,7 +74,8 @@ export default {
   padding: 15px 20px;
   margin: 0 auto;
   border-radius: 12px;
-
+  border: 1px solid rgba(100,100,100,0.7);
+  box-shadow: 8px 8px 2px 1px rgba(100,100,100,0.4);
 }
 .task-detail-base-info-card .description{
   display: inline-block;

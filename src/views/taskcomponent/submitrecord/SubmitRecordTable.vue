@@ -140,6 +140,8 @@ export default {
       downloadFileNetwork(filePath).then( response =>{
         console.log(response)
         convertRes2Blob(response)
+      }).catch(e => {
+        this.$alert('出错了，该上传文件已不存在')
       })
     }
   }
