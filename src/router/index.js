@@ -197,6 +197,7 @@ const routes = [
       },
       {
         path: 'alterproject',
+        name: 'alterProject',
         meta:{
           title: '修改项目信息'
         },

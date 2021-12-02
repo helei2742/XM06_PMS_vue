@@ -18,12 +18,12 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item >
-              <span @click="toAlterProject">
+              <span @click="toAlterProject(project)">
                 修改项目信息
               </span>
             </el-dropdown-item>
             <el-dropdown-item>
-              删除项目
+              <span @click="deleteProject(project)" style="color: #ff0000">删除项目</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -73,6 +73,7 @@
     </div>
   </el-card>
   </div>
+
 </div>
 </template>
 
@@ -123,8 +124,14 @@ export default {
         }
       })
     },
-    toAlterProject(){
-      this.$router.push('/index/alterproject')
+    toAlterProject(project){
+      this.$router.push({
+        path: '/index/alterproject',
+        query: {
+          project: project,
+          projectId: project.id
+        }
+      })
     },
     /**
      * 点击悬浮查看中的小组按钮调用
@@ -137,7 +144,10 @@ export default {
           groupName: group.groupName
         }
       })
-    }
+    },
+    deleteProject(project){
+      this.$emit('deleteProject', project)
+    },
   }
 }
 </script>

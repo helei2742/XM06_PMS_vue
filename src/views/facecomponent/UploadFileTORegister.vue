@@ -46,6 +46,7 @@ export default {
   name: "UploadFileTORegister",
   data(){
     return {
+      isHaveFile: false,
       fileList: [],
       fileForm: null,
       percentVisible: false,
@@ -61,11 +62,12 @@ export default {
         this.$refs.upload.clearFiles()
         return
       }
+      this.isHaveFile = true
       this.fileForm = new FormData()
       this.fileForm.append('file', param.file)
     },
     submitUpload(){
-      if(this.fileForm == null){
+      if(this.fileForm == null||!this.isHaveFile){
         this.$message.error('请先选择文件')
         return
       }
@@ -117,6 +119,7 @@ export default {
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
+      this.isHaveFile = false
       this.percentVisible = false
     }
   }

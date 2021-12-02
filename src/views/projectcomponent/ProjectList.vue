@@ -68,6 +68,7 @@
             </div>
 
              <project-list-card :card-style="getProjectListCardStyle"
+                                @deleteProject="deleteProject"
                                 :project-list="projectList"/>
           </el-col>
         </el-row>
@@ -90,6 +91,40 @@
 
       </div>
     </show-window>
+
+
+
+
+    <el-dialog
+        :title="'删除'+currentDelete"
+        :visible.sync="deleteProjectVisible"
+        width="320px"
+        center>
+
+      <span>已向邮箱发送验证码,请在5分钟内输入</span>
+      <el-input
+          type="text"
+          placeholder="请输入验证码"
+          v-model="checkCode"
+          maxlength="6"
+          show-word-limit>
+      </el-input>
+
+      <el-slider v-model="checkTime"
+                 :max="60"
+                 disabled>
+      </el-slider>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteProjectVisible = false">取 消</el-button>
+        <el-button type="primary"
+                   :disabled="checkCode.length!==6"
+                   @click="handleDeleteConfirm">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -102,6 +137,7 @@ import {PAGEQUERYPROJECTBYUSERID,
         PAGEQUERYPUBLICPROJECT,
         PAGEQUERYUSERJOINEDGROUPPROJECT,
         PAGEQUERYNAMELIKEPROJECT} from "@/network/project.js";
+import {deleteProjectConfirmNetwork, deleteProjectNetwork} from "@/network/project";
 
 export default {
   name: "ProjectList",
@@ -136,7 +172,15 @@ export default {
 
       createProjectPath: '/index/createproject',
       //正在加载
-      loading: false
+      loading: false,
+
+      //是否显示删除项目对话框
+      deleteProjectVisible: false,
+      checkCode: '',
+      checkTime: 60,
+      timer: null,
+      currentDelete: null,
+      currentDeleteId: -1
     }
   },
   computed: {
@@ -246,6 +290,64 @@ export default {
 
     toCreateProjectPage() {
       this.$router.push(this.createProjectPath)
+    },
+
+    handleDeleteConfirm(){
+      deleteProjectConfirmNetwork(this.currentDeleteId, this.checkCode).then(data=>{
+        if(data.code === 200){
+          this.$alert('删除项目信息成功')
+          this.deleteProjectVisible = false
+        }else {
+          this.$alert('删除项目信息失败，'+data.msg)
+        }
+      }).finally(()=>{
+        this.resetDelete()
+      })
+    },
+    deleteProject(project){
+      let userId = this.$store.getters.getLoginUser.id
+      if(userId !== project.creatorId){
+        this.$alert('只有项目创建者才能执行此操作')
+        return
+      }
+      //上一次点的同一个项目
+      if(this.currentDelete === project.projectName && this.timer !==null){
+        this.deleteProjectVisible = true
+        return
+      }
+
+      this.currentDelete = project.projectName
+      this.currentDeleteId = project.id
+      //没点过或点不同的项目
+
+      this.resetDelete()
+
+      //网络请求，生成验证码
+      deleteProjectNetwork(userId, project.id).then(data => {
+        console.log(data)
+        if(data.code === 200){
+          this.timer = setInterval(()=>{
+            this.checkTime--
+            if(this.checkTime <=0 ){
+              clearInterval(this.timer)
+              this.timer = null
+              console.log(this.timer)
+            }
+          },1000)
+
+        }else {
+          this.$alert('出错了，'+data.msg)
+
+        }
+      })
+      this.deleteProjectVisible = true
+
+    },
+    resetDelete(){
+      clearInterval(this.timer)
+      this.checkCode = ''
+      this.timer = null
+      this.checkTime = 60*5
     }
   },
 }

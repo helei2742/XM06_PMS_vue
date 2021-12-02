@@ -23,7 +23,9 @@
     </el-form-item>
 
     <el-form-item label="项目描述" prop="desc">
-      <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 9 }"  v-model="ruleForm.desc"></el-input>
+      <el-input type="textarea"
+                :autosize="{ minRows: 2, maxRows: 9 }"
+                v-model="ruleForm.desc"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>

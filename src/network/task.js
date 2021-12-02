@@ -124,3 +124,30 @@ export function queryTaskSubmitChartsNetwork(taskId){
     method: 'post'
   })
 }
+
+/**
+ * 删除任务提交记录网络请求
+ * @param recordId
+ * @param userId
+ */
+export function deleteTaskSubmitRecordNetwork(recordId, userId){
+  return request({
+    url: '/task/deleteTaskSubmitRecord',
+    data:{
+      recordId,
+      userId
+    },
+    method: 'post'
+  })
+}
+
+export function deleteSelectedTaskRecordNetwork(recordIds,userId){
+  return request({
+    url: '/task/deleteSelectedRecord',
+    data: {
+      recordIds,
+      userId
+    },
+    method: 'post'
+  })
+}

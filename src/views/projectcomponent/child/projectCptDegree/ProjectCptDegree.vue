@@ -6,7 +6,7 @@
     <el-progress type="circle"
                  :width="200"
                  :color="getDegreeColor(project.completionDegree*100)"
-                 :percentage="Math.floor(project.completionDegree*100)">
+                 :percentage="Math.round(project.completionDegree*100)">
     </el-progress>
 
 

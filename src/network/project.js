@@ -96,7 +96,7 @@ export function queryProjectListNetwork(projectQuery) {
 
 
 /**
- * 更新项目信息网络请求
+ * 更新项目进度网络请求
  * @param form  类型为DataForm     需包含
  *                      userId          提交用户id
  *                      projectId       项目id
@@ -146,6 +146,67 @@ export function pageQueryProjectUpdateRecordNetwork(projectId, page, limit){
       projectId,
       page,
       limit
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 更新项目网络请求，
+ *        {
+ *        projectId     必传
+ *        creatorId     必传
+ *        projectName   为null 不修改
+ *        projectDesc   为null 不修改
+ *        isPublic    为null 不修改
+ *        groupIds     没有视作移除项目下所有小组
+ *        }
+ *  {AxiosPromise}
+ */
+export function updateProjectNetwork(form){
+  return request({
+    url: '/project/updateProject',
+    data: {
+      id: form.projectId,
+      creatorId: form.creatorId,
+      projectDesc: form.projectDesc,
+      projectName: form.projectName,
+      isPublic: form.isPublic,
+      groupIds: form.groupIds
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 删除项目网络请求，会向project.creatorId（创建人） 发送验证码邮件
+ * @param userId
+ * @param projectId
+ * @returns {AxiosPromise}
+ */
+export function deleteProjectNetwork(userId, projectId){
+  return request({
+    url: '/project/deleteProject',
+    data:{
+      userId,
+      projectId
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 确认码 确认删除项目
+ * @param projectId
+ * @param checkCode
+ * @returns {AxiosPromise}
+ */
+export function deleteProjectConfirmNetwork(projectId, checkCode){
+  return request({
+    url: '/project/deleteConfirm',
+    data:{
+      projectId,
+      checkCode
     },
     method: 'post'
   })

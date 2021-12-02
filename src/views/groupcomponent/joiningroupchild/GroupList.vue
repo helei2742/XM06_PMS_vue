@@ -26,11 +26,13 @@
       <el-table-column
           prop="memberNum"
           label="成员数"
+          sortable
           width="95">
       </el-table-column>
       <el-table-column
           prop="createDate"
           label="创建日期"
+          sortable
           width="240">
         <template slot-scope="scope">
           {{formatDate(scope.row.createDate)}}
@@ -46,9 +48,10 @@
               placeholder="输入小组名"/>
           <el-button size="mini" @click="searchGroupName">搜索</el-button>
         </template>
-          <template slot-scope="scope">
-            <el-button type="success" @click="add(scope.row.id)">加入</el-button>
-          </template>
+        <template slot-scope="scope">
+          <el-button type="success" @click="add(scope.row.id)">加入</el-button>
+          <el-button type="info" @click="groupDetail(scope.row)">详情</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -114,6 +117,15 @@ export default {
     add(id){
       this.form.groupId = id
       this.dialogFormVisible = true
+    },
+    groupDetail(group){
+      this.$router.push({
+        path: '/index/groupdetail',
+        query: {
+          group: group,
+          groupName: group.groupName
+        }
+      })
     },
     invitationCodeSubmit() {
       this.$emit('joiningroup', this.form)

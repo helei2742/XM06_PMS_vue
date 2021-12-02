@@ -10,7 +10,20 @@
       <span>{{group.groupName}}</span>
     </div>
 
+
+
     <div slot="main" style="padding: 30px 15px">
+
+      <div v-if="isManager"
+           style="text-align: right;margin-bottom: 20px">
+        <el-tooltip effect="dark" content="修改小组信息" placement="bottom-end">
+          <el-button @click="dialogFormVisible=true"
+                     circle
+                     icon="el-icon-edit">
+          </el-button>
+        </el-tooltip>
+      </div>
+
 
       <el-descriptions :column="1"
                        border
@@ -104,6 +117,35 @@
     </div>
   </show-window>
 
+
+  <el-dialog title="小组信息修改"
+             v-if="isManager"
+             :visible.sync="dialogFormVisible">
+    <el-form :model="groupForm">
+
+      <el-form-item label="小组名">
+        <el-input v-model="groupForm.groupName" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="小组描述">
+        <el-input  v-model="groupForm.described"
+                   type="textarea"
+                   :autosize="{ minRows: 2, maxRows: 4}">
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="handleCancel"
+                 :disabled="isSame">
+        取 消
+      </el-button>
+      <el-button type="primary"
+                 :disabled="isSame"
+                 @click="handleAlter">
+        确 定
+      </el-button>
+    </div>
+  </el-dialog>
+
 </div>
 </template>
 
@@ -112,7 +154,7 @@ import ShowWindow from "@/components/showwindow/ShowWindow";
 import {
   queryGroupInvitationCode,
   removeGroupMemberNetwork,
-  dissolveGroupNetwork, queryGroupByNameNetwork
+  dissolveGroupNetwork, queryGroupByNameNetwork, alterGroupInfoNetwork
 } from "@/network/group";
 
 export default {
@@ -125,31 +167,68 @@ export default {
     isManager() {
       let userId = this.$store.getters.getLoginUser.id
       return userId === this.group.managerId
+    },
+    isSame(){
+      if(this.groupForm.groupName !== this.group.groupName)
+        return false
+      if(this.groupForm.described !== this.group.described)
+        return false
+      return true
     }
   },
   data(){
     return {
-      group: null
+      group: null,
+      groupForm: {
+        groupName: '',
+        described: ''
+      },
+      dialogFormVisible: false
     }
   },
   activated() {
 
     let group = this.$route.query.group
-    console.log(group)
     if(group.groupName === undefined){
       let groupName = this.$route.query.groupName
       queryGroupByNameNetwork(groupName).then(data=>{
         if(data.code === 200) {
           this.group = this.fixGroup(data.result)
+
+          this.groupForm = JSON.parse(JSON.stringify(data.result))
         }else {
           this.$message.error('加载失败，请稍后重试')
         }
       })
     }else {
+
       this.group = this.fixGroup(group)
+
+      this.groupForm = JSON.parse(JSON.stringify(group))
     }
   },
   methods:{
+    handleCancel(){
+      this.groupForm.groupName = this.group.groupName
+      this.groupForm.described = this.group.described
+      this.dialogFormVisible = false
+    },
+    handleAlter(){
+      let form = {
+        groupId: this.group.id,
+        userId: this.$store.getters.getLoginUser.id,
+        groupName: this.groupForm.groupName===this.group.groupName?null:this.groupForm.groupName,
+        described: this.groupForm.described===this.group.described?null:this.groupForm.described
+      }
+      console.log(form)
+      alterGroupInfoNetwork(form).then(data=>{
+        if(data.code === 200){
+          this.$alert('修改成功')
+        }else {
+          this.$alert('修改失败,'+data.msg)
+        }
+      })
+    },
     formatDate(time){
       return this.$formatDate(time);
     },
@@ -231,7 +310,8 @@ export default {
           message: '已取消删除'
         })
       })
-    }
+    },
+
   }
 }
 </script>
