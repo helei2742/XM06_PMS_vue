@@ -1,17 +1,23 @@
 <template>
 <!--  侧边栏下方的公告-->
-<div class="announcement">
-  <div class="announcement-title">系统公告</div>
+<div class="announcement" >
+  <div class="announcement-title">最近的公告</div>
   <i class="el-icon-close" @click="closeThis"></i>
+  <i class="el-icon-more-outline" @click="toShowAnnouncePath"></i>
 
-  <div id="review_box" @mouseover="rollStop()" @mouseout="rollStart(60)">
+  <div v-loading="loading"
+       id="review_box"
+       @mouseover="rollStop()"
+       @mouseout="rollStart(60)">
+
     <ul id="comment1">
-      <li>别点人脸相关的</li>
-      <li>别点人脸相关的</li>
-      <li>别点人脸相关的</li>
-      <li>别点人脸相关的</li>
-      <li>别点人脸相关的</li>
-      <li>别点人脸相关的</li>
+      <li v-for="(announce,index) in announceList">
+        <el-link type="info" @click="toAnnounceDetail(announce)">
+          <div style="overflow: hidden;text-overflow:ellipsis;white-space:nowrap;width:150px">
+            {{ (index+1)+'-'+announce.title}}
+          </div>
+        </el-link>
+      </li>
     </ul>
     <ul id="comment2"></ul>
   </div>
@@ -19,15 +25,33 @@
 </template>
 
 <script>
+import {pageQueryAnnounceNetwork} from "@/network/announce";
+
 export default {
   name: "Announcement",
   data (){
     return {
       timer: null,
+      announceList:[],
+      loading: true
     }
   },
   mounted() {
-    this.roll(60);
+
+    this.loading = true
+    pageQueryAnnounceNetwork(1,1,1,10).then(data=>{
+      if(data.code === 200){
+        let pageInfo = data.result
+        setTimeout(()=>{
+          this.roll(60)
+        },2000)
+
+        this.announceList = pageInfo.list
+      }else {
+      }
+    }).finally(()=>{
+      this.loading = false
+    })
   },
   beforeDestroy() {
     if (this.timer) clearInterval(this.timer);
@@ -36,6 +60,19 @@ export default {
     closeThis() {
       this.rollStop()
       this.$emit('closeThis')
+    },
+    toShowAnnouncePath(){
+      this.$router.push('/index/showannounce')
+    },
+    toAnnounceDetail(announce){
+      console.log(announce.id)
+      this.$router.push({
+        path: '/index/announcedetail',
+        query:{
+          announce,
+          announceId: announce.id
+        }
+      })
     },
     roll(t) {
       let ul1 = document.getElementById("comment1");
@@ -46,6 +83,7 @@ export default {
       this.rollStart(t);
     },
     rollStart(t) {
+      if(this.announceList.length<5) return
       let ul1 = document.getElementById("comment1");
       let ul2 = document.getElementById("comment2");
       let ulbox = document.getElementById("review_box");
@@ -62,7 +100,7 @@ export default {
     rollStop() {
       clearInterval(this.timer);
     }
-  }
+  },
 }
 </script>
 
@@ -77,6 +115,17 @@ export default {
   top: 5px
 }
 .announcement > .el-icon-close:hover{
+  color: #3a8ee6;
+  cursor: pointer;
+}
+
+.announcement> .el-icon-more-outline{
+  font-size: 18px;
+  position: absolute;
+  left: 8px;
+  top: 5px
+}
+.announcement> .el-icon-more-outline:hover{
   color: #3a8ee6;
   cursor: pointer;
 }

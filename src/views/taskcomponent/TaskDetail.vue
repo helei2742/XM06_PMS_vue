@@ -14,6 +14,43 @@
     </div>
 
     <div slot="main">
+      <div style="text-align: right;margin-right: 25px">
+        <el-dropdown >
+          <span class="el-dropdown-link">
+           <i style="font-size: 30px;cursor: pointer" class="el-icon-more-outline el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <el-button type="success"
+                         icon="el-icon-upload2"
+                         @click="submitTask(task)"
+                         size="small">
+                提交任务
+              </el-button>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <el-button type="primary"
+                         icon="el-icon-s-claim"
+                         @click="submitRecord(task)"
+                         size="small">
+                提交记录
+              </el-button>
+            </el-dropdown-item>
+
+            <el-dropdown-item v-if="task.creatorId === this.$store.getters.getLoginUser.id">
+              <el-button type="warning"
+                         @click="alterTask(task)"
+                         icon="el-icon-edit"
+                         size="small">
+                修改任务
+              </el-button>
+            </el-dropdown-item>
+
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+
+
       <el-row :gutter="1">
         <el-col :xs="22" :sm="22" :md="22" :lg="6" :xl="6">
             <task-detail-base-info-card :task="task"/>
@@ -43,6 +80,36 @@ export default {
     return {
       task: null,
       loading: false
+    }
+  },
+  methods:{
+
+    submitTask(task){
+      this.$router.push({
+        path:'/index/submittask',
+        query: {
+          task,
+          taskId: task.id
+        }
+      })
+    },
+    submitRecord(task){
+      this.$router.push({
+        path: '/index/submitrecord',
+        query:{
+          taskName: task.taskName,
+          taskId: task.id
+        }
+      })
+    },
+    alterTask(task) {
+      this.$router.push({
+        path: '/index/altertask',
+        query:{
+          task: task,
+          taskId: task.id
+        }
+      })
     }
   },
   activated() {

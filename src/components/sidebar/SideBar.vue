@@ -56,7 +56,16 @@
           </el-menu-item-group>
         </el-submenu>
 
-
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-tickets"></i>
+            <span>公告管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="4-1" @click="createAnnounce">发布公告</el-menu-item>
+            <el-menu-item index="4-2" @click="showAnnounce">公告查询</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
       </el-menu>
     </div>
 
@@ -93,7 +102,10 @@ export default {
       myTaskSubmitRecordPath: '/index/mytasksubmitrecord',
 
       createProjectPath: '/index/createproject',
-      projectListPath: '/index/projectlist'
+      projectListPath: '/index/projectlist',
+
+      createAnnouncePath: '/index/createannounce',
+      showAnnouncePath: '/index/showannounce'
     }
   },
   methods: {
@@ -132,9 +144,15 @@ export default {
       this.$router.push(this.projectListPath)
     },
 
+    createAnnounce(){
+      this.$router.push(this.createAnnouncePath)
+    },
+    showAnnounce(){
+      this.$router.push(this.showAnnouncePath)
+    },
     announcementClose() {
       this.isShowAnnounce = false
-    }
+    },
   }
 }
 </script>

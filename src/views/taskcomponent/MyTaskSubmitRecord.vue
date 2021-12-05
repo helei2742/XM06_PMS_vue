@@ -13,6 +13,24 @@
     </div>
     <div slot="main">
 
+      <div style="text-align: right;margin-right: 50px">
+        <el-dropdown >
+          <span class="el-dropdown-link">
+           <i style="font-size: 30px;cursor: pointer" class="el-icon-more-outline el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <el-button size="mini"
+                         @click="exportMyTaskSubmitRecord"
+                         icon="el-icon-s-fold">
+                导出excel文件
+              </el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+
+
       <submit-record-table :record-list="recordList"/>
       <div style="text-align: center">
         <el-pagination
@@ -33,7 +51,8 @@
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
 import SubmitRecordTable from "@/views/taskcomponent/submitrecord/SubmitRecordTable";
-import {queryTaskRecordOfUserNetwork} from "@/network/task";
+import {exportMyTaskSubmitRecordNetwork, queryTaskRecordOfUserNetwork} from "@/network/task";
+import {convertRes2Blob} from "@/util/fileUtil";
 
 export default {
   name: "MySubmitRecord",
@@ -70,6 +89,14 @@ export default {
       }).finally(()=>{
         this.loading = false
       })
+    },
+    exportMyTaskSubmitRecord(){
+      let userId = this.$store.getters.getLoginUser.id
+      exportMyTaskSubmitRecordNetwork(userId).then(
+        (res) => { // 处理返回的文件流
+        convertRes2Blob(res)
+        }
+      )
     }
   },
   mounted() {

@@ -31,6 +31,7 @@
         width="100">
     </el-table-column>
     <el-table-column
+        sortable
         label="提交日期"
     >
       <template slot-scope="scope">

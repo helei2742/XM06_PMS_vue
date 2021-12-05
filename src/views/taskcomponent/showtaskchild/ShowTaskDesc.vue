@@ -35,6 +35,14 @@
               修改任务
             </el-button>
           </el-dropdown-item>
+          <el-dropdown-item v-if="task.creatorId === this.$store.getters.getLoginUser.id">
+            <el-button type="danger"
+                       @click="dropTask(task)"
+                       icon="el-icon-edit"
+                       size="small">
+              删除任务
+            </el-button>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </template>
@@ -130,13 +138,10 @@ export default {
       this.$emit('submitrecord', task)
     },
     alterTask(task) {
-      this.$router.push({
-        path: '/index/altertask',
-        query:{
-          task: task,
-          taskId: task.id
-        }
-      })
+      this.$emit('altertask', task)
+    },
+    dropTask(task){
+      this.$emit('droptask', task.id)
     }
   }
 }

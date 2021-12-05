@@ -45,6 +45,12 @@ export default {
   },
   methods:{
     alterTask(task){
+      const loading = this.$loading({
+        lock: true,
+        text: '正在修改任务信息',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
 
       alterTaskNetWork(task).then(data=>{
         if(data.code === 200){
@@ -52,6 +58,8 @@ export default {
         }else {
           this.$message.error('修改失败，请稍后重试')
         }
+      }).finally(()=>{
+        loading.close()
       })
     }
   },

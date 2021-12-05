@@ -19,7 +19,27 @@
     </div>
 
     <div slot="main">
+      <div style="text-align: right;margin-right: 50px">
+        <el-dropdown >
+          <span class="el-dropdown-link">
+           <i style="font-size: 30px;cursor: pointer" class="el-icon-more-outline el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <el-button size="mini"
+                         @click="exportTaskSubmitRecord"
+                         icon="el-icon-s-fold">
+                导出excel文件
+              </el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+
+
+
       <submit-record-table :record-list="recordList"/>
+
       <div style="text-align: center">
         <el-pagination
             :small="isUseSmall"
@@ -41,7 +61,8 @@ import ShowWindow from '@/components/showwindow/ShowWindow'
 
 import SubmitRecordTable from '@/views/taskcomponent/submitrecord/SubmitRecordTable'
 
-import {queryTaskRecordNetwork, queryTaskRecordOfUserNetwork} from "@/network/task";
+import {exportTaskSubmitRecordNetwork, queryTaskRecordNetwork, queryTaskRecordOfUserNetwork} from "@/network/task";
+import {convertRes2Blob} from "@/util/fileUtil";
 
 
 export default {
@@ -57,7 +78,8 @@ export default {
       recordList: [],
       currentPage: 1,
       limit: 15,
-      total: 0
+      total: 0,
+      taskId: -1
     }
   },
   computed:{
@@ -82,6 +104,11 @@ export default {
       }).finally(()=>{
         this.loading = false
       })
+    },
+    exportTaskSubmitRecord(){
+      exportTaskSubmitRecordNetwork(this.taskId).then(res=>{
+        convertRes2Blob(res)
+      })
     }
   },
   /**
@@ -89,9 +116,9 @@ export default {
    */
   activated() {
     let taskName = this.$route.query.taskName
-    let taskId = this.$route.query.taskId
+    this.taskId = this.$route.query.taskId
     if(taskName !== this.taskName){
-      this.queryTaskRecord(taskId, 1)
+      this.queryTaskRecord(this.taskId, 1)
     }
   }
 }

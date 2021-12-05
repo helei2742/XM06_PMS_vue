@@ -1,4 +1,5 @@
 import {request} from "@/network/request";
+import {download} from "@/network/file";
 
 /**
  * 创建任务网络请求
@@ -34,6 +35,22 @@ export function alterTaskNetWork(form) {
   return request({
     url: '/task/alterTask',
     data: form,
+    method: 'post'
+  })
+}
+
+/**
+ * 删除任务，需传入taskId,  userId(确认身份)
+ * @param taskId
+ * @param userId
+ */
+export function dropTaskNetwork(taskId, userId){
+  return request({
+    url: '/task/dropTask',
+    data:{
+      id: taskId,
+      creatorId: userId
+    },
     method: 'post'
   })
 }
@@ -141,12 +158,58 @@ export function deleteTaskSubmitRecordNetwork(recordId, userId){
   })
 }
 
+/**
+ * 删除选中的任务提交记录
+ * @param recordIds
+ * @param userId
+ * @returns {AxiosPromise}
+ */
 export function deleteSelectedTaskRecordNetwork(recordIds,userId){
   return request({
     url: '/task/deleteSelectedRecord',
     data: {
       recordIds,
       userId
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 导出当前userId的所有提交记录excel文件
+ * @param userId
+ * @returns {AxiosPromise}
+ */
+export function exportMyTaskSubmitRecordNetwork(userId){
+  return download({
+    url: 'http://localhost:9000/XM06/task/exportMyRecordExcel',
+    data: {
+      userId
+    },
+    responseType: 'blob',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 导出任务的所有提交记录excel文件
+ * @param taskId
+ * @returns {AxiosPromise}
+ */
+export function exportTaskSubmitRecordNetwork(taskId){
+  return download({
+    url: 'http://localhost:9000/XM06/task/exportTaskRecordExcel',
+    data: {
+      taskId
+    },
+    responseType: 'blob',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8'
     },
     method: 'post'
   })

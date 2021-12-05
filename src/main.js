@@ -37,7 +37,9 @@ Date.prototype.Format = function (fmt) {
 Vue.prototype.$formatDate = (num)=>{
     return new Date(num).Format("yyyy年MM月dd日HH时mm分ss秒")
 }
-
+Vue.prototype.$formatDateToDay = (num)=>{
+  return new Date(num).Format("yyyy年MM月dd日")
+}
 
 new Vue({
   router,

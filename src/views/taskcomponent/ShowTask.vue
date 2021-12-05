@@ -2,7 +2,7 @@
 <div class="show-task">
   <show-window
       v-loading="loading"
-      element-loading-text="加载数据中"
+      element-loading-text="等待网络中..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"
       key="showTask">
@@ -56,6 +56,8 @@
                           :card-style="getShowTaskCardStyle"
                           @submittask="submitTask"
                           @submitrecord="submitRecord"
+                          @altertask="alterTask"
+                          @droptask="dropTask"
                          />
         </el-col>
       </el-row>
@@ -73,8 +75,10 @@
       </el-pagination>
 
     </div>
-
   </show-window>
+
+
+
 </div>
 </template>
 
@@ -83,7 +87,7 @@ import ShowTaskDesc from '@/views/taskcomponent/showtaskchild/ShowTaskDesc'
 import ShowWindow from "@/components/showwindow/ShowWindow";
 
 import {queryJoinedGroupAllNetwork} from "@/network/group";
-import {pageQueryUserTaskNetwork} from "@/network/task";
+import {dropTaskNetwork, pageQueryUserTaskNetwork} from "@/network/task";
 import {RELOADJOINEDGROUP} from "@/store/mutations-types-groupmodule";
 
 
@@ -159,6 +163,40 @@ export default {
           taskName: task.taskName,
           taskId: task.id
         }
+      })
+    },
+    alterTask(task) {
+      this.$router.push({
+        path: '/index/altertask',
+        query:{
+          task: task,
+          taskId: task.id
+        }
+      })
+    },
+    dropTask(taskId){
+      this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let userId = this.$store.getters.getLoginUser.id
+        this.loading = true
+        dropTaskNetwork(taskId, userId).then(data=>{
+          if(data.code === 200){
+            this.$message.success('删除成功')
+          }else {
+            this.$alert('删除失败，' + data.msg)
+          }
+        }).finally(()=>{
+          this.loading = false
+        })
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   },

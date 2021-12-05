@@ -43,6 +43,11 @@ const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
 const AlterProject = () => import('@/views/projectcomponent/AlterProject')
 
 
+const CreateAnnounce = () => import('@/views/announcecomponent/CreateAnnounce')
+const ShowAnnounce = () => import('@/views/announcecomponent/ShowAnnounce')
+const AnnounceDetail = () => import('@/views/announcecomponent/AnnounceDetail')
+const EditAnnounce = () => import('@/views/announcecomponent/EditAnnounce')
+
 const FaceInfoRegister = () => import('@/views/facecomponent/FaceInfoRegister')
 const UploadFIleToRegister = () => import('@/views/facecomponent/UploadFileTORegister')
 
@@ -202,6 +207,34 @@ const routes = [
           title: '修改项目信息'
         },
         component: AlterProject
+      },
+      {
+        path: 'createannounce',
+        meta: {
+          title: '发布公告'
+        },
+        component: CreateAnnounce
+      },
+      {
+        path: 'showannounce',
+        meta: {
+          title: '公告查询'
+        },
+        component: ShowAnnounce
+      },
+      {
+        path: 'announcedetail',
+        meta: {
+          title: '公告详情'
+        },
+        component: AnnounceDetail
+      },
+      {
+        path: 'editannounce',
+        meta:{
+          title: '修改公告'
+        },
+        component: EditAnnounce
       },
       {
         path: 'faceregisterpage',
