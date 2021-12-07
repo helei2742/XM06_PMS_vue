@@ -19,7 +19,7 @@
           :auto-upload="true">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传.mp4文件，且不超过10mb</div>
+        <div slot="tip" class="el-upload__tip">只能上传.mp4文件</div>
       </el-upload>
 
       <el-progress
@@ -80,7 +80,7 @@ export default {
       uploadFaceMp4NetWork(userId,this.fileForm, uploadProgressEvent).then(data =>{
         console.log(data)
         if(data.code === 200){
-          this.$alert('上传保存成功，请点击下方生成按钮，生成您的人类信息')
+          this.$alert('上传保存成功，请点击下方生成按钮，生成您的人脸信息')
           this.mp4SavePath = data.result
         }else {
           this.$message.error('出错了', data.msg)

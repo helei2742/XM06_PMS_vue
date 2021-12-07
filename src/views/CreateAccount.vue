@@ -49,7 +49,7 @@ export default {
           }, 2000)
         }else{
           // this.$message.error('注册失败，'+data.msg)
-          this.$message.error('注册失败，可能是幽幽子把数据吃了（bushi)'+data.msg)
+          this.$message.error('注册失败，'+data.msg)
         }
 
       }).catch(e =>{
