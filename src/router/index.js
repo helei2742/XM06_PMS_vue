@@ -224,6 +224,7 @@ const routes = [
       },
       {
         path: 'announcedetail',
+        name: 'announceDetail',
         meta: {
           title: '公告详情'
         },

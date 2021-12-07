@@ -47,8 +47,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.ruleForm.mainBody = 'mainbody:'+ this.ruleForm.mainBody
-          this.$emit('createAnnounce', this.ruleForm)
+          this.$emit('createAnnounce', {
+            title: this.ruleForm.title,
+            mainBody: 'mainbody:'+ this.ruleForm.mainBody
+          })
         } else {
           return false;
         }

@@ -172,6 +172,12 @@ html{
   flex: 1;
 }
 
+
+.announce-detail-text textarea{
+  background-color: transparent;
+  border: none;
+}
+
 .submit-task-from div[class='el-upload-dragger']{
   width: 280px;
 }

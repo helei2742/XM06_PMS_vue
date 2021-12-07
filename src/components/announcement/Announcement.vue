@@ -65,7 +65,6 @@ export default {
       this.$router.push('/index/showannounce')
     },
     toAnnounceDetail(announce){
-      console.log(announce.id)
       this.$router.push({
         path: '/index/announcedetail',
         query:{
@@ -75,6 +74,7 @@ export default {
       })
     },
     roll(t) {
+      if(this.announceList.length<5) return
       let ul1 = document.getElementById("comment1");
       let ul2 = document.getElementById("comment2");
       let ulbox = document.getElementById("review_box");

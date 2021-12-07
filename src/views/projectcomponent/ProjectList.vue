@@ -43,7 +43,7 @@
           <div>
             <el-input v-model="queryProjectName" placeholder="请输入项目名称" size="mini" style="width: 65%"></el-input>
             <el-button :type="this.queryType === allQueryType.nameLikeProject?'success':'primary'"
-                       @click="handleTypeChange(allQueryType.nameLikeProject)" size="mini">小组名查找</el-button>
+                       @click="handleTypeChange(allQueryType.nameLikeProject)" size="mini">查找</el-button>
           </div>
 
         </div>
