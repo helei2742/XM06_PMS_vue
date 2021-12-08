@@ -24,7 +24,7 @@
 
   </div>
   <div class="project-detail-card-cpt-textarea" >
-    <h5 >当前项目进度:{{Math.floor(project.completionDegree*100)}}%</h5>
+    <h5 >当前项目进度:{{Math.round(project.completionDegree*100)}}%</h5>
     <el-input
         type="textarea"
         :autosize="{ minRows: 6, maxRows: 6}"

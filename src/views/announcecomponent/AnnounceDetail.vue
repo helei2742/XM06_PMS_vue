@@ -9,6 +9,11 @@
     </div>
 
     <div slot="main" style="padding: 20px">
+      <div v-if="isCreator" class="announce-detail-edit">
+        <el-tooltip class="item" effect="dark" content="编辑该公告" placement="bottom-end">
+          <i @click="editAnnounce" class="el-icon-edit"></i>
+        </el-tooltip>
+      </div>
       <div class="announce-detail-text" :style="$store.getters.getCardColorStyle">
         <h2>{{announce.title}}</h2>
         <el-input type="textarea"
@@ -22,7 +27,7 @@
 <!--        <div style="text-indent:2em;white-space: pre-wrap" v-html="announce.mainBody"></div>-->
       </div>
 
-      <div v-if="user!=null" style="text-align: right">
+      <div v-if="user!=null" style="text-align: right;margin-top: 10px">
         <el-link type="success"><span style="font-size: 20px">{{user.userName}}</span></el-link>
         <div>{{formatDate(announce.createDate)}}</div>
       </div>
@@ -45,9 +50,24 @@ export default {
       user: null
     }
   },
+  computed:{
+    isCreator(){
+      return this.announce.userId === this.$store.getters.getLoginUser.id
+    }
+  },
   methods:{
     formatDate(time){
       return this.$formatDate(time)
+    },
+
+    editAnnounce(){
+      this.$router.push({
+        path: '/index/editannounce',
+        query: {
+          announce: this.announce,
+          announceId: this.announceId
+        }
+      })
     },
     loadData(announce, announceId){
       return new Promise((resolve, reject)=>{
@@ -82,7 +102,7 @@ export default {
       })
     }
   },
-  mounted() {
+  activated() {
     let announce = this.$route.query.announce
     let announceId = this.$route.query.announceId
     this.loading = true
@@ -108,8 +128,20 @@ export default {
   min-height: 65vh;
   padding: 15px 10px;
 }
+
 .announce-detail-text>h2{
   text-align: center;
 }
 
+.announce-detail-edit{
+ text-align: right;
+}
+.announce-detail-edit i {
+  font-size: 25px;
+
+}
+.announce-detail-edit i:hover{
+  cursor: pointer;
+  color: #66b1ff;
+}
 </style>

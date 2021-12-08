@@ -9,8 +9,8 @@ axios.defaults.withCredentials = true
  */
 export function request(config) {
   const instance = axios.create({
-    // baseURL: 'http://www.ylxteach.net/XM06',
-    baseURL: 'http://localhost:9000/XM06',
+    baseURL: 'http://www.ylxteach.net/XM06',
+    // baseURL: 'http://localhost:9000/XM06',
     timeout: 10000,
     withCredentials:true,
   })

@@ -1,8 +1,9 @@
 <template>
   <div id="sidebar">
 
-    <div class="sidebar-menu">
+    <div class="sidebar-menu" :style="collapseStyle">
       <el-menu
+          :collapse="isCollapse"
           default-active="1"
           class="el-menu-vertical-demo"
           background-color="transparent"
@@ -69,7 +70,7 @@
       </el-menu>
     </div>
 
-    <div v-if="isShowAnnounce" class="public-inform">
+    <div v-if="isShowAnnounce&&!isCollapse" class="public-inform">
       <announcement @closeThis="announcementClose"/>
     </div>
   </div>
@@ -81,11 +82,21 @@ import Announcement from "@/components/announcement/Announcement";
 export default {
   components: {Announcement},
   props:{
+    isCollapse:{
+      type: Boolean,
+      default: false
+    },
     user: {
       type: Object,
       default(){
         return {userName: 'zhangsan', trueName: '张三'}
       }
+    }
+  },
+  computed:{
+    collapseStyle(){
+      if(this.isCollapse) return {'overflowY':'hidden'}
+      return {'overflowY':'scroll'}
     }
   },
   data(){

@@ -70,6 +70,20 @@
                   </el-tooltip>
                   <div>通知</div>
                 </el-col>
+
+
+                <el-col :span="8">
+                  <el-link :href="$store.getters.getApiDocSrc" target="_blank">
+                  <el-tooltip effect="dark"
+                              content="接口文档"
+                              placement="bottom">
+                    <i class="el-icon-document more-func-icon"
+                       :key="'openInform'"
+                    ></i>
+                  </el-tooltip>
+                  </el-link>
+                  <div>接口文档</div>
+                </el-col>
               </el-row>
 
             </div>
@@ -82,7 +96,6 @@
   <!--登录-->
     <el-submenu v-if="isLogin"
                 id="user-manage"
-                popper-class="bgcClass"
                 index="1">
       <template slot="title">
         <div class="navbar-username">

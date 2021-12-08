@@ -2,24 +2,23 @@
 
   <div id="index">
     <el-row type="flex" justify="center">
-
 <!--侧边框-->
-      <el-collapse-transition>
-        <div v-if="isShowSidebar"
+      <transition name="el-zoom-in-center">
+        <div v-if="sideBarModel !== 2"
              :style="$store.getters.getAppBgc"
+             :class="{'aside-collapse': sideBarModel===3}"
              class="aside">
-            <SideBar/>
+          <SideBar :is-collapse="sideBarModel===3"/>
         </div>
-      </el-collapse-transition>
+      </transition>
 
 <!--  占位，本来的sidebar位置-->
-      <div v-if="isShowSidebar"
-           class="hidden-sm-and-down"
-           style="width: 232px">
+      <div v-if="sideBarModel !== 2"
+           :style="sideBarWidth">
       </div>
 
 <!--主要区域-->
-      <el-col id="main-area" :xs="24" :sm="20" :md="20" :lg="21" :xl="21">
+      <el-col id="main-area" :xs="20" :sm="20" :md="20" :lg="21" :xl="21">
         <keep-alive exclude="SubmitTask GroupDetail">
           <router-view />
         </keep-alive>
@@ -27,7 +26,7 @@
 
 <!-- 汉堡按钮-->
       <el-button id="side-bar-open"
-                 @click="isShowSidebar=!isShowSidebar"
+                 @click="handleSideBarModel"
                  circle
                  icon="el-icon-s-operation">
       </el-button>
@@ -48,20 +47,39 @@ export default {
     SideBar,
     NavBar
   },
+  computed:{
+    sideBarWidth(){
+      if(this.sideBarModel === 1){
+        return {'width':'232px'}
+      }else if(this.sideBarModel === 3){
+        return {'width':'65px'}
+      }else {
+        return {'width':0}
+      }
+    }
+  },
   data(){
     return {
       drawer: false,
-      isShowSidebar: true
+      //模式有三种， 为1时为全展开，为3时为部分收缩，只留下图标。为2时全隐藏
+      sideBarModel: 1,
+    }
+  },
+  methods:{
+    handleSideBarModel(){
+      this.sideBarModel = (this.sideBarModel+1)%3 + 1
+      if(this.$store.getters.getScreenSize.width < 400){
+        if(this.sideBarModel === 1) this.sideBarModel = 3
+      }
     }
   },
   mounted() {
-
-
-
     //初始化时根据屏幕大小决定是否显示侧边框
     let size = this.$store.getters.getScreenSize
-    if(size.width < 980){
-      this.isShowSidebar = false
+    if(size.width >= 980){
+      this.sideBarModel = 1
+    }else {
+      this.sideBarModel = 3
     }
   }
 }
@@ -81,6 +99,12 @@ export default {
   width: 232px;
   position: fixed;
   height: 100vh;
+  left: 0;
+  z-index: 1000;
+}
+.aside-collapse{
+  width: 65px;
+  position: fixed;
   left: 0;
   z-index: 1000;
 }

@@ -3,6 +3,9 @@ import {findUserByUserIdStr} from "@/network/user";
 import {SUMCOLORMODULE} from "@/store/mutations-types";
 
 export default {
+  getApiDocSrc(state){
+    return state.apiDocSrc
+  },
   getScreenSize(state){
     return {
       width: state.screenWidth,

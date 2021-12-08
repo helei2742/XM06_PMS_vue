@@ -12,6 +12,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // apiDocSrc: 'http://localhost:9000/XM06/doc.html',
+    apiDocSrc: 'http://www.ylxteach.net/XM06/doc.html',
     screenWidth: 0,
     screenHeight: 0,
     userIdStr: null,
