@@ -40,16 +40,18 @@ export function alterTaskNetWork(form) {
 }
 
 /**
- * 删除任务，需传入taskId,  userId(确认身份)
+ * 删除任务，需传入taskId,  userId(确认身份) userPwd
  * @param taskId
  * @param userId
+ * @param userPwd
  */
-export function dropTaskNetwork(taskId, userId){
+export function dropTaskNetwork(taskId, userId, userPwd){
   return request({
     url: '/task/dropTask',
     data:{
       id: taskId,
-      creatorId: userId
+      creatorId: userId,
+      userPwd
     },
     method: 'post'
   })

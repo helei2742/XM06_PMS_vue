@@ -189,12 +189,13 @@ export function removeGroupMemberNetwork(managerId, groupId, userId){
  * @param groupId
  * @returns {AxiosPromise}
  */
-export function dissolveGroupNetwork(managerId, groupId){
+export function dissolveGroupNetwork(managerId, groupId,userPwd){
   return request({
     url: '/group/dissolveGroup',
     params: {
       managerId,
-      groupId
+      groupId,
+      userPwd
     },
     method: 'post'
   })

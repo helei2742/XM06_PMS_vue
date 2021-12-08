@@ -284,10 +284,19 @@ const router = new VueRouter({
   linkActiveClass: 'active'
 })
 
+import store from '../store'
+import {ADDIFNOTHAVETAB} from "@/store/mutations-types";
+
 router.beforeEach((to, from, next) => {
   //嵌套路由可能获取不到
-  // document.title = to.meta.title
   document.title = to.matched[to.matched.length-1].meta.title
+  let payload = {
+    label: to.meta.title,
+    path: to.path,
+    query: to.query
+  }
+  store.commit(ADDIFNOTHAVETAB, payload)
+
   next()
 })
 

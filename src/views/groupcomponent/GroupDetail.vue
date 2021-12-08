@@ -288,15 +288,17 @@ export default {
 
     //解散小组方法
     dissolveGroup(){
-      this.$confirm('此操作将永久解散小组, 是否继续?', '提示', {
+      this.$prompt('请输入密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+        inputType: 'password',
+        inputPattern: /^[_0-9a-z]{6,16}$/,
+        inputErrorMessage: '密码格式不正确'
+      }).then(({ value }) => {
         let groupId = this.group.id
         let managerId = this.$store.getters.getLoginUser.id
 
-        dissolveGroupNetwork(managerId, groupId).then(data=>{
+        dissolveGroupNetwork(managerId, groupId,value).then(data=>{
           console.log(data)
           if(data.code === 200){
             this.$message.success('解散小组'+this.group.groupName+'成功')
@@ -307,9 +309,10 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
-        })
+          message: '取消删除'
+        });
       })
+
     },
 
   }

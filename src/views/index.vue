@@ -18,13 +18,31 @@
       </div>
 
 <!--主要区域-->
-      <el-col id="main-area" :xs="20" :sm="20" :md="20" :lg="21" :xl="21">
+      <el-col id="main-area" >
+        <div style="height: 40px;width: 100%">
+          <el-tabs v-model="currentTabName"
+                   @tab-click="tabClick"
+                   @tab-add="tabAdd"
+                   @tab-remove="tabRemove"
+                   type="card"
+                   editable>
+
+            <el-tab-pane v-for="(item,index) in $store.getters.getTabs"
+                         :key="item.name"
+                         :name="item.name"
+                         :path="item.path"
+                         :query="item.query"
+                         :label="item.label">
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+
         <keep-alive exclude="SubmitTask GroupDetail">
           <router-view />
         </keep-alive>
       </el-col>
 
-<!-- 汉堡按钮-->
+<!-- 调整侧边栏大小的按钮-->
       <el-button id="side-bar-open"
                  @click="handleSideBarModel"
                  circle
@@ -39,6 +57,7 @@
 <script>
 import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
+import {REMOVETAB} from "@/store/mutations-types";
 
 
 
@@ -56,7 +75,15 @@ export default {
       }else {
         return {'width':0}
       }
+    },
+    currentTabName: {
+      get(){
+        return this.$store.getters.getCrtTabName
+      },
+      set(v){
+      }
     }
+
   },
   data(){
     return {
@@ -71,6 +98,26 @@ export default {
       if(this.$store.getters.getScreenSize.width < 400){
         if(this.sideBarModel === 1) this.sideBarModel = 3
       }
+    },
+    tabClick(tab){
+      let path = tab.$attrs.path
+      let query = JSON.parse(JSON.stringify(tab.$attrs.query))
+
+      this.$router.push({
+        path,
+        query
+      })
+    },
+    tabRemove(name){
+      if(name === '1') return
+      this.$store.commit(REMOVETAB, {name})
+    },
+    tabAdd(){
+      this.$alert('更多功能请查看用户说明', '提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+        }
+      })
     }
   },
   mounted() {

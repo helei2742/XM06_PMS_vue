@@ -33,7 +33,7 @@ export default {
     return {
       timer: null,
       announceList:[],
-      loading: true
+      loading: true,
     }
   },
   mounted() {

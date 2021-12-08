@@ -38,6 +38,13 @@ export default {
     // }
     return state.loginUser
   },
+  getTabs(state) {
+    return state.tabs
+  },
+  getCrtTabName(state){
+    return state.crtTabName
+  },
+
 
   getColorModule(state) {
     return state.colorModule

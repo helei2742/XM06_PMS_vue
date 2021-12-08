@@ -222,7 +222,10 @@ html{
 */
 
 
-
+/* 去掉导航条右边头像的小图标*/
+.el-menu--horizontal>.el-submenu .el-submenu__icon-arrow {
+  display: none;
+}
 
 /* =================  通知界面修改element组件样式 start =============================== */
 .project-list-card div[class='el-card__header'] {

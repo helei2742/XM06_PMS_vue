@@ -175,14 +175,17 @@ export default {
       })
     },
     dropTask(taskId){
-      this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {
+
+      this.$prompt('请输入密码', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+        inputType: 'password',
+        inputPattern: /^[_0-9a-z]{6,16}$/,
+        inputErrorMessage: '密码格式不正确'
+      }).then(({ value }) => {
         let userId = this.$store.getters.getLoginUser.id
         this.loading = true
-        dropTaskNetwork(taskId, userId).then(data=>{
+        dropTaskNetwork(taskId, userId, value).then(data=>{
           if(data.code === 200){
             this.$message.success('删除成功')
           }else {
@@ -195,8 +198,8 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
-        })
+          message: '取消删除'
+        });
       })
     }
   },

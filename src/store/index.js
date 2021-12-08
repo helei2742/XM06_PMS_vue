@@ -18,6 +18,20 @@ export default new Vuex.Store({
     screenHeight: 0,
     userIdStr: null,
     loginUser: null,
+    //存放每个标签页的路径，query参数， name为每个标签页的唯一标识
+    tabs:[
+      {
+        label: '首页',
+        name: '1',
+        path: '/index/welcome',
+        query: {}
+      }
+    ],
+    //当前标签页
+    crtTabName: '1',
+    //每打开一个标签页加一，用于产生标签页的唯一标识
+    addTabCount: 1,
+
     colorModule: 0,// 颜色，对应下方color的索引
     //主题颜色，bgcColor 为ShowWindow组件除去标题行的背景颜色，slotAreaBgc为main插槽区域的颜色，
     //desBgc为插槽区域中，卡片块的颜色， fontColor为插槽区域字体颜色
