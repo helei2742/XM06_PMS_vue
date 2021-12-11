@@ -4,7 +4,12 @@
   加入的小组
 -->
 <div class="join-in-group">
-    <show-window>
+    <show-window v-loading="loading"
+                 element-loading-text="加载数据中"
+                 element-loading-spinner="el-icon-loading"
+                 element-loading-background="rgba(0, 0, 0, 0.8)"
+                 key="joininGroup">
+
       <div slot="title">
         <i class="el-icon-s-custom"></i>
         <span>小组管理</span>
@@ -13,25 +18,28 @@
       </div>
 
       <div slot="main">
-        <el-row>
+        <el-row style="margin-top: 20px">
         <el-col :offset="3" :span="18">
 
         <group-list
             :group-list="groupList"
+            :card-style="cardColorStyle"
             @joiningroup="joinInGroup"
             @searchgroupname="searchByGroupName"
         />
 
-          <el-pagination
-              v-show="isShowPagination"
-              class="pagination"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="pageSize"
-              layout="total, prev, pager, next, jumper"
-              :total="total">
-          </el-pagination>
-          <el-button type="primary" >导出列表</el-button>
+          <div class="scroll-pagination" style="overflow: scroll">
+            <el-pagination
+                v-show="isShowPagination"
+                class="pagination"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="pageSize"
+                :pager-count="7"
+                layout="total, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
+          </div>
         </el-col>
         </el-row>
 
@@ -48,18 +56,24 @@ import GroupList from "@/views/groupcomponent/joiningroupchild/GroupList";
 
 import {joinInGroupNetwork, pageQueryAllGroupNetwork, queryGroupByNameNetwork} from "@/network/group";
 
-import {emitFailEvent, emitSuccess} from "@/util/eventbus";
+
 
 export default {
   name: "JoinInGroup",
   components: {ShowWindow, GroupList},
+  computed: {
+    cardColorStyle() {
+      return this.$store.getters.getCardColorStyle
+    }
+  },
   data(){
     return {
       groupList: [],
       total: 0,
       currentPage: 1,
       pageSize: 5,
-      isShowPagination: true
+      isShowPagination: true,
+      loading: false
     }
   },
   methods: {
@@ -67,23 +81,23 @@ export default {
      * 根据输入的组名查找组
      */
     searchByGroupName(groupName){
+      const loading = this.$loading({
+        lock: true,
+        text: '正在查找小组',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       queryGroupByNameNetwork(groupName).then(data => {
-        console.log(data)
-
         if(data.code === 200){
           this.groupList = [data.result]
           this.groupList[0].memberNum = this.groupList[0].memberList.length
-          this.groupList[0].createDate = this.$formatDate(this.groupList[0].createDate)
-          this.isShowPagination = false
-          this.$message.success({
-            message: '查询成功'
-          })
-
+          // this.isShowPagination = false
+          this.$message.success('查询成功')
         }else {
-          this.$message.error({
-            message: '出错了' + data.msg
-          })
+          this.$message.error('出错了' + data.msg)
         }
+      }).finally(()=>{
+        loading.close()
       })
     },
 
@@ -94,20 +108,21 @@ export default {
      *  invitationCode  邀请码
      */
     joinInGroup(from) {
-      console.log(from)
       from.userId = this.$store.getters.getLoginUser.id
+      const loading = this.$loading({
+        lock: true,
+        text: '正在处理请求',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       joinInGroupNetwork(from).then(data => {
-        console.log(data)
         if(data.code === 200){
-           emitSuccess.call({
-             msgTitle: '加入小组成功'
-           })
+           this.$message.success('加入小组成功')
         }else{
-          emitFailEvent.call({
-            msgTitle: '加入小组失败',
-            message: data.msg
-          })
+          this.$message.error('加入失败,'+data.msg)
         }
+      }).finally(()=>{
+        loading.close()
       })
     },
 
@@ -117,22 +132,26 @@ export default {
     handleCurrentChange(current){
       this.pageQueryAllGroup(current, this.pageSize)
     },
+
     /**
      * 网络请求列表数据方法
      * @param current
      * @param pageSize
      */
     pageQueryAllGroup(current, pageSize) {
+      this.loading = true
       pageQueryAllGroupNetwork(current, pageSize).then(pageInfo =>{
         let list = pageInfo.list;
-        console.log(pageInfo)
         this.groupList = []
+
         list.forEach(group => {
           group.memberNum = group.memberList.length
-          group.createDate = this.$formatDate(group.createDate)
           this.groupList.push(group)
-        });
+        })
+
         this.total = pageInfo.total
+      }).finally(()=>{
+        this.loading = false
       })
     }
   },
@@ -147,6 +166,9 @@ export default {
   height: 100%;
 }
 .pagination{
-margin-top: 20px;
+  margin-top: 20px;
+}
+.scroll-pagination::-webkit-scrollbar{
+  display: none;
 }
 </style>

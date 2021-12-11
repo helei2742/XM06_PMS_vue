@@ -1,45 +1,54 @@
 <template>
   <div class="create-account-from">
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-alert title="请输入4到16位用户名" :closable="false"></el-alert>
-        <el-input v-model="username" placeholder="请输入用户名"></el-input>
-      </el-col>
-    </el-row>
+    <el-form ref="createForm" :model="form" :rules="rules">
 
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-alert title="请输入6到16位密码" :closable="false"></el-alert>
-        <el-input v-model="password" placeholder="请输入密码"></el-input>
-      </el-col>
-    </el-row>
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-form-item label="请输入6到14位用户名" prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-alert title="请输入手机号" :closable="false"></el-alert>
-        <el-input v-model="phone" placeholder="请输入手机号"></el-input>
-      </el-col>
-    </el-row>
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-form-item label="请输入6到16位密码" prop="password">
+            <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-alert title="请输入真实姓名" :closable="false"></el-alert>
-        <el-input v-model="trueName" placeholder="请输入真实姓名"></el-input>
-      </el-col>
-    </el-row>
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-form-item label="请输入手机号" prop="phone">
+            <el-input v-model="form.phone" placeholder="请输入手机号"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-alert title="请输入电子邮箱" :closable="false"></el-alert>
-        <el-input v-model="email" placeholder="请输入邮箱"></el-input>
-      </el-col>
-    </el-row>
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-form-item label="请输入真实姓名" prop="trueName">
+            <el-input v-model="form.trueName" placeholder="请输入真实姓名"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-    <el-row class="create-account-from-item">
-      <el-col :offset="2" :span="20">
-        <el-button @click="createAccount" style="width: 100%" type="primary">创建账户</el-button>
-      </el-col>
-    </el-row>
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-form-item label="请输入电子邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row class="create-account-from-item">
+        <el-col :offset="2" :span="20">
+          <el-button @click="createAccount" style="width: 100%" type="primary">创建账户</el-button>
+        </el-col>
+      </el-row>
+
+    </el-form>
   </div>
 
 </template>
@@ -49,24 +58,50 @@ export default {
   name: "CreateAccountFrom",
   data(){
     return {
-      username: '',
-      password: '',
-      email: '',
-      phone: '',
-      trueName: ''
+      form:{
+        username: '',
+        password: '',
+        email: '',
+        phone: '',
+        trueName: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 6, max: 14, message: '长度在 6 到 14 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+        ],
+        trueName: [
+          { required: true, message: '请输入真实姓名', trigger: 'blur' }
+        ],
+        // phone: [
+        //   { type: 'number',required: true, message: '请输入正确电弧号码', trigger: 'blur' },
+        // ],
+        email: [
+          { type: 'email', required: true, message: '请输入正确的邮箱', trigger: 'blur' },
+        ]
+      }
     }
   },
   methods: {
     createAccount() {
-      let user = {
-        userName: this.username,
-        userPwd: this.password,
-        email: this.email,
-        phone: this.phone,
-        trueName: this.trueName
-      }
-      console.log(user)
-      this.$emit('createaccount', user)
+      this.$refs['createForm'].validate((valid) => {
+        if (valid) {
+          let user = {
+            userName: this.form.username,
+            userPwd: this.form.password,
+            email: this.form.email,
+            phone: this.form.phone,
+            trueName: this.form.trueName
+          }
+          this.$emit('createaccount', user)
+        } else {
+          return false;
+        }
+      })
     }
   }
 }
@@ -75,11 +110,8 @@ export default {
 <style scoped>
 
 .create-account-from{
-  background-color: rgba(100,100,100,0.1);
-  padding: 20px 0;
+  background-color: rgba(200,200,200,0.7);
+  padding: 80px 0 100px;
 }
 
-.create-account-from-item{
-  margin: 10px 0;
-}
 </style>

@@ -1,12 +1,12 @@
 <template>
-<div id="groupList" >
+<div class="my-group-list" >
 <!-- 组队列表   -->
   <el-table
+        :row-style="cardStyle"
+        :header-cell-style="cardStyle"
         :data="groupList"
-        stripe
-        border
-        height="400"
-        style="width: 100%">
+        height="372"
+        style="min-width: 600px;width: 100%;">
 
       <el-table-column
           prop="groupName"
@@ -22,9 +22,12 @@
           prop="createDate"
           label="创建日期"
           width="240">
+        <template slot-scope="scope">
+          {{formatDate(scope.row.createDate)}}
+        </template>
       </el-table-column>
 
-      <el-table-column width="200">
+      <el-table-column width="100">
           <template slot-scope="scope">
             <el-button  @click="detail(scope.row)">详情</el-button>
           </template>
@@ -44,6 +47,15 @@ export default {
       default() {
         return []
       }
+    },
+    cardStyle: {
+      type: Object,
+      default() {
+        return {
+          backgroundColor: '#b6baba',
+          color: '#202020'
+        }
+      }
     }
   },
   methods: {
@@ -52,14 +64,22 @@ export default {
       this.$router.push({
         path: '/index/groupdetail',
         query: {
-          group: group
+          group: group,
+          groupName: group.groupName
         }
       })
+    },
+    formatDate(time) {
+      return this.$formatDate(time)
     }
   }
 }
 </script>
 
 <style scoped>
-
+.my-group-list{
+  margin: 40px auto 5px;
+  width: 700px;
+  border-radius: 6px;
+}
 </style>

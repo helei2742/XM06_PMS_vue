@@ -49,6 +49,7 @@ export function queryGroupByNameNetwork(groupName){
   })
 }
 
+
 /**
  * 根据userId，小组id， 邀请码， 加入小组网络请求
  * @param data
@@ -98,6 +99,35 @@ export function queryJoinedGroupAllNetwork(userId){
   })
 }
 
+/**
+ * 查询我管理的小组，包含成员信息
+ * @param userId
+ * @returns {AxiosPromise}
+ */
+export function queryMyGroupAllNetwork(userId){
+  return request({
+    url: '/group/queryMyGroupAll',
+    params:{
+      userId
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 查询我管理的小组，不包含成员信息
+ * @param userId
+ * @returns {AxiosPromise}
+ */
+export function queryMyGroupNetwork(userId){
+  return request({
+    url: '/group/queryMyGroup',
+    params:{
+      userId
+    },
+    method: 'post'
+  })
+}
 /**
  * 根据managerId ，分页查询所有管理的小组
  * @param managerId
@@ -159,13 +189,31 @@ export function removeGroupMemberNetwork(managerId, groupId, userId){
  * @param groupId
  * @returns {AxiosPromise}
  */
-export function dissolveGroupNetwork(managerId, groupId){
+export function dissolveGroupNetwork(managerId, groupId,userPwd){
   return request({
     url: '/group/dissolveGroup',
     params: {
       managerId,
-      groupId
+      groupId,
+      userPwd
     },
     method: 'post'
+  })
+}
+
+/**
+ * 修改小组的小组名，小组描述信息
+ * @param form
+ * @returns {AxiosPromise}
+ */
+export function alterGroupInfoNetwork(form){
+  return request({
+    url: '/group/alterGroupInfo',
+    params: {
+      groupId: form.groupId,
+      userId: form.userId,
+      groupName: form.groupName,
+      described: form.described
+    }
   })
 }

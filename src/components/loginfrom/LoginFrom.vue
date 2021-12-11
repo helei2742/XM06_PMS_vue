@@ -1,10 +1,13 @@
 <template>
 <div class="login-from">
+  <el-form :model="form" :rules="rules" ref="loginForm">
   <div  class="login-from-item">
     <label for="username">
       Username or email address
     </label>
-      <el-input id="username" placeholder="请输入用户名" v-model="username" size="small"></el-input>
+    <el-form-item prop="username">
+      <el-input id="username" placeholder="请输入用户名" v-model="form.username" size="small"></el-input>
+    </el-form-item>
   </div>
 
   <div class="login-from-item" >
@@ -12,14 +15,14 @@
         Password
         <el-link style="position: absolute; right: 2px" type="danger">忘记密码？</el-link>
       </label>
-
-      <el-input id="password" placeholder="请输入密码" v-model="password" size="small" show-password></el-input>
-
+    <el-form-item prop="password">
+      <el-input id="password" placeholder="请输入密码" v-model="form.password" size="small" show-password></el-input>
+    </el-form-item>
   </div>
   <div class="login-from-item">
       <el-button style="width: 100%" @click="login" type="primary" round>登录</el-button>
   </div>
-
+  </el-form>
 </div>
 </template>
 
@@ -28,13 +31,31 @@ export default {
   name: "LoginFrom",
   data(){
     return {
-      username: '',
-      password: ''
+      form: {
+        username: '',
+        password: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 6, max: 14, message: '长度在 6 到 14 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods:{
     login(){
-      this.$emit('userlogin')
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          this.$emit('userlogin', this.form)
+        } else {
+          return false;
+        }
+      })
     }
   }
 }
@@ -47,9 +68,9 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   width: 260px;
   background-color: #f6f8fa;
+  border-radius: 6px;
 }
 .login-from-item{
-  margin: 10px 0;
   font-size: 14px;
   text-align: left;
   font-weight: 400;

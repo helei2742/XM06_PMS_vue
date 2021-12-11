@@ -1,8 +1,8 @@
 <template>
-  <div class="create-account">
+  <div class="create-account" :style="bgStyle">
     <el-row type="flex" justify="space-around">
       <el-col :xs="20" :sm="16" :md="12" :lg="10" :xl="12">
-        <div class="title">注册管理系统账户</div>
+        <div class="title">注册项目管理系统账户</div>
       </el-col>
     </el-row>
 
@@ -18,7 +18,7 @@
 <script>
 import CreateAccountFrom from "@/components/createaccountfrom/CreateAccountFrom";
 import {createAccount} from "@/network/user";
-import {emitSuccess, emitFailEvent} from "@/util/eventbus";
+import {REGISTBACKGROUND} from "@/util/imageUrl";
 
 export default {
   name: "CreateAccount",
@@ -27,36 +27,35 @@ export default {
   },
   data(){
     return {
-      logoUrl: require('@/assets/logo.png')
+      bgStyle: REGISTBACKGROUND,
+      logoUrl: require('@/assets/img/logo.png')
     }
   },
   methods: {
     createAccount(user) {
-      console.log(user)
+      const loading = this.$loading({
+        lock: true,
+        text: '正在创建用户',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+
       createAccount(user).then((data) => {
-        console.log(data)
         if(data.code === 200){
-          emitSuccess.call(this,{
-            msgTitle: '创建账户成功',
-            message: '请前往邮箱确认'
-          })
+          this.$message.success('注册成功，请前往邮箱确认')
 
           setTimeout(()=>{
             this.$router.push('/login')
           }, 2000)
         }else{
-
-          emitFailEvent.call(this,{
-            msgTitle: '创建账户失败',
-            message: data.msg,
-          })
+          // this.$message.error('注册失败，'+data.msg)
+          this.$message.error('注册失败，可能是幽幽子把数据吃了（bushi)'+data.msg)
         }
 
       }).catch(e =>{
-        emitFailEvent.call(this,{
-          msgTitle: '出错啦',
-          message: '请稍后再试',
-        })
+        this.$message.error('注册失败，请稍后重试')
+      }).finally(()=>{
+        loading.close()
       })
     }
 
@@ -67,12 +66,17 @@ export default {
 <style scoped>
 .create-account{
   background-color: #fff;
-  height: 100vh;
+  min-height: calc(100vh);
+  padding: 0 0 50px;
 }
 .title{
-  font-size: 30px;
-  font-weight: 900;
+
   text-align: center;
+  font-size: 32px;
+  letter-spacing: 6px;
+  font-weight: 500;
+  margin-bottom: 10px;
+
   padding: 70px 0 20px;
 }
 </style>

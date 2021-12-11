@@ -1,6 +1,6 @@
 <template>
 <div id="joined-group">
-  <show-window>
+  <show-window key="joinedGroup">
     <div slot="title">
       <i class="el-icon-s-custom"></i>
       <span>小组管理</span>
@@ -10,14 +10,36 @@
 
     <div slot="main">
 
-      <ul v-if="isShowGroupList" class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-        <li v-for="group in joinedGroup" class="infinite-list-item">
+      <div v-if="isShowGroupList"
+           class="infinite-wrapper"
+           style="overflow:auto">
 
-          <el-col style="margin-top: 10px" :offset="1" :xs="20" :sm="8" :md="8" :lg="8" :xl="8">
-              <group-msg-card :group="group"></group-msg-card>
-          </el-col>
-        </li>
-      </ul>
+        <ul  ref="scrollArea"
+             class="infinite-list"
+             :infinite-scroll-disabled="disabled"
+             v-infinite-scroll="load" >
+          <el-row>
+            <li v-for="group in joinedGroup" class="infinite-list-item">
+              <el-col style="margin-top: 10px;height: 490px;"
+                      :offset="1" :xs="20" :sm="8" :md="8" :lg="8" :xl="8">
+                  <group-msg-card :group="group"></group-msg-card>
+              </el-col>
+            </li>
+          </el-row>
+        </ul>
+
+        <el-row style="height: 60px"
+                v-if="loading"
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.3)"></el-row>
+        <el-row style="text-align: center;" v-if="noMore">
+          <hr/>
+          没有更多了
+        </el-row>
+      </div>
+
       <div v-else>
         您还未加入任何小组哦，点击前往
         <el-link @click="toJoinInPage">添加小组</el-link>
@@ -40,45 +62,55 @@ export default {
     ShowWindow,
     GroupMsgCard
   },
+  computed: {
+    noMore(){
+      return this.currentPage >= this.totalPage;
+    },
+    disabled() {
+      //当两个都为真的时候不加载,页面滚动失效
+      return this.loading || this.noMore
+    }
+  },
   data() {
     return {
+      scrollHeight: 0,
       joinedGroup: [],
       currentPage: 1,
       limit: 3,
-      totalPage: 1,
-      isShowGroupList: false
+      totalPage: 10000,
+      isShowGroupList: false,
+      loading: false,
     }
   },
   methods: {
     load() {
-      this.queryJoinedGroup(this.currentPage, this.limit)
+      this.queryJoinedGroup(this.currentPage + 1, this.limit)
     },
     //网络请求加入小组的分页数据
     queryJoinedGroup(currentPage, limit){
-      if(currentPage > this.totalPage){
-        this.$message.info('已经是最后的了')
-        return
-      }
+      this.loading = true
       let userId = this.$store.getters.getLoginUser.id
       queryJoinedGroupNetwork(userId, currentPage, limit).then(data =>{
         let pageInfo = data.result
         if(data.code === 200){
           if(pageInfo.list.length !== 0){
             this.joinedGroup.push(...pageInfo.list)
-            this.currentPage ++
             this.totalPage = pageInfo.pages
+            this.currentPage = pageInfo.pageNum
             this.isShowGroupList = true
             this.$message.success('加载成功')
           }
         }else {
           this.$message.error('加载失败')
         }
+      }).finally(()=>{
+        this.loading = false
       })
     },
 
     toJoinInPage(){
       this.$router.push('/index/joiningroup')
-    }
+    },
   },
   mounted() {
     this.queryJoinedGroup(1,this.limit)
@@ -91,11 +123,16 @@ export default {
   width: 100%;
   height: 100%;
 }
+
+.infinite-wrapper{
+  width: 100%;
+  height: 530px;
+}
 .infinite-list{
-  height: 450px;
   list-style-type: none;
 }
 
 .infinite-list-item{
+
 }
 </style>

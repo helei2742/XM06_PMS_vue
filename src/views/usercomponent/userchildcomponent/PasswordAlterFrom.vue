@@ -23,36 +23,6 @@
 export default {
   name: "PasswordAlterFrom",
   data() {
-    var checkOldPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入旧密码'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
-      }
-    };
-
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
-      }
-    };
     return {
       ruleForm: {
         pass: '',
@@ -61,13 +31,16 @@ export default {
       },
       rules: {
         pass: [
-          { validator: validatePass, trigger: 'blur' }
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ],
         checkPass: [
-          { validator: validatePass2, trigger: 'blur' }
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ],
         oldPass: [
-          { validator: checkOldPass, trigger: 'blur' }
+          { required: true, message: '请输入旧密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
         ]
       }
     };
@@ -105,6 +78,10 @@ export default {
      * 发出修改密码事件，由父组件接收并发出修改密码网络请求
      */
     emitAlter() {
+      if(this.ruleForm.checkPass !== this.ruleForm.pass){
+        this.$alert('两次输入密码不相同，请重试')
+        return
+      }
       this.$emit('alterpassword', {
         oldPwd: this.ruleForm.oldPass,
         newPwd: this.ruleForm.pass,

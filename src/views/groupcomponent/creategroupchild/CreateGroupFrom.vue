@@ -1,26 +1,28 @@
 <template>
-<div class="create-group-from">
+<div class="create-group-from" :style="cardStyle">
+
   <el-row>
-    <el-col :offset="2" :span="18">
-      <el-alert title="请输入组名" :closable="false"></el-alert>
-      <el-input v-model="groupName" placeholder="请输入组名"></el-input>
+    <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
+
+      <el-form :model="form" :rules="rules" ref="createForm">
+        <el-form-item label="小组名" label-width="100px" prop="groupName">
+          <el-input v-model="form.groupName"></el-input>
+        </el-form-item>
+
+        <el-form-item label-width="100px" label="小组描述">
+          <el-input  v-model="form.described"
+                     type="textarea"
+                     :autosize="{ minRows: 2, maxRows: 4}">
+          </el-input>
+        </el-form-item>
+      </el-form>
+
     </el-col>
   </el-row>
 
   <el-row>
-    <el-col :offset="2" :span="18">
-      <el-alert title="请输入小组描述" :closable="false"></el-alert>
-      <el-input  v-model="described"
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-      ></el-input>
-    </el-col>
-  </el-row>
-
-  <el-row>
-    <el-col :offset="7" :span="10">
-      <el-button @click="$emit('creategroup',
-            {'groupName': groupName, 'described': described})"
+    <el-col :offset="4" :span="10">
+      <el-button @click="createGroup"
                  style="width: 100%;margin-top:20px"
                  type="primary"
       >
@@ -34,10 +36,39 @@
 <script>
 export default {
   name: "CreateGroupFrom",
+  props: {
+    cardStyle: {
+      type: Object,
+      default() {
+        return {backgroundColor: '#b6baba',
+                color: '#202020'}
+      }
+    }
+  },
   data(){
     return {
-      groupName: null,
-      described: null
+      form: {
+        groupName: null,
+        described: null
+      },
+      rules: {
+        groupName:[
+          { required: true, message: '请输入小组名', trigger: 'blur' },
+          { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    createGroup() {
+      this.$refs['createForm'].validate((valid) => {
+        if (valid) {
+          this.$emit('creategroup',this.form)
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
     }
   }
 }

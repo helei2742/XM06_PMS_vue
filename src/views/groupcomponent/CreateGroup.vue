@@ -1,7 +1,12 @@
 <template>
-<div class="create-group" v-if="destroyYet">
+<div class="create-group" v-if="destroyYet" key="createGroup">
 
-  <show-window>
+  <show-window
+    v-loading="loading"
+    element-loading-text="创建小组中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
 
     <div slot="title">
       <i class="el-icon-s-custom"></i>
@@ -9,11 +14,14 @@
       <i class="el-icon-arrow-right"></i>
       <span>创建小组</span>
     </div>
-    <div slot="main">
+
+    <div slot="main" >
       <create-group-from
-        @creategroup="createGroup"
+          :card-style="cardStyle"
+          @creategroup="createGroup"
       />
     </div>
+
   </show-window>
 
 </div>
@@ -24,7 +32,7 @@ import CreateGroupFrom from "@/views/groupcomponent/creategroupchild/CreateGroup
 import ShowWindow from "@/components/showwindow/ShowWindow";
 
 import {createGroupNetwork} from "@/network/group";
-import {emitSuccess,emitFailEvent} from "@/util/eventbus";
+
 
 export default {
   name: "CreateGroup",
@@ -32,9 +40,15 @@ export default {
     CreateGroupFrom,
     ShowWindow
   },
+  computed: {
+    cardStyle(){
+      return this.$store.getters.getCardColorStyle
+    }
+  },
   data(){
     return {
-      destroyYet: true
+      destroyYet: true,
+      loading: false
     }
   },
   methods: {
@@ -42,18 +56,15 @@ export default {
     createGroup(groupInfo) {
       let loginUser = this.$store.getters.getLoginUser
       groupInfo.managerId = loginUser.id
+      this.loading = true
       createGroupNetwork(groupInfo).then(data=>{
-        console.log(data)
         if(data.code === 200){
-          emitSuccess.call(this, {
-           msgTitle: '小组创建成功',
-          })
+          this.$message.success('创建小组成功')
         }else{
-          emitFailEvent.call(this, {
-            msgTitle: '创建小组失败',
-            message: data.msg
-          })
+          this.$message.error('创建失败,'+data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }
   }

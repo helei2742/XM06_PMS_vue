@@ -1,16 +1,17 @@
 <template>
-<div>
+<div class="memo-drawer">
   <el-drawer
-      :size="'40%'"
+      :size="drawerSize"
       title="便签"
-      :visible.sync="isShow"
+      :visible.sync="isShowMemo"
+      @open="openMemo"
       direction="ltr"
   >
 
 <!-- 头部   -->
     <template slot="title">
       <div>便签</div>
-      <el-button @click="visible = true" type="success" size="mini">
+      <el-button @click="dialogFormVisible = true" type="success" size="mini">
         <i class="el-icon-plus"></i>
         添加便签
       </el-button>
@@ -18,16 +19,23 @@
 
     <hr/>
 
-    <div>
-      <el-steps space="190px" direction="vertical">
-        <el-step :status="memoStatus(m.finish, m.staleDate)"
-                 v-for="(m, index) in memo"
-                 :title="'便签'+(index+1)+'('+(m.staleDate-new Date().getTime()<0?'已过期':'进行中')+')'" >
-          <template slot="description">
+    <div :style="bgStyle">
+      <el-timeline >
+        <el-timeline-item size="20px"
+                          :style="{width: '80%'}"
+                          v-for="m in memo"
+                          :color="iconColor(m.finish,m.staleDate)"
+                          :icon="memoIcon(m.finish,m.staleDate)"
+                          :timestamp="formatDate(m.staleDate)"
+                          placement="top">
+          <el-card>
+            <h4>{{ m.memo }}</h4>
+            <p :style="{color: iconColor(m.finish,m.staleDate)}">
+              创建时间:
+              {{formatDate(m.createDate)+'('+(m.staleDate-new Date().getTime()<0?'已过期':'进行中')+')'}}
+            </p>
+
             <div>
-              <div>代办事项：{{m.memo}}</div>
-              <div>过期日期：{{formatDate(m.staleDate)}}</div>
-              <div>创建日期：{{formatDate(m.createDate)}}</div>
               <el-popconfirm
                   v-if="!m.finish"
                   confirm-button-text='是的'
@@ -43,7 +51,6 @@
                   确认完成
                 </el-button>
               </el-popconfirm>
-
               <el-popconfirm
                   confirm-button-text='是的'
                   cancel-button-text='算了'
@@ -58,14 +65,16 @@
                 </el-button>
               </el-popconfirm>
             </div>
-          </template>
-        </el-step>
-      </el-steps>
+          </el-card>
+
+        </el-timeline-item>
+      </el-timeline>
     </div>
+
   </el-drawer>
 
 <!--添加标签弹出框-->
-  <el-dialog title="添加便签" :visible.sync="visible">
+  <el-dialog title="添加便签" :visible.sync="dialogFormVisible">
     <el-form>
       <el-form-item label="便签内容" label-width="50">
         <el-input v-model="memoMsg" autocomplete="off"></el-input>
@@ -92,10 +101,12 @@
 </template>
 
 <script>
+import {MEMOBACKGROUND} from "@/util/imageUrl";
+
 export default {
   name: "MemoDrawer",
   props:{
-    isShow: {
+    isShowMemo: {
       type: Boolean,
       default: false
     },
@@ -105,20 +116,39 @@ export default {
     }
   },
   computed:{
-    memoStatus(){
-      return function (isFinish, slateDate) {
-        if(isFinish) return 'success'
-        if(slateDate < new Date().getTime()) return 'error'
-        if(slateDate - new Date().getTime() < 24*60*60*1000) return 'process'
-        return 'wait'
+    drawerSize(){
+      let screenWidth = this.$store.getters.getScreenSize.width
+      if(screenWidth < 1080){
+        return '80%'
+      }else {
+        return '40%'
       }
-    }
+    },
+    memoIcon(){
+      return function (isFinish, slateDate) {
+        if(isFinish) return 'el-icon-check'
+        if(slateDate < new Date().getTime()) return 'el-icon-close'
+        if(slateDate - new Date().getTime() < 24*60*60*1000) return 'el-icon-s-promotion'
+        return 'el-icon-s-promotion'
+      }
+    },
+    iconColor() {
+      return function (isFinish, slateDate) {
+        if(isFinish) return '#5bdb5b'
+        if(slateDate < new Date().getTime()) return '#fe315d'
+        if(slateDate - new Date().getTime() < 24*60*60*1000) return '#af873d'
+        return '#06304e'
+      }
+    },
   },
   data() {
     return {
       visible: false,
+      dialogFormVisible: false,
+      screenWidth: null,
       staleDate: null,
-      memoMsg: ''
+      memoMsg: '',
+      bgStyle: MEMOBACKGROUND
     }
   },
   methods: {
@@ -126,7 +156,7 @@ export default {
       this.$emit('removememo', memoId)
     },
     addMemo(){
-      this.visible = false
+      this.dialogFormVisible = true
       this.$emit('addmemo', {
         memo: this.memoMsg,
         staleDate: this.staleDate
@@ -137,6 +167,9 @@ export default {
     },
     confirmFinish(memoId){
       this.$emit('confirmfinish', memoId)
+    },
+    openMemo(){
+      console.log(this.isShowMemo)
     }
   }
 }

@@ -1,19 +1,26 @@
 <template>
-<div class="createTask">
-  <show-window>
+<div class="createTask" key="createTask">
+  <show-window
+      v-loading="loading"
+      element-loading-text="创建任务中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
+
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>任务管理</span>
       <i class="el-icon-arrow-right"></i>
       <span>发部任务</span>
     </div>
+
     <div slot="main">
       <el-row>
         <el-col :offset="1" :xs="22" :sm="18" :md="14" :lg="10" :xl="10">
           <create-task-from
+              style="margin-top: 40px"
               ref="createTaskFrom"
-              :user-groups="userGroups"
-              @querygroup="queryJoinedGroup"
+              :user-groups="this.$store.getters.getMyGroup"
               @createtask="createTask"
           />
         </el-col>
@@ -26,9 +33,9 @@
 
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
-import CreateTaskFrom from "@/views/taskcomponent/child/CreateTaskFrom";
-import {queryJoinedGroupAllNetwork} from "@/network/group";
+import CreateTaskFrom from "@/views/taskcomponent/createtaskchild/CreateTaskFrom";
 import {createTaskNetwork} from "@/network/task";
+import {RELOADMYGROUP} from "@/store/mutations-types-groupmodule";
 
 export default {
   name: "CreateTask",
@@ -38,37 +45,26 @@ export default {
   },
   data() {
     return {
-      userGroups: null
+      loading: false
     }
   },
   methods:{
     createTask(from){
-      createTaskNetwork(from).then(data =>{
-        console.log(data)
+      this.loading = true
+      setTimeout(()=>{      createTaskNetwork(from).then(data =>{
         if(data.code === 200){
           this.$message.success('发布任务成功')
         }else {
           this.$message.error(data.msg)
         }
-      })
+      }).finally(()=>{
+        this.loading = false
+      })},2000)
+
     },
-    queryJoinedGroup(){
-      if(this.userGroups != null && this.userGroups.length !== 0){
-        return
-      }
-      let userId = this.$store.getters.getLoginUser.id
-      queryJoinedGroupAllNetwork(userId).then(data=>{
-        if(data.code === 200){
-          this.userGroups = data.result
-          console.log(this.userGroups)
-        }else {
-          this.$message.error('出错了，'+data.msg)
-        }
-      })
-    }
   },
   mounted() {
-    this.queryJoinedGroup()
+    this.$store.dispatch(RELOADMYGROUP)
   }
 }
 </script>

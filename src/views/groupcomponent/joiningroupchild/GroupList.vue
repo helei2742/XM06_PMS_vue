@@ -1,12 +1,12 @@
 <template>
-<div id="groupList" >
+<div class="joinin-group-list" :style="cardStyle">
 <!-- 组队列表   -->
   <el-table
         :data="groupList"
-        stripe
-        border
+        :header-cell-style="cardStyle"
+        :row-style="cardStyle"
         height="400"
-        style="width: 100%">
+        style="width: 100%;background-color:transparent;">
 
       <el-table-column
           prop="groupName"
@@ -22,15 +22,21 @@
           </el-popover>
         </template>
       </el-table-column>
+
       <el-table-column
           prop="memberNum"
           label="成员数"
-          width="180">
+          sortable
+          width="95">
       </el-table-column>
       <el-table-column
           prop="createDate"
           label="创建日期"
+          sortable
           width="240">
+        <template slot-scope="scope">
+          {{formatDate(scope.row.createDate)}}
+        </template>
       </el-table-column>
 
     <el-table-column width="200">
@@ -42,9 +48,10 @@
               placeholder="输入小组名"/>
           <el-button size="mini" @click="searchGroupName">搜索</el-button>
         </template>
-          <template slot-scope="scope">
-            <el-button type="success" @click="add(scope.row.id)">加入</el-button>
-          </template>
+        <template slot-scope="scope">
+          <el-button type="success" @click="add(scope.row.id)">加入</el-button>
+          <el-button type="info" @click="groupDetail(scope.row)">详情</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -74,6 +81,15 @@ export default {
       default() {
         return []
       }
+    },
+    cardStyle: {
+      type: Object,
+      default() {
+        return {
+          backgroundColor: '#b6baba',
+          color: '#202020'
+        }
+      }
     }
   },
   data() {
@@ -91,7 +107,7 @@ export default {
       return function (id, memberList) {
         for(let i = 0; i < memberList.length; i++ ){
           if(id === memberList[i].id)
-            return memberList[i].user_name
+            return memberList[i].userName
         }
         return ''
       }
@@ -102,18 +118,34 @@ export default {
       this.form.groupId = id
       this.dialogFormVisible = true
     },
+    groupDetail(group){
+      this.$router.push({
+        path: '/index/groupdetail',
+        query: {
+          group: group,
+          groupName: group.groupName
+        }
+      })
+    },
     invitationCodeSubmit() {
       this.$emit('joiningroup', this.form)
       this.dialogFormVisible = false
     },
     searchGroupName() {
       this.$emit('searchgroupname', this.search)
+    },
+    formatDate(time) {
+      return this.$formatDate(time)
     }
   }
 }
 </script>
 
 <style scoped>
+.joinin-group-list{
+  padding: 30px 10px;
+}
+
 .demo-table-expand {
   font-size: 0;
 }

@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store'
+import {ADDIFNOTHAVETAB} from "@/store/mutations-types";
+import {BACECONTEXTPATH} from "@/config";
+
 
 Vue.use(VueRouter)
 
@@ -11,6 +15,7 @@ VueRouter.prototype.push = function push(location) {
 const Index = () => import('@/views/index.vue')
 const Login = () => import('@/views/login.vue')
 const Welcome = () => import('@/views/Welcome.vue')
+const Introduce = () => import('@/views/Introduce')
 
 const CreateAccount = () => import('@/views/CreateAccount.vue')
 
@@ -26,17 +31,33 @@ const PasswordAlterPage = () => import('@/views/usercomponent/PasswordAlter.vue'
 
 const CreateTask = () => import('@/views/taskcomponent/CreateTask.vue')
 const ShowTask = () => import('@/views/taskcomponent/ShowTask.vue')
+const AlterTask = () => import('@/views/taskcomponent/AlterTask')
+const TaskDetail = () => import('@/views/taskcomponent/TaskDetail')
+const MyTaskSubmitRecord = () => import('@/views/taskcomponent/MyTaskSubmitRecord')
 const SubmitTask = () => import('@/views/taskcomponent/SubmitTask')
 const SubmitRecord = () => import('@/views/taskcomponent/SubmitRecord')
+
 
 const InformView = () => import('@/views/informcomponent/InformView')
 
 const CreateProject = () => import('@/views/projectcomponent/CreateProject')
+const ProjectList = () => import('@/views/projectcomponent/ProjectList')
+const ProjectDetail = () => import('@/views/projectcomponent/ProjectDetail')
+const AlterProject = () => import('@/views/projectcomponent/AlterProject')
+
+
+const CreateAnnounce = () => import('@/views/announcecomponent/CreateAnnounce')
+const ShowAnnounce = () => import('@/views/announcecomponent/ShowAnnounce')
+const AnnounceDetail = () => import('@/views/announcecomponent/AnnounceDetail')
+const EditAnnounce = () => import('@/views/announcecomponent/EditAnnounce')
+
+const FaceInfoRegister = () => import('@/views/facecomponent/FaceInfoRegister')
+const UploadFIleToRegister = () => import('@/views/facecomponent/UploadFileTORegister')
 
 const routes = [
   {
     path:'/',
-    redirect: '/index'
+    redirect: '/introduce'
   },
   {
     path: '/index',
@@ -127,6 +148,27 @@ const routes = [
         component: SubmitTask
       },
       {
+        path: 'altertask',
+        meta: {
+          title: '修改任务信息',
+        },
+        component: AlterTask
+      },
+      {
+        path: 'mytasksubmitrecord',
+        meta:{
+          title: '查看我的提交'
+        },
+        component: MyTaskSubmitRecord
+      },
+      {
+        path: 'taskdetail',
+        meta:{
+          title: '任务详情'
+        },
+        component: TaskDetail
+      },
+      {
         path: 'submitrecord',
         meta:{
           title: '任务提交记录'
@@ -146,6 +188,71 @@ const routes = [
           title: '创建项目'
         },
         component: CreateProject
+      },
+      {
+        path: 'projectlist',
+        meta:{
+          title: '项目列表'
+        },
+        component: ProjectList
+      },
+      {
+        path: 'projectdetail',
+        meta:{
+          title: '项目详情'
+        },
+        component: ProjectDetail
+      },
+      {
+        path: 'alterproject',
+        name: 'alterProject',
+        meta:{
+          title: '修改项目信息'
+        },
+        component: AlterProject
+      },
+      {
+        path: 'createannounce',
+        meta: {
+          title: '发布公告'
+        },
+        component: CreateAnnounce
+      },
+      {
+        path: 'showannounce',
+        meta: {
+          title: '公告查询'
+        },
+        component: ShowAnnounce
+      },
+      {
+        path: 'announcedetail',
+        name: 'announceDetail',
+        meta: {
+          title: '公告详情'
+        },
+        component: AnnounceDetail
+      },
+      {
+        path: 'editannounce',
+        meta:{
+          title: '修改公告'
+        },
+        component: EditAnnounce
+      },
+      {
+        path: 'faceregisterpage',
+        meta: {
+          title: '人脸信息录入'
+        },
+        component: FaceInfoRegister
+      },
+      {
+        path: 'facefileupload',
+        meta: {
+          title: '视频上传人类信息'
+        },
+        component: UploadFIleToRegister
       }
     ]
   },
@@ -162,21 +269,35 @@ const routes = [
       title: '创建账户'
     },
     component: CreateAccount
+  },
+  {
+    path: '/introduce',
+    meta: {
+      title: '项目介绍'
+    },
+    component: Introduce
   }
 ]
 
 
 const router = new VueRouter({
-  mode: 'history',
-  base: '/XM06/',
+  mode: 'hash',
+  base: BACECONTEXTPATH,
   routes,
   linkActiveClass: 'active'
 })
 
+
 router.beforeEach((to, from, next) => {
   //嵌套路由可能获取不到
-  // document.title = to.meta.title
   document.title = to.matched[to.matched.length-1].meta.title
+  let payload = {
+    label: to.meta.title,
+    path: to.path,
+    query: to.query
+  }
+  store.commit(ADDIFNOTHAVETAB, payload)
+
   next()
 })
 

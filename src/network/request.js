@@ -1,4 +1,6 @@
 import axios from 'axios'
+import {REQUESTAPIURL} from "@/config";
+
 axios.defaults.withCredentials = true
 
 /**
@@ -7,11 +9,13 @@ axios.defaults.withCredentials = true
  * @returns {AxiosPromise}
  */
 export function request(config) {
+
+  let baseURL = REQUESTAPIURL
+
   const instance = axios.create({
-    // baseURL: 'http://www.ylxteach.net/XM06',
-    baseURL: 'http://localhost:9000/XM06',
-    timeout: 5000,
-    withCredentials:true
+    baseURL: baseURL,
+    timeout: 10000,
+    withCredentials:true,
   })
 
   /*
@@ -19,11 +23,17 @@ export function request(config) {
   * */
   instance.interceptors.response.use(
       (res) => {
-        console.log(res)
-        return res.data
+          console.log(res)
+          let result = res.data
+          if(result.code !== 200)
+              result.msg = decodeURI(result.msg)
+          return result
       },
       (error) => {
         console.log(error)
+        if(500 === error.response.status){
+          window.open(baseURL+ '/error')
+        }
       })
 
   return instance(config)

@@ -1,6 +1,12 @@
 <template>
 <div id="my-group">
-    <show-window>
+    <show-window
+        v-loading="loading"
+        element-loading-text="加载数据中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        key="myGroup">
+
       <div slot="title">
         <i class="el-icon-s-custom"></i>
         <span>小组管理</span>
@@ -8,16 +14,18 @@
         <span>我管理的小组</span>
       </div>
 
-      <div slot="main">
+      <div slot="main" style="overflow-x: scroll">
         <group-list
-          :group-list="groupList"
+            :card-style="groupListStyle"
+             :group-list="groupList"
         />
 
         <el-pagination
-            class="pagination"
+            style="margin: 10px 0;text-align: center"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-size="limit"
+            :pager-count="7"
             layout="total, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
@@ -39,13 +47,19 @@ export default {
     ShowWindow,
     GroupList
   },
+  computed: {
+    groupListStyle() {
+      return this.$store.getters.getCardColorStyle
+    }
+  },
   data() {
     return {
       currentPage: 1,
       total: 0,
       pages: 1,
       limit: 5,
-      groupList: []
+      groupList: [],
+      loading: false
     }
   },
   methods: {
@@ -56,21 +70,23 @@ export default {
      */
     queryGroupByManagerId(currentPage, limit){
       let id = this.$store.getters.getLoginUser.id
+      this.loading = true
       queryManagedGroupNetwork(id, currentPage, limit).then(data=>{
-        console.log(data)
         if(data.code === 200){
           let pageInfo = data.result
           this.groupList = pageInfo.list
 
           for (let group of this.groupList) {
             group.memberNum = group.memberList.length
-            group.createDate = this.$formatDate(group.createDate)
+            // group.createDate = this.$formatDate(group.createDate)
           }
 
           this.total = pageInfo.total
         }else{
           this.$message.error('出错了'+data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     },
     handleCurrentChange(index){

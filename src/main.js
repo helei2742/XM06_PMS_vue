@@ -5,14 +5,13 @@ import store from './store'
 import ElementUi from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/display.css';
+import '@/assets/css/reset.css'
+import * as echarts from 'echarts'
+//需要挂载到Vue原型上
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 Vue.use(ElementUi)
-
-/**
- * 挂载事件总线
- */
-Vue.prototype.$eventBus = new Vue()
 
 Date.prototype.Format = function (fmt) {
   let o = {
@@ -37,6 +36,9 @@ Date.prototype.Format = function (fmt) {
  */
 Vue.prototype.$formatDate = (num)=>{
     return new Date(num).Format("yyyy年MM月dd日HH时mm分ss秒")
+}
+Vue.prototype.$formatDateToDay = (num)=>{
+  return new Date(num).Format("yyyy年MM月dd日")
 }
 
 new Vue({
