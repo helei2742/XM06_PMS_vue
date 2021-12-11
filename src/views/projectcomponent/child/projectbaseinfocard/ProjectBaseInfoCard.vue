@@ -15,6 +15,10 @@
       </div>
     </el-descriptions-item>
     <el-descriptions-item label="创建日期">{{formatDate(project.createDate)}}</el-descriptions-item>
+    <el-descriptions-item v-if="creator!=null" label="创建者用户名">{{creator.userName}}</el-descriptions-item>
+    <el-descriptions-item v-if="creator!=null" label="创建者真实姓名">{{creator.trueName}}</el-descriptions-item>
+    <el-descriptions-item v-if="creator!=null" label="创建者手机号">{{creator.phone}}</el-descriptions-item>
+    <el-descriptions-item v-if="creator!=null" label="创建者邮箱">{{creator.email}}</el-descriptions-item>
 
   </el-descriptions>
 </div>
@@ -25,6 +29,10 @@ export default {
   name: "ProjectBaseInfoCard",
   props: {
     project: {
+      type: Object,
+      default: null
+    },
+    creator: {
       type: Object,
       default: null
     }

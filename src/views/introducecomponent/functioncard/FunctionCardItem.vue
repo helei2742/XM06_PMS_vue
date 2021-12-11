@@ -42,7 +42,7 @@ export default {
   position: relative;
   height: 384px;
   padding: 10px 15px;
-  min-width: 230px;
+  width: 230px;
 }
 .function-card-item > h3{
   font-size: 32px;

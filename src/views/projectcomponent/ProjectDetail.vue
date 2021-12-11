@@ -16,7 +16,33 @@
 
     <div slot="main" style="padding-bottom: 100px;text-align: center">
 
-      <project-detail-card :project="project"/>
+      <div style="text-align: right;margin-right: 25px">
+        <el-dropdown >
+          <span class="el-dropdown-link">
+           <i style="font-size: 30px;cursor: pointer" class="el-icon-more-outline el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-if="project.creatorId === this.$store.getters.getLoginUser.id">
+              <el-button type="warning"
+                         @click="alterProject(project)"
+                         icon="el-icon-edit"
+                         size="small">
+                修改项目
+              </el-button>
+            </el-dropdown-item>
+            <el-dropdown-item v-if="project.creatorId === this.$store.getters.getLoginUser.id">
+              <el-button type="danger"
+                         @click="deleteProject(project)"
+                         icon="el-icon-edit"
+                         size="small">
+                删除项目
+              </el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+
+      <project-detail-card :project="project" :creator="creator"/>
 
       <user-submit-degree-chart ref="userSubmitDegreeChart"/>
 
@@ -53,6 +79,7 @@ import {pageQueryProjectUpdateRecordNetwork, queryProjectByIdNetwork} from "@/ne
 import ProjectUpdateRecord from "@/views/projectcomponent/child/projectupdaterecord/ProjectUpdateRecord";
 import UserSubmitDegreeChart from "@/views/projectcomponent/child/charts/UserSubmitDegreeChart";
 import UserSubmit14DayChart from "@/views/projectcomponent/child/charts/UserSubmit14DayChart";
+import {queryUserByIdNetwork} from "@/network/user";
 
 export default {
   name: "ProjectDetail",
@@ -81,13 +108,14 @@ export default {
       haveNextPage: false,
       isClick: false,
       isShowUpdateRecord: false,
-      loading: false
+      loading: false,
+      creator: null
     }
   },
   methods: {
 
     /**
-     * 查询项目记录
+     * 查询项目提交记录
      */
     queryProjectRecord() {
       this.isShowUpdateRecord = true
@@ -128,33 +156,64 @@ export default {
       downloadFileNetwork(src).then( response =>{
         convertRes2Blob(response)
       })
+    },
+    alterProject(project){
+      this.$router.push({
+        path: '/index/alterproject',
+        query: {
+          project: project,
+          projectId: project.id
+        }
+      })
+    },
+    deleteProject(project){
+      this.$alert('请到项目列表中找到该项目再选择删除')
+    },
+    loadData(project,projectId){
+      return new Promise(((resolve, reject) => {
+        if(project.id === undefined){
+
+          queryProjectByIdNetwork(projectId).then(data => {
+            if(data.code === 200) {
+              this.project = data.result
+              return queryUserByIdNetwork(data.result.creatorId)
+            }else {
+              this.$message.error('加载失败，请稍后重试')
+            }
+          }).then(data=>{
+            this.creator = data.result
+          }).catch(e=>{
+            reject()
+          }).finally(()=>{
+            resolve()
+          })
+        }else {
+          //进入不同的项目详情时，清除之前的状态
+          if(project.id !== this.project.id){
+            this.recordList = []
+            this.isShowUpdateRecord = false
+            this.haveNextPage = false
+            this.isClick = false
+          }
+          this.project = project
+          queryUserByIdNetwork(project.creatorId).then(data=>{
+            this.creator = data.result
+          }).catch(e => {
+            reject(e)
+          }).finally(()=>{
+            resolve()
+          })
+        }
+      }))
     }
   },
   activated() {
 
     //进入时，如果没有project， 进行网络请求获取
-    let project = this.$route.query.project
     let projectId = this.$route.query.projectId
-    if(project.id === undefined){
+    let project = this.$route.query.project
 
-      queryProjectByIdNetwork(projectId).then(data => {
-        if(data.code === 200) {
-          this.project = data.result
-        }else {
-          this.$message.error('加载失败，请稍后重试')
-        }
-      })
-
-    }else {
-      //进入不同的项目详情时，清除之前的状态
-      if(project.id !== this.project.id){
-        this.recordList = []
-        this.isShowUpdateRecord = false
-        this.haveNextPage = false
-        this.isClick = false
-      }
-      this.project = project
-    }
+    this.loadData(project,projectId)
 
     //重新加载图表信息
     this.$refs.userSubmit14dayChart.loadChart(projectId)

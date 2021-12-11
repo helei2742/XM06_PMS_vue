@@ -17,7 +17,7 @@
             v-if="isShowToTopBtn"/>
 
     <div id="footer">
-      <h2 style="font-weight: 300">本项目由四川大学2019级研究与开发实践小组XM06完成</h2>
+      <footer-card/>
     </div>
   </div>
 </template>
@@ -29,10 +29,13 @@ import {findUserByUserIdStr} from "@/network/user";
 import {CHANGECOLORMODULE, CHECKSUCCESS,LOGOUT, SCREENHEIGHTCHANGE, SCREENWIDTHCHANGE} from "@/store/mutations-types";
 import {APPBACkGROUND} from "@/util/imageUrl";
 import ToTop from "@/components/totop/ToTop";
+import {test} from "@/network/announce";
+import FooterCard from "@/components/footer/FooterCard";
 
 export default {
   name: 'app',
   components: {
+    FooterCard,
     ToTop,
     NavBar,
   },
@@ -159,15 +162,11 @@ html{
   min-height: 100%;
   overflow: auto;
 }
-
-
 #footer{
-  height: 150px;
-  background-color: rgba(100, 100, 100, 0.4);
-  text-align: center;
-  padding: 15px;
   flex: 0;
 }
+
+
 #main-area{
   flex: 1;
 }

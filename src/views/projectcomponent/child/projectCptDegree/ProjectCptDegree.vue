@@ -99,6 +99,15 @@ export default {
       })
     },
     updateProjectDegree(){
+      if(this.submitDegree <=0 || this.submitDegree + this.project.submitDegree > 1){
+        this.$alert('提交进度非法')
+        return
+      }
+      if(this.submitDesc.length < 1){
+        this.$alert('请输入提交的描述')
+        return
+      }
+
       let form = this.$refs.fileUpload.fileForm
       if(form == null) form = new FormData()
 

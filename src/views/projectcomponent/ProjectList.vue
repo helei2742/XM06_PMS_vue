@@ -167,7 +167,7 @@ export default {
       allList:[],
       //分页相关
       currentPage: 1,
-      limit: 3,
+      limit: 6,
       total: 0,
 
       createProjectPath: '/index/createproject',

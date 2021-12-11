@@ -11,7 +11,7 @@
 <!-- 头部   -->
     <template slot="title">
       <div>便签</div>
-      <el-button @click="visible = true" type="success" size="mini">
+      <el-button @click="dialogFormVisible = true" type="success" size="mini">
         <i class="el-icon-plus"></i>
         添加便签
       </el-button>
@@ -74,7 +74,7 @@
   </el-drawer>
 
 <!--添加标签弹出框-->
-  <el-dialog title="添加便签" :visible.sync="visible">
+  <el-dialog title="添加便签" :visible.sync="dialogFormVisible">
     <el-form>
       <el-form-item label="便签内容" label-width="50">
         <el-input v-model="memoMsg" autocomplete="off"></el-input>
@@ -144,6 +144,7 @@ export default {
   data() {
     return {
       visible: false,
+      dialogFormVisible: false,
       screenWidth: null,
       staleDate: null,
       memoMsg: '',
@@ -155,7 +156,7 @@ export default {
       this.$emit('removememo', memoId)
     },
     addMemo(){
-      this.visible = false
+      this.dialogFormVisible = true
       this.$emit('addmemo', {
         memo: this.memoMsg,
         staleDate: this.staleDate

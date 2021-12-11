@@ -32,7 +32,7 @@
       :limit="1">
     <i class="el-icon-upload"></i>
     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-    <div class="el-upload__tip" slot="tip">请上传一个文件,跟换上传文件时请先点击删除之前选择的文件</div>
+    <div class="el-upload__tip" slot="tip">支持上传单个文件，最大100MB。更换上传文件时请先点击删除之前选择的文件</div>
   </el-upload>
 
   <el-button style="margin-left: 10px;" size="small"

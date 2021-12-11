@@ -8,7 +8,7 @@
       :auto-upload="true"
       :file-list="fileList">
     <el-button size="small" type="primary">点击选择附件</el-button>
-    <div slot="tip" class="el-upload__tip">每次请上传一个文件</div>
+    <div slot="tip" class="el-upload__tip">每次请上传一个文件，不超过100MB</div>
   </el-upload>
 
 </div>

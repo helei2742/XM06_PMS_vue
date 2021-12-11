@@ -32,13 +32,11 @@
     </el-table-column>
     <el-table-column
         sortable
+        prop="submitDate"
+        :formatter="submitDate"
         label="提交日期"
     >
-      <template slot-scope="scope">
-        <el-tag>
-          {{submitDate(scope.row.submitDate)}}
-        </el-tag>
-      </template>
+
     </el-table-column>
 
     <el-table-column
@@ -140,12 +138,6 @@ export default {
     }
   },
   computed:{
-    submitDate(){
-      return num =>{
-        if(num == null) return '无记录'
-        return this.$formatDate(num)
-      }
-    },
     isMyRecord(){
       return (userId) =>{
         return userId === this.$store.getters.getLoginUser.id
@@ -153,6 +145,11 @@ export default {
     }
   },
   methods: {
+    submitDate(row, column){
+      let num = row.submitDate
+        if(num == null) return '无记录'
+        return this.$formatDate(num)
+    },
     handleSelectable(row){
       return row.userId === this.$store.getters.getLoginUser.id
     },
@@ -215,13 +212,23 @@ export default {
     deleteRecord(index, record){
       let userId = this.$store.getters.getLoginUser.id;
       console.log(record)
-
-      deleteTaskSubmitRecordNetwork(record.id, userId).then(data=>{
-        if(data.code === 200){
-          this.$message.success('删除提交记录成功')
-        }else{
-          this.$message.error('删除提交记录失败,'+data.msg)
-        }
+      this.$confirm('此操作将永久删除该提交记录和提交的文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteTaskSubmitRecordNetwork(record.id, userId).then(data=>{
+          if(data.code === 200){
+            this.$message.success('删除提交记录成功')
+          }else{
+            this.$message.error('删除提交记录失败,'+data.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }

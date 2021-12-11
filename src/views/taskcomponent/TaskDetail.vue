@@ -46,6 +46,14 @@
               </el-button>
             </el-dropdown-item>
 
+            <el-dropdown-item v-if="task.creatorId === this.$store.getters.getLoginUser.id">
+              <el-button type="danger"
+                         @click="deleteTask(task.id)"
+                         icon="el-icon-edit"
+                         size="small">
+                删除任务
+              </el-button>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -67,7 +75,7 @@
 
 <script>
 import ShowWindow from "@/components/showwindow/ShowWindow";
-import {queryTaskInfoNetwork} from "@/network/task";
+import {dropTaskNetwork, queryTaskInfoNetwork} from "@/network/task";
 import TaskDetailBaseInfoCard from "@/views/taskcomponent/taskdetailchild/TaskDetailBaseInfoCard";
 import {queryUserByIdNetwork} from "@/network/user";
 import TaskSubmitChart from "@/views/taskcomponent/taskdetailchild/TaskSubmitChart";
@@ -109,6 +117,33 @@ export default {
           task: task,
           taskId: task.id
         }
+      })
+    },
+    deleteTask(taskId){
+      this.$prompt('请输入密码', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputType: 'password',
+        inputPattern: /^[_0-9a-z]{6,16}$/,
+        inputErrorMessage: '密码格式不正确'
+      }).then(({ value }) => {
+        let userId = this.$store.getters.getLoginUser.id
+        this.loading = true
+        dropTaskNetwork(taskId, userId, value).then(data=>{
+          if(data.code === 200){
+            this.$message.success('删除成功')
+          }else {
+            this.$alert('删除失败，' + data.msg)
+          }
+        }).finally(()=>{
+          this.loading = false
+        })
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消删除'
+        });
       })
     }
   },

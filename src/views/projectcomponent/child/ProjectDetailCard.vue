@@ -2,7 +2,7 @@
   <div class="project-detail-card">
     <el-row >
       <el-col :xs="22" :sm="22" :md="22" :lg="8" :xl="10">
-        <ProjectBaseInfoCard :project="project"/>
+        <ProjectBaseInfoCard :project="project" :creator="creator"/>
       </el-col>
 
       <el-col  :xs="22" :sm="22" :md="22" :lg="14" :xl="10" >
@@ -24,6 +24,12 @@ export default {
   },
   props: {
     project: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    creator: {
       type: Object,
       default() {
         return {}

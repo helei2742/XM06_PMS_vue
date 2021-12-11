@@ -132,6 +132,7 @@ export default {
 
 .announcement-title{
   color: #F86B63;
+  font-weight: 800;
   text-align: center;
 }
 

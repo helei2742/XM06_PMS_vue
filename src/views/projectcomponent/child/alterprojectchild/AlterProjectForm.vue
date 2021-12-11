@@ -1,7 +1,7 @@
 <template>
 <div class="alter-project-form" v-if="project!=null">
-  <el-form ref="form" :model="alterForm" label-width="80px" size="mini">
-    <el-form-item label="项目名称">
+  <el-form ref="form" :model="alterForm" :rules="rules" label-width="80px" size="mini">
+    <el-form-item label="项目名称" prop="projectName">
       <el-input v-model="alterForm.projectName"
                 style="width: 70%"
                 :disabled="disabledItem.name">
@@ -37,7 +37,8 @@
                    :titles="['尚未加入的小组', '已加入的小组']"
                    :data="allGroups"></el-transfer>
     </el-form-item>
-    <el-form-item label="项目描述">
+
+    <el-form-item label="项目描述" prop="projectDesc">
       <el-input type="textarea"
                 style="width: 70%"
                 :autosize="{ minRows: 2, maxRows: 9 }"
@@ -90,7 +91,16 @@ export default {
         desc: true
       },
       selectGroups:[],
-      allGroups: []
+      allGroups: [],
+      rules: {
+        projectName: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' },
+          { min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur' }
+        ],
+        projectDesc: [
+          { required: true, message: '请填写项目详情', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed:{
@@ -144,20 +154,26 @@ export default {
       }
     },
     onSubmit(){
-      let form = {
-        projectId: this.project.id,
-        creatorId: this.$store.getters.getLoginUser.id,
-        projectName: this.alterForm.projectName!==this.project.projectName
-            ?this.alterForm.projectName:null,
-        projectDesc: this.alterForm.projectDesc!==this.project.projectDesc
-            ?this.alterForm.projectDesc:null,
-        isPublic: this.alterForm.isPublic!==this.project.isPublic
-            ?this.alterForm.isPublic:null,
-        groupIds: this.selectGroups
-      }
-      this.$emit('alterProject', form)
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let form = {
+            projectId: this.project.id,
+            creatorId: this.$store.getters.getLoginUser.id,
+            projectName: this.alterForm.projectName!==this.project.projectName
+                ?this.alterForm.projectName:null,
+            projectDesc: this.alterForm.projectDesc!==this.project.projectDesc
+                ?this.alterForm.projectDesc:null,
+            isPublic: this.alterForm.isPublic!==this.project.isPublic
+                ?this.alterForm.isPublic:null,
+            groupIds: this.selectGroups
+          }
+          this.$emit('alterProject', form)
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
-
   }
 }
 </script>

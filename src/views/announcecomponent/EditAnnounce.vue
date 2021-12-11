@@ -1,6 +1,6 @@
 <template>
 <div class="edit-announce">
-  <show-window>
+  <show-window v-loading="loading">
     <div slot="title">
       <i class="el-icon-s-order"></i>
       <span>公告管理</span>
@@ -29,6 +29,7 @@ export default {
   data(){
     return {
       announce: null,
+      loading: false
     }
   },
   methods:{
@@ -77,8 +78,9 @@ export default {
   activated() {
     let announceId = this.$route.query.announceId
     let announce = this.$route.query.announce
-    if(announce.id === undefined){
 
+    if(announce.id === undefined){
+      this.loading = true
       queryAnnounceByIdNetwork(announceId).then(data=>{
         if(data.code === 200){
           let announce = data.result
@@ -88,6 +90,8 @@ export default {
         }else{
           this.$message.error('获取公告信息失败，'+data.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }else {
       this.announce = announce
