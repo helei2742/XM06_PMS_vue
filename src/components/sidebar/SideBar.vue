@@ -67,6 +67,12 @@
             <el-menu-item index="4-2" @click="showAnnounce">公告查询</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
+            <i class="el-icon-microphone"></i>
+            <span @click="toConferenceModel">会议模块</span>
+          </template>
+        </el-submenu>
       </el-menu>
     </div>
 
@@ -160,6 +166,10 @@ export default {
     },
     showAnnounce(){
       this.$router.push(this.showAnnouncePath)
+    },
+    toConferenceModel(){
+      window.location.href = 'http://www.ylxteach.net/XM06/conference_index.html'
+      // window.location.href = 'http://localhost:9000/XM06/conference_index.html'
     },
     announcementClose() {
       this.isShowAnnounce = false

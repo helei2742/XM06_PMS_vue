@@ -35,3 +35,32 @@ npm run build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 "# XM06_PMS_vue" 
+
+### 一些配置项
+```
+    在src/config/index.js中
+        如下
+        /**
+         * router基本路径名
+         * @type {string}
+         */
+        export const BACECONTEXTPATH = '/XM06/'
+        
+        /**
+         * 通知模块的websocket连接地址
+         * @type {string}
+         */
+        export const INFORMWEBSOCKETURL = 'ws://localhost:9000/XM06/api/websocket'
+        
+        /**
+         * 请求api的 地址
+         * @type {string}
+         */
+        export const REQUESTAPIURL = 'http://localhost:9000/XM06'
+        
+        /**
+         * 文件下载接口地址
+         * @type {string}
+         */
+        export const FILEDOWNLOADURL = 'http://localhost:9000/XM06/file/download'
+```

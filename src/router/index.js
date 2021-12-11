@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import {Upload} from "element-ui";
+import store from '../store'
+import {ADDIFNOTHAVETAB} from "@/store/mutations-types";
+import {BACECONTEXTPATH} from "@/config";
+
 
 Vue.use(VueRouter)
 
@@ -279,13 +282,11 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'hash',
-  base: '/XM06/',
+  base: BACECONTEXTPATH,
   routes,
   linkActiveClass: 'active'
 })
 
-import store from '../store'
-import {ADDIFNOTHAVETAB} from "@/store/mutations-types";
 
 router.beforeEach((to, from, next) => {
   //嵌套路由可能获取不到

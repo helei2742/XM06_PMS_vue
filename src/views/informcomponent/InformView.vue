@@ -72,6 +72,7 @@ import InformInfoCard from '@/views/informcomponent/child/InformInfoCard'
 import {queryJoinedGroupAllNetwork} from "@/network/group";
 import {clearNotReadNetWork, queryHistoryGroupInformNetwork, queryInformIn3dayNetwork} from "@/network/inform";
 import {debounce} from "@/util/baseUtil";
+import {INFORMWEBSOCKETURL} from "@/config";
 
 export default {
   name: "InformView",
@@ -92,8 +93,7 @@ export default {
       userId: null,
       groupId: null,           // 当前小组id
       websocket: null,       // 当前小组对于的websocket
-      // baseUrl: 'ws://127.0.0.1:9000/XM06/api/websocket'
-      baseUrl: 'ws://www.ylxteach.net/XM06/api/websocket'
+      baseUrl: INFORMWEBSOCKETURL
     }
   },
   computed:{

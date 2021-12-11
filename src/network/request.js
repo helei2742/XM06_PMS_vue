@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {REQUESTAPIURL} from "@/config";
 
 axios.defaults.withCredentials = true
 
@@ -8,9 +9,10 @@ axios.defaults.withCredentials = true
  * @returns {AxiosPromise}
  */
 export function request(config) {
-  let baseURL = 'http://localhost:9000/XM06'
+
+  let baseURL = REQUESTAPIURL
+
   const instance = axios.create({
-    // baseURL: 'http://www.ylxteach.net/XM06',
     baseURL: baseURL,
     timeout: 10000,
     withCredentials:true,
