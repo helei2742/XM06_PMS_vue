@@ -29,8 +29,8 @@ export function submitTaskFileNetwork(userId, taskId, description, form, uploadP
 
 export function downloadFileNetwork(filePath){
   return download({
-    url: 'http://www.ylxteach.net/XM06/file/download',
-    // url: 'http://localhost:9000/XM06/file/download',
+    // url: 'http://www.ylxteach.net/XM06/file/download',
+    url: 'http://localhost:9000/XM06/file/download',
     params: {
       filePath,
     },

@@ -16,9 +16,12 @@
     <to-top @toTop="toTopClick"
             v-if="isShowToTopBtn"/>
 
-    <div id="footer">
+    <div id="footer" class="star">
       <h2 style="font-weight: 300">本项目由四川大学2019级研究与开发实践小组XM06完成</h2>
     </div>
+
+<!--    看板娘-->
+    <kan-ban-mu-su-me/>
   </div>
 </template>
 
@@ -29,10 +32,12 @@ import {findUserByUserIdStr} from "@/network/user";
 import {CHANGECOLORMODULE, CHECKSUCCESS,LOGOUT, SCREENHEIGHTCHANGE, SCREENWIDTHCHANGE} from "@/store/mutations-types";
 import {APPBACkGROUND} from "@/util/imageUrl";
 import ToTop from "@/components/totop/ToTop";
+import KanBanMuSuMe from "@/components/live2d/KanBanMuSuMe";
 
 export default {
   name: 'app',
   components: {
+    KanBanMuSuMe,
     ToTop,
     NavBar,
   },

@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/display.css';
 import '@/assets/css/reset.css'
 import * as echarts from 'echarts'
+
 //需要挂载到Vue原型上
 Vue.prototype.$echarts = echarts
 
