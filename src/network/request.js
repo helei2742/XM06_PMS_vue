@@ -31,7 +31,7 @@ export function request(config) {
       },
       (error) => {
         console.log(error)
-        if(500 === error.response.status){
+        if(error.response!==null && 500 === error.response.status){
           window.open(baseURL+ '/error')
         }
       })

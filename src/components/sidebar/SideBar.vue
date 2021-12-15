@@ -168,8 +168,8 @@ export default {
       this.$router.push(this.showAnnouncePath)
     },
     toConferenceModel(){
-      window.location.href = 'http://www.ylxteach.net/XM06/conference_index.html'
-      // window.location.href = 'http://localhost:9000/XM06/conference_index.html'
+      // window.location.href = 'http://www.ylxteach.net/XM06/conference/conference_index.html'
+      window.location.href = 'http://localhost:9000/XM06/conference_index.html'
     },
     announcementClose() {
       this.isShowAnnounce = false

@@ -110,8 +110,6 @@ export default {
       if(data.code === 200){
         let user = data.result
         this.$store.commit(CHECKSUCCESS, {loginUser: user})
-
-        // this.$alert('人脸相关尚未完成，请勿使用！！！')
         this.$message.success('欢迎回来:'+ user.userName)
       }else {
         this.$message('您还未登录，请先前往登录')
