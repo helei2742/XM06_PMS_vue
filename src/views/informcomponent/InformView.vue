@@ -100,6 +100,7 @@ export default {
     debounceMessageNotify(){
       return debounce(this.messageNotify, 15000)
     },
+
     /**
      * 屏幕宽度动态改变tab的位置
      */
