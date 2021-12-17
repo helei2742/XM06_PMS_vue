@@ -19,6 +19,7 @@
 
 <!--主要区域-->
       <el-col id="main-area" >
+<!--        标签栏-->
         <div style="height: 40px;width: 100%">
           <el-tabs v-model="currentTabName"
                    @tab-click="tabClick"
@@ -50,6 +51,8 @@
       </el-button>
 
     </el-row>
+    <kan-ban-mu-su-me/>
+
   </div>
 
 </template>
@@ -58,11 +61,13 @@
 import SideBar from "@/components/sidebar/SideBar";
 import NavBar from "@/components/navbar/NavBar";
 import {REMOVETAB} from "@/store/mutations-types";
+import KanBanMuSuMe from "@/components/live2d/KanBanMuSuMe";
 
 
 
 export default {
   components: {
+    KanBanMuSuMe,
     SideBar,
     NavBar
   },
@@ -76,6 +81,9 @@ export default {
         return {'width':0}
       }
     },
+    /**
+     * store中存储的是当前选择的tabName,通过计算属性动态绑定到标签栏
+     */
     currentTabName: {
       get(){
         return this.$store.getters.getCrtTabName
@@ -99,6 +107,10 @@ export default {
         if(this.sideBarModel === 1) this.sideBarModel = 3
       }
     },
+    /**
+     * 点击后获取点击页的路径和query，跳转即可
+     * @param tab
+     */
     tabClick(tab){
       let path = tab.$attrs.path
       let query = JSON.parse(JSON.stringify(tab.$attrs.query))

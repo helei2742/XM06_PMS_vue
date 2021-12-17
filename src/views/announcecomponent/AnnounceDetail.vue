@@ -69,6 +69,12 @@ export default {
         }
       })
     },
+    /**
+     * 封装异步的获取公告和公告发布者信息的Promise
+     * @param announce
+     * @param announceId
+     * @returns {Promise<unknown>}
+     */
     loadData(announce, announceId){
       return new Promise((resolve, reject)=>{
         if(announce.id === undefined){

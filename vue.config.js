@@ -10,16 +10,18 @@ module.exports = {
   // 生成的静态资源存放的目录
   assetsDir: "static",*/
 
-/*  devServer: {
+  devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:9000',
+        // target: 'http://music.163.com',
+        // target: 'http://qqmusic.qq.com/',
+        target: 'https://c.y.qq.com',
         changeOrigin: true,
         pathRewrite: {
-          '/api': ''
+          '^/api': '/'
         }
       }
     }
-  }*/
+  }
 
 }

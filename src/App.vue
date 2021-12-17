@@ -20,8 +20,7 @@
       <footer-card/>
     </div>
 
-<!--    看板娘-->
-    <kan-ban-mu-su-me/>
+
   </div>
 </template>
 
@@ -32,13 +31,11 @@ import {findUserByUserIdStr} from "@/network/user";
 import {CHANGECOLORMODULE, CHECKSUCCESS,LOGOUT, SCREENHEIGHTCHANGE, SCREENWIDTHCHANGE} from "@/store/mutations-types";
 import {APPBACkGROUND} from "@/util/imageUrl";
 import ToTop from "@/components/totop/ToTop";
-import KanBanMuSuMe from "@/components/live2d/KanBanMuSuMe";
 import FooterCard from "@/components/footer/FooterCard";
 
 export default {
   name: 'app',
   components: {
-    KanBanMuSuMe,
     FooterCard,
     ToTop,
     NavBar,

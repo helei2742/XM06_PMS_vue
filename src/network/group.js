@@ -49,6 +49,19 @@ export function queryGroupByNameNetwork(groupName){
   })
 }
 
+/**
+ * 小组名模糊查询小组列表
+ * @param groupName
+ */
+export function queryGroupLikeGroupNameNetwork(groupName){
+  return request({
+    url: '/group/queryLikeGroupName',
+    params:{
+      groupName
+    },
+    method: 'post'
+  })
+}
 
 /**
  * 根据userId，小组id， 邀请码， 加入小组网络请求

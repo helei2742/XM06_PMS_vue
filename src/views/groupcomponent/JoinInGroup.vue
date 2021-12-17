@@ -29,6 +29,7 @@
         />
 
           <div class="scroll-pagination" style="overflow: scroll">
+
             <el-pagination
                 v-show="isShowPagination"
                 class="pagination"
@@ -39,6 +40,7 @@
                 layout="total, prev, pager, next, jumper"
                 :total="total">
             </el-pagination>
+
           </div>
         </el-col>
         </el-row>
@@ -54,7 +56,12 @@
 import ShowWindow from "@/components/showwindow/ShowWindow";
 import GroupList from "@/views/groupcomponent/joiningroupchild/GroupList";
 
-import {joinInGroupNetwork, pageQueryAllGroupNetwork, queryGroupByNameNetwork} from "@/network/group";
+import {
+  joinInGroupNetwork,
+  pageQueryAllGroupNetwork,
+  queryGroupByNameNetwork,
+  queryGroupLikeGroupNameNetwork
+} from "@/network/group";
 
 
 
@@ -73,7 +80,8 @@ export default {
       currentPage: 1,
       pageSize: 5,
       isShowPagination: true,
-      loading: false
+      loading: false,
+      queryGroupName: ''
     }
   },
   methods: {
@@ -81,21 +89,27 @@ export default {
      * 根据输入的组名查找组
      */
     searchByGroupName(groupName){
+      this.currentPage = 1
+      this.queryGroupName = groupName
+      //没有输入小组名，默认查询全部
+      if(groupName.length < 1){
+        this.pageQueryAllGroup(this.currentPage, this.pageSize)
+        this.isShowPagination = true
+        return
+      }
+
+      //有小组名
       const loading = this.$loading({
         lock: true,
         text: '正在查找小组',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      queryGroupByNameNetwork(groupName).then(data => {
-        if(data.code === 200){
-          this.groupList = [data.result]
-          this.groupList[0].memberNum = this.groupList[0].memberList.length
-          // this.isShowPagination = false
-          this.$message.success('查询成功')
-        }else {
-          this.$message.error('出错了' + data.msg)
-        }
+      queryGroupLikeGroupNameNetwork(groupName).then(data =>{
+        console.log(data)
+        this.groupList = data.result
+        this.total = data.result.length | 0
+        this.isShowPagination = false
       }).finally(()=>{
         loading.close()
       })

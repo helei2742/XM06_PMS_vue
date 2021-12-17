@@ -9,7 +9,6 @@ export function getSuffix(fileName){
   return split[split.length-1];
 }
 
-
 export function convertRes2Blob(response) {
   // 提取文件名
   const filename = response.headers['filename']

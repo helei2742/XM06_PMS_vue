@@ -17,6 +17,8 @@ vue脚手架
     npm i element-ui -S
 Echart
     npm install echarts@5.2.2 --save
+
+更多请自行阅读package.json 文件
 ```
 
 ### Compiles and hot-reloads for development

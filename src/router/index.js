@@ -291,6 +291,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   //嵌套路由可能获取不到
   document.title = to.matched[to.matched.length-1].meta.title
+  //路由负责获取到跳转的标签页的信息；具体是增加标签页，
+  // 还是更新标签页数据(beforeRouteUpdate跳转的情况)交给store处理
   let payload = {
     label: to.meta.title,
     path: to.path,

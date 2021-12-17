@@ -1,6 +1,8 @@
 <template>
-<div class="group-detail" v-if="group !== null" >
-  <show-window key="groupDetail">
+  <el-skeleton v-if="group === null" :rows="15" animated />
+
+<div v-else class="group-detail"  >
+  <show-window key="groupDetail" v-loading="loading">
     <div slot="title">
       <i class="el-icon-s-custom"></i>
       <span>小组管理</span>
@@ -121,9 +123,9 @@
   <el-dialog title="小组信息修改"
              v-if="isManager"
              :visible.sync="dialogFormVisible">
-    <el-form :model="groupForm">
 
-      <el-form-item label="小组名">
+    <el-form :model="groupForm" :rules="rules" ref="ruleForm">
+      <el-form-item label="小组名" prop="groupName">
         <el-input v-model="groupForm.groupName" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="小组描述">
@@ -133,9 +135,9 @@
         </el-input>
       </el-form-item>
     </el-form>
+
     <div slot="footer" class="dialog-footer">
-      <el-button @click="handleCancel"
-                 :disabled="isSame">
+      <el-button @click="handleCancel">
         取 消
       </el-button>
       <el-button type="primary"
@@ -145,7 +147,6 @@
       </el-button>
     </div>
   </el-dialog>
-
 </div>
 </template>
 
@@ -183,52 +184,104 @@ export default {
         groupName: '',
         described: ''
       },
-      dialogFormVisible: false
+      rules: {
+        groupName:[
+          { required: true, message: '请输入小组名', trigger: 'blur' },
+          { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
+        ]
+      },
+      dialogFormVisible: false,
+      loading: false
     }
   },
   activated() {
-
-    let group = this.$route.query.group
-    if(group.groupName === undefined){
-      let groupName = this.$route.query.groupName
-      queryGroupByNameNetwork(groupName).then(data=>{
-        if(data.code === 200) {
-          this.group = this.fixGroup(data.result)
-
-          this.groupForm = JSON.parse(JSON.stringify(data.result))
-        }else {
-          this.$message.error('加载失败，请稍后重试')
-        }
-      })
-    }else {
-
-      this.group = this.fixGroup(group)
-
-      this.groupForm = JSON.parse(JSON.stringify(group))
-    }
+    this.reloadPage()
   },
   methods:{
+    /**
+     * 重载页面方法
+     */
+    reloadPage(){
+      let group = this.$route.query.group
+      let groupName = this.$route.query.groupName
+      this.loading = true
+      this.loadData(group, groupName).finally(()=>this.loading = false)
+    },
+
+    /**
+     * 加载数据方法，返回promise
+     */
+    loadData(group,groupName){
+      return new Promise(((resolve, reject) => {
+        if(group===null||group===undefined||group.groupName === undefined){
+
+          queryGroupByNameNetwork(groupName).then(data=>{
+            if(data.code === 200) {
+              this.group = this.fixGroup(data.result)
+              this.groupForm = JSON.parse(JSON.stringify(data.result))
+            }else {
+              this.$message.error('加载失败，请稍后重试')
+            }
+          }).catch(e => reject(e)).finally(()=>resolve())
+
+        }else {
+          try{
+            this.group = this.fixGroup(group)
+            this.groupForm = JSON.parse(JSON.stringify(group))
+            resolve()
+          } catch{
+            reject('解析group信息出错')
+          }
+        }
+      }))
+    },
+    /**
+     * 取消修改小组信息时调用
+     */
     handleCancel(){
       this.groupForm.groupName = this.group.groupName
       this.groupForm.described = this.group.described
       this.dialogFormVisible = false
     },
+    /**
+     * 点击修改小组信息时调用
+     */
     handleAlter(){
-      let form = {
-        groupId: this.group.id,
-        userId: this.$store.getters.getLoginUser.id,
-        groupName: this.groupForm.groupName===this.group.groupName?null:this.groupForm.groupName,
-        described: this.groupForm.described===this.group.described?null:this.groupForm.described
-      }
-      console.log(form)
-      alterGroupInfoNetwork(form).then(data=>{
-        if(data.code === 200){
-          this.$alert('修改成功')
-        }else {
-          this.$alert('修改失败,'+data.msg)
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: '正在修改小组信息',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          let form = {
+            groupId: this.group.id,
+            userId: this.$store.getters.getLoginUser.id,
+            groupName: this.groupForm.groupName===this.group.groupName?null:this.groupForm.groupName,
+            described: this.groupForm.described===this.group.described?null:this.groupForm.described
+          }
+          alterGroupInfoNetwork(form).then(data=>{
+            if(data.code === 200){
+              this.$alert('修改小组信息成功,请关闭后重新进入页面', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.handleCancel()
+                }
+              })
+            }else {
+              this.$alert('修改失败,'+data.msg)
+            }
+          }).finally(()=>loading.close())
+
+        } else {
+          return false;
         }
       })
     },
+    /**
+     * 格式化该页的日期显示
+     */
     formatDate(time){
       return this.$formatDate(time);
     },
@@ -249,9 +302,17 @@ export default {
       return group
     },
 
-    //获取小组邀请码方法
+    /**
+     *  获取小组邀请码方法
+     */
     getInvitationCode(groupId){
       let managerId = this.$store.getters.getLoginUser.id
+      const loading = this.$loading({
+        lock: true,
+        text: '正在获取小组邀请码',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       queryGroupInvitationCode(groupId, managerId).then(data => {
         console.log(data)
         if(data.code === 200){
@@ -261,10 +322,12 @@ export default {
         }else{
           this.$message.error('出错了', data.msg)
         }
-      })
+      }).finally(()=> loading.close())
     },
 
-    //移除成员方法
+    /**
+     *   移除成员方法
+     */
     removeMember(userId) {
       let groupId = this.group.id
       let managerId = this.$store.getters.getLoginUser.id
@@ -273,7 +336,12 @@ export default {
       this.$alert('是否移除该成员', '警告', {
         confirmButtonText: '确定',
         callback: action => {
-
+          const loading = this.$loading({
+            lock: true,
+            text: '正在移除成员',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
           removeGroupMemberNetwork(managerId, groupId, userId).then(data=>{
             console.log(data)
             if(data.code === 200){
@@ -281,12 +349,17 @@ export default {
             }else {
               this.$message.error(data.msg)
             }
+          }).finally(()=>{
+            loading.close()
+            this.reloadPage()
           })
         }
       })
     },
 
-    //解散小组方法
+    /**
+     *  解散小组方法
+     */
     dissolveGroup(){
       this.$prompt('请输入密码', '提示', {
         confirmButtonText: '确定',
@@ -297,23 +370,26 @@ export default {
       }).then(({ value }) => {
         let groupId = this.group.id
         let managerId = this.$store.getters.getLoginUser.id
-
+        const loading = this.$loading({
+          lock: true,
+          text: '正在解散小组',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
         dissolveGroupNetwork(managerId, groupId,value).then(data=>{
-          console.log(data)
           if(data.code === 200){
             this.$message.success('解散小组'+this.group.groupName+'成功')
           }else{
             this.$message.error('解散小组失败,'+data.msg)
           }
-        })
+        }).finally(()=>loading.close())
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '取消删除'
         });
       })
-
-    },
+    }
 
   }
 }
