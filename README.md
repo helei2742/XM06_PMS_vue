@@ -1,3 +1,14 @@
+# 人脸模块
+```
+    前端人脸识别使用的代码为 src/assets/js/face-min.js
+                         src/assets/js/tracking.js
+    主要是通过其在前端捕获摄像头采集画面中的人脸，采集到的人脸转为base64编码后发送到后端处理
+    
+    封装采集人脸的组件在 src/components/faceconnect/FaceConnect.vue
+其他页面都是引入该组件进行人脸采集的
+
+```
+
 # vue-pms
 
 ```
