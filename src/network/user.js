@@ -89,3 +89,39 @@ export function queryUserByIdNetwork(userId){
     method: 'post'
   })
 }
+
+/**
+ * 修改用户信息网络请求
+ *    id必传
+ *    其他修改项需要传则给出值，不需要赋值为null
+ * @param user
+ */
+export function alterUserInfoNetwork(user){
+  return request({
+    url: '/user/alterUserInfo',
+    data:{
+      id: user.id,
+      trueName: user.trueName,
+      phone: user.phone,
+      userName: user.userName
+    },
+    method: 'post'
+  })
+}
+
+/**
+ * 注销用户网络请求
+ * @param userId
+ * @param userPwd
+ * @returns {AxiosPromise}
+ */
+export function dropUserNetwork(userId, userPwd){
+  return request({
+    url:'/user/dropUser',
+    data:{
+      id: userId,
+      userPwd
+    },
+    method: 'post'
+  })
+}

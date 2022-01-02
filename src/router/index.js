@@ -28,6 +28,7 @@ const MyGroup = () => import('@/views/groupcomponent/MyGroup.vue')
 
 const UserInfoPage = () => import('@/views/usercomponent/UserInfoPage.vue')
 const PasswordAlterPage = () => import('@/views/usercomponent/PasswordAlter.vue')
+const AlterUserInfoPage = () => import('@/views/usercomponent/AlterUserInfoPage')
 
 const CreateTask = () => import('@/views/taskcomponent/CreateTask.vue')
 const ShowTask = () => import('@/views/taskcomponent/ShowTask.vue')
@@ -118,6 +119,13 @@ const routes = [
           title: '修改密码'
         },
         component: PasswordAlterPage
+      },
+      {
+        path: 'alteruserinfo',
+        meta:{
+          title: '修改账户信息'
+        },
+        component: AlterUserInfoPage
       },
       {
         path: 'groupdetail',
@@ -293,12 +301,15 @@ router.beforeEach((to, from, next) => {
   document.title = to.matched[to.matched.length-1].meta.title
   //路由负责获取到跳转的标签页的信息；具体是增加标签页，
   // 还是更新标签页数据(beforeRouteUpdate跳转的情况)交给store处理
-  let payload = {
-    label: to.meta.title,
-    path: to.path,
-    query: to.query
+  if(to.matched[0].path==='/index'){
+    let payload = {
+      label: to.meta.title,
+      path: to.path,
+      query: to.query
+    }
+    store.commit(ADDIFNOTHAVETAB, payload)
   }
-  store.commit(ADDIFNOTHAVETAB, payload)
+
 
   next()
 })

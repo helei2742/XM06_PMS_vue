@@ -120,12 +120,12 @@ export default {
       })
       this.kanbanmusume = new window.L2Dwidget.constructor()
       this.kanbanmusume.init({
-        pluginRootPath: 'live2dw/',                 //指向你的目录
+        pluginRootPath: 'XM06/live2dw/',                 //指向你的目录
         pluginJsPath: 'lib/',                       //指向你的目录
-        pluginModelPath: 'live2d-widget-model-nico/assets/',                                   //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
+        // pluginModelPath: 'live2d-widget-model-nico/assets/',                                   //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
         tagMode: false,
         debug: false,
-        model: { jsonPath: '/live2dw/live2d-widget-model-rimi/'+this.models[this.currentModel]+'.model.json' },       //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
+        model: { jsonPath: 'live2dw/live2d-widget-model-rimi/'+this.models[this.currentModel]+'.model.json' },       //中间这个koharu就是你的老婆,想换个老婆,换这个就可以了
         display: { position: 'right', width: this.width, height: this.height ,vOffset: -150},                               //调整大小,和位置
         mobile: { show: false },                                                                //要不要盯着你的鼠标看
         name:{
@@ -160,7 +160,7 @@ export default {
       if(++this.currentModel >= this.models.length){
         this.currentModel = 0
       }
-      window.L2Dwidget.config.model = { jsonPath: '/live2dw/live2d-widget-model-rimi/'+this.models[this.currentModel]+'.model.json' }
+      window.L2Dwidget.config.model = { jsonPath: 'live2dw/live2d-widget-model-rimi/'+this.models[this.currentModel]+'.model.json' }
       this.kanbanmusume.init()
     },
     showDialog(text){

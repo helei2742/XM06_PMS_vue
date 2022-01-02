@@ -113,12 +113,14 @@
               信息修改<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
           <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item icon="el-icon-plus">修改基本信息</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-plus">
+              <span @click="alterUserInfo">修改基本信息</span>
+            </el-dropdown-item>
             <el-dropdown-item icon="el-icon-delete">
               <span @click="deleteFaceInfo">删除人脸信息</span>
             </el-dropdown-item>
             <el-dropdown-item icon="el-icon-circle-check">
-            <span @click="alterPwd"> 修改密码</span>
+             <span @click="alterPwd"> 修改密码</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -191,8 +193,10 @@ export default {
       this.$router.push('/index/faceregisterpage')
     },
     alterPwd(){
-      console.log('---')
       this.$router.push('/index/passwordalter')
+    },
+    alterUserInfo(){
+      this.$router.push('/index/alteruserinfo')
     },
     openInform(){
       this.$router.push('/index/informview')

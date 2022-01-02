@@ -41,7 +41,7 @@
       </ul>
     </div>
   </div>
-  <h2 class="footer-card-title">版权所有 © 2021 辛卫研究与开发实践XM02小组</h2>
+  <h2 class="footer-card-title">版权所有 © 2021 辛卫研究与开发实践XM06小组</h2>
 </div>
 </template>
 
